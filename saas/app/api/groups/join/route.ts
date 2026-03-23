@@ -37,5 +37,26 @@ export async function POST(req: NextRequest) {
     }),
   ]);
 
+  const [leaders, newMember] = await Promise.all([
+    prisma.groupMember.findMany({
+      where: { groupId: invite.groupId, role: "LEADER" },
+      select: { userId: true },
+    }),
+    prisma.user.findUnique({ where: { id: session.user.id }, select: { name: true } }),
+  ]);
+
+  const { createNotification } = await import("@/lib/notifications");
+  for (const leader of leaders) {
+    if (leader.userId !== session.user.id) {
+      await createNotification({
+        userId: leader.userId,
+        type: "GROUP_JOIN",
+        title: "Novo membro na célula! ✝️",
+        body: `${newMember?.name ?? "Alguém"} entrou no grupo`,
+        link: "/celula",
+      });
+    }
+  }
+
   return NextResponse.json({ groupName: invite.group.name });
 }

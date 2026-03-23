@@ -29,5 +29,24 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   }
 
   await prisma.reaction.create({ data: { postId, userId, type } });
+
+  // Notificar dono do post (se for outra pessoa reagindo)
+  const post = await prisma.gratitudePost.findUnique({ where: { id: postId }, select: { userId: true } });
+  if (post && post.userId !== userId) {
+    const actor = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true },
+    });
+    const reactionLabel = type === "AMEN" ? "Amém" : "Glória a Deus";
+    const { createNotification } = await import("@/lib/notifications");
+    await createNotification({
+      userId: post.userId,
+      type: "REACTION",
+      title: `${reactionLabel} recebido! 🙏`,
+      body: `${actor?.name ?? "Alguém"} reagiu ao seu post de gratidão`,
+      link: "/gratidao",
+    });
+  }
+
   return NextResponse.json({ userReacted: type });
 }

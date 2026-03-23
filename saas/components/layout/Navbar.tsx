@@ -10,6 +10,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { useFontSize } from "@/components/providers/FontSizeProvider";
 import { NotificationPrompt } from "@/components/ui/NotificationPrompt";
+import { NotificationDropdown } from "@/components/ui/NotificationDropdown";
 
 const NAV_ITEMS = [
   { href: "/dashboard",  icon: Home,        label: "Início" },
@@ -31,9 +32,28 @@ export function Navbar() {
   const { fontSize, setFontSize } = useFontSize();
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifEnabled, setNotifEnabled] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     setNotifEnabled(localStorage.getItem("notif") === "on");
+  }, []);
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      if (document.hidden) return;
+      try {
+        const res = await fetch("/api/notifications");
+        if (res.ok) {
+          const data = await res.json();
+          setUnreadCount(data.unreadCount ?? 0);
+        }
+      } catch {}
+    };
+    fetchCount();
+    const interval = setInterval(fetchCount, 60000);
+    const onVisibility = () => { if (!document.hidden) fetchCount(); };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => { clearInterval(interval); document.removeEventListener("visibilitychange", onVisibility); };
   }, []);
 
   const handleBellClick = () => setNotifOpen((v) => !v);
@@ -159,8 +179,10 @@ export function Navbar() {
               }`}
             >
               <Bell className={`w-4 h-4 ${notifEnabled ? "fill-gold/30" : ""}`} />
-              {notifEnabled && (
-                <span className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-gold border border-white" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full bg-red-500 border-2 border-white text-white text-[10px] font-bold flex items-center justify-center px-0.5">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
               )}
             </button>
             <AnimatePresence>
@@ -173,17 +195,8 @@ export function Navbar() {
                   className="absolute right-0 top-10 w-72 z-50"
                 >
                   {notifEnabled ? (
-                    <div className="divine-card p-4 flex items-center gap-3 border-l-2 border-l-gold/60 shadow-divine">
-                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gold/20 to-amber-100 flex items-center justify-center flex-shrink-0">
-                        <Bell className="w-4 h-4 text-gold-dark" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-semibold text-emerald-700">✓ Notificações ativas</p>
-                        <p className="text-xs text-slate-500 mt-0.5">Você receberá lembretes diários.</p>
-                      </div>
-                      <button onClick={() => setNotifOpen(false)} className="p-1 text-slate-300 hover:text-slate-500">
-                        <X className="w-4 h-4" />
-                      </button>
+                    <div className="divine-card overflow-hidden shadow-divine">
+                      <NotificationDropdown onClose={() => setNotifOpen(false)} />
                     </div>
                   ) : (
                     <NotificationPrompt onDismiss={handleNotifDismiss} />
