@@ -128,17 +128,24 @@ export function PrayerList({
     <div className="divine-card p-5 flex flex-col gap-4 h-full">
 
       {/* ── Header ── */}
-      <div className="flex flex-col items-center text-center relative">
-        <div className="flex items-center gap-2 mb-0.5">
-          <Heart className="w-4 h-4 text-gold-dark" />
-          <p className="text-sm font-bold text-gold-dark leading-none">
-            ✦ Pedidos diante de Deus
+      <div className="flex items-center justify-between">
+        {/* espaçador */}
+        <div className="flex items-center gap-1.5 opacity-0 pointer-events-none" aria-hidden="true">
+          <div className="w-8 h-8" />
+          <div className="w-8 h-8" />
+        </div>
+        <div className="flex flex-col items-center text-center">
+          <div className="flex items-center gap-2 mb-0.5">
+            <Heart className="w-4 h-4 text-gold-dark" />
+            <p className="text-sm font-bold text-gold-dark leading-none">
+              ✦ Pedidos diante de Deus
+            </p>
+          </div>
+          <p className="text-xs text-slate-400 leading-none">
+            {answeredCount} respondidas · {pendingCount} pendentes
           </p>
         </div>
-        <p className="text-xs text-slate-400 leading-none">
-          {answeredCount} respondidas · {pendingCount} pendentes
-        </p>
-        <div className="absolute right-0 top-0 flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0">
           {prayers.length > 0 && (
             <button
               onClick={handleExport}

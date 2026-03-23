@@ -412,7 +412,7 @@ export default function DashboardPage() {
           {/* Seção 02 */}
           <div>
             <div className="flex flex-col items-center text-center mb-6 gap-0.5">
-              <h2 className="font-serif text-3xl md:text-4xl font-semibold text-slate-800 tracking-tight">
+              <h2 className="font-serif text-2xl md:text-3xl font-semibold text-slate-800 tracking-tight">
                 Oração & Comunidade
               </h2>
               <div className="w-8 h-px bg-gold/40 mt-1" />

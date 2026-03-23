@@ -78,13 +78,13 @@ export function PremiumGate({ children, fallback, feature, benefits, blur = true
   const featureTitle = feature ? feature.split(" —")[0].split(" — ")[0] : "Recurso Premium";
 
   return (
-    <div className="relative overflow-hidden rounded-2xl">
+    <div className={`relative overflow-hidden rounded-2xl ${blur ? "min-h-[440px]" : ""}`}>
       {blur && (
         <div className="pointer-events-none select-none blur-[2px] opacity-20 saturate-50">
           {children}
         </div>
       )}
-      <div className={`${blur ? "absolute inset-0" : ""} flex flex-col items-center justify-center gap-4 bg-white/90 backdrop-blur-sm rounded-2xl px-6 py-7`}>
+      <div className={`${blur ? "absolute inset-0" : ""} flex flex-col items-center justify-center gap-4 bg-white/90 backdrop-blur-sm rounded-2xl px-6 py-8`}>
         {/* Icon */}
         <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold/20 to-gold-dark/10 border border-gold/30 flex items-center justify-center shadow-[0_0_24px_rgba(212,175,55,0.18)]">
           <span className="text-2xl">✦</span>

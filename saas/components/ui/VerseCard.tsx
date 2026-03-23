@@ -59,8 +59,9 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
 
         {/* ── HEADER ── */}
         <div className="flex items-center justify-between mb-3 relative z-10">
-          {/* espaçador para balancear os botões à direita */}
+          {/* espaçador espelha os botões à direita */}
           <div className="flex items-center gap-1 opacity-0 pointer-events-none" aria-hidden="true">
+            <div className="min-h-[32px] min-w-[32px]" />
             <div className="min-h-[32px] min-w-[32px]" />
           </div>
 
