@@ -367,7 +367,7 @@ export default function DashboardPage() {
                         Entre em uma fraternidade pelo link de convite de um líder, ou crie a sua para caminhar junto com outros irmãos.
                       </p>
                     </div>
-                    <a href="/celula" className="btn-divine py-3 text-sm px-8">
+                    <a href="/fraternidade" className="btn-divine py-3 text-sm px-8">
                       Criar minha fraternidade
                     </a>
                   </div>

@@ -29,7 +29,7 @@ const FEATURES = [
     icon: "👥",
     title: "Fraternidade",
     desc: "Ore e cresça junto com seu grupo. Partilhe gratidão no feed.",
-    href: "/celula",
+    href: "/fraternidade",
   },
 ];
 

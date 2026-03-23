@@ -15,7 +15,7 @@ import { OnboardingModal } from "@/components/ui/OnboardingModal";
 
 const NAV_ITEMS = [
   { href: "/dashboard",  icon: Home,        label: "Início" },
-  { href: "/celula",     icon: Users,       label: "Fraternidade" },
+  { href: "/fraternidade",     icon: Users,       label: "Fraternidade" },
   { href: "/oracao",     icon: Heart,       label: "Oração" },
   { href: "/diario",     icon: BookMarked,  label: "Diário" },
   { href: "/devocional", icon: BookOpen,    label: "Devocional" },

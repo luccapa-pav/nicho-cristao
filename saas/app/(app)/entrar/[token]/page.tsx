@@ -49,7 +49,7 @@ export default function EntrarPage() {
     setJoining(false);
     if (!res.ok) { setJoinError(data.error ?? "Erro ao entrar na fraternidade"); return; }
     setJoined(true);
-    setTimeout(() => router.push("/celula"), 2500);
+    setTimeout(() => router.push("/fraternidade"), 2500);
   }
 
   return (

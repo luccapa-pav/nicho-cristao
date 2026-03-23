@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
         type: "GROUP_JOIN",
         title: "Novo membro na fraternidade! ✝️",
         body: `${newMember?.name ?? "Alguém"} entrou no grupo`,
-        link: "/celula",
+        link: "/fraternidade",
       });
     }
   }
