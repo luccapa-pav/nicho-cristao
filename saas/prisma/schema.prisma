@@ -175,7 +175,7 @@ model Prayer {
   description String?
   testimony   String?
   status      PrayerStatus  @default(PENDING)
-  isPublic    Boolean       @default(false)
+  isPublic    Boolean       @default(false)  // sempre falso por padrão — explícito na API
   prayedCount Int           @default(0)
   answeredAt  DateTime?
   createdAt   DateTime      @default(now())

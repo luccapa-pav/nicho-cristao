@@ -11,7 +11,7 @@ interface Prayer {
   title: string;
   description?: string;
   testimony?: string;
-  status: "PENDING" | "ANSWERED";
+  status: "PENDING" | "ANSWERED" | "CLOSED";
   prayedCount: number;
   createdAt: string;
 }
@@ -28,8 +28,8 @@ interface GroupPrayer {
 
 interface PrayerListProps {
   prayers: Prayer[];
-  onAddPrayer: (title: string, description?: string, isPublic?: boolean) => void;
-  onMarkAnswered: (id: string, testimony?: string) => void;
+  onAddPrayer: (title: string, description?: string, isPublic?: boolean) => Promise<boolean>;
+  onMarkAnswered: (id: string, testimony?: string) => Promise<boolean>;
   onPrayedFor?: (id: string) => void;
   onDeletePrayer?: (id: string) => void;
   autoOpenForm?: boolean;
@@ -55,6 +55,8 @@ export function PrayerList({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const [tab, setTab] = useState<Tab>("ALL");
   const [awaitingTestimony, setAwaitingTestimony] = useState<string | null>(null);
   const [testimonyText, setTestimonyText] = useState("");
@@ -78,19 +80,25 @@ export function PrayerList({
     });
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) return;
-    onAddPrayer(title.trim(), description.trim() || undefined, isPublic);
-    setTitle(""); setDescription(""); setIsPublic(false); setShowForm(false);
+    if (!title.trim() || submitting) return;
+    setSubmitting(true);
+    setSubmitError(false);
+    const ok = await onAddPrayer(title.trim(), description.trim() || undefined, isPublic);
+    setSubmitting(false);
+    if (ok) { setTitle(""); setDescription(""); setIsPublic(false); setShowForm(false); }
+    else setSubmitError(true);
   };
 
-  const confirmAnswer = (id: string) => {
-    navigator.vibrate?.([30, 30, 60, 30, 120]);
-    onMarkAnswered(id, testimonyText.trim() || undefined);
+  const confirmAnswer = async (id: string) => {
+    const ok = await onMarkAnswered(id, testimonyText.trim() || undefined);
     setAwaitingTestimony(null);
     setTestimonyText("");
-    confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors: ["#D4AF37", "#F5E27A", "#FFFFFF", "#FFA500"] });
+    if (ok) {
+      navigator.vibrate?.([30, 30, 60, 30, 120]);
+      confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors: ["#D4AF37", "#F5E27A", "#FFFFFF", "#FFA500"] });
+    }
   };
 
   const handlePrayed = async (id: string) => {
@@ -120,21 +128,17 @@ export function PrayerList({
     <div className="divine-card p-5 flex flex-col gap-4 h-full">
 
       {/* ── Header ── */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gold/10 flex items-center justify-center border border-gold/20 shrink-0">
-            <Heart className="w-5 h-5 text-gold-dark" />
-          </div>
-          <div>
-            <p className="text-sm font-bold text-gold-dark leading-none">
-              ✦ Pedidos diante de Deus
-            </p>
-            <p className="text-xs text-slate-400 mt-0.5 leading-none">
-              {answeredCount} respondidas · {pendingCount} pendentes
-            </p>
-          </div>
+      <div className="flex flex-col items-center text-center relative">
+        <div className="flex items-center gap-2 mb-0.5">
+          <Heart className="w-4 h-4 text-gold-dark" />
+          <p className="text-sm font-bold text-gold-dark leading-none">
+            ✦ Pedidos diante de Deus
+          </p>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0">
+        <p className="text-xs text-slate-400 leading-none">
+          {answeredCount} respondidas · {pendingCount} pendentes
+        </p>
+        <div className="absolute right-0 top-0 flex items-center gap-1.5 shrink-0">
           {prayers.length > 0 && (
             <button
               onClick={handleExport}
@@ -204,8 +208,11 @@ export function PrayerList({
               />
               Compartilhar com minha célula
             </label>
-            <button type="submit" className="btn-divine py-3 text-base w-full">
-              Adicionar pedido 🙏
+            {submitError && (
+              <p className="text-xs text-red-500 text-center">Erro ao salvar. Verifique sua conexão e tente novamente.</p>
+            )}
+            <button type="submit" disabled={submitting} className="btn-divine py-3 text-base w-full disabled:opacity-60">
+              {submitting ? "Salvando..." : "Adicionar pedido 🙏"}
             </button>
           </motion.form>
         )}
@@ -306,7 +313,9 @@ export function PrayerList({
                     <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                       <span className="text-[10px] text-slate-500">{gp.author}</span>
                       <span className="text-[10px] text-slate-300">·</span>
-                      <span className="text-[10px] text-slate-400">{gp.createdAt}</span>
+                      <span className="text-[10px] text-slate-400">
+                        {(() => { const d = new Date(gp.createdAt); return isNaN(d.getTime()) ? "" : d.toLocaleDateString("pt-BR", { day: "numeric", month: "short" }); })()}
+                      </span>
                       {gp.prayedCount > 0 && (
                         <span className="text-[10px] text-rose-400">🙏 {gp.prayedCount}</span>
                       )}
@@ -411,8 +420,14 @@ function PrayerItem({
   const [expanded, setExpanded] = useState(false);
 
   const handleDelete = async () => {
-    await fetch(`/api/prayers/${prayer.id}`, { method: "DELETE" });
-    onDelete?.(prayer.id);
+    setConfirmingDelete(false);
+    const res = await fetch(`/api/prayers/${prayer.id}`, { method: "DELETE" }).catch(() => null);
+    if (res && (res.ok || res.status === 204)) {
+      onDelete?.(prayer.id);
+    } else {
+      // Revert — re-show the item (parent keeps it in state, just reset local confirm)
+      setConfirmingDelete(false);
+    }
   };
 
   return (
@@ -472,7 +487,9 @@ function PrayerItem({
             </div>
           )}
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            <span className="text-xs text-slate-400">{prayer.createdAt}</span>
+            <span className="text-xs text-slate-400">
+              {(() => { const d = new Date(prayer.createdAt); return isNaN(d.getTime()) ? "" : d.toLocaleDateString("pt-BR", { day: "numeric", month: "short", year: "numeric" }); })()}
+            </span>
             {prayer.status === "PENDING" && (
               <button
                 onClick={() => onPrayed(prayer.id)}

@@ -17,18 +17,20 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
 
   // Notificar o dono do pedido (se for outra pessoa orando)
   if (prayer.userId !== session.user.id) {
-    const actor = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: { name: true },
-    });
-    const { createNotification } = await import("@/lib/notifications");
-    await createNotification({
-      userId: prayer.userId,
-      type: "PRAYED",
-      title: "Alguém orou por você! 🙏",
-      body: `${actor?.name ?? "Um irmão"} orou pelo seu pedido "${prayer.title.slice(0, 50)}"`,
-      link: "/oracao",
-    });
+    try {
+      const actor = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { name: true },
+      });
+      const { createNotification } = await import("@/lib/notifications");
+      await createNotification({
+        userId: prayer.userId,
+        type: "PRAYED",
+        title: "Alguém orou por você! 🙏",
+        body: `${actor?.name ?? "Um irmão"} orou pelo seu pedido "${prayer.title.slice(0, 50)}"`,
+        link: "/oracao",
+      });
+    } catch { /* notificação falhou — não impede a resposta */ }
   }
 
   return NextResponse.json({ prayedCount: updated.prayedCount });

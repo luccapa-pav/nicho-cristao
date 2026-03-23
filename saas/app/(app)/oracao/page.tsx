@@ -14,7 +14,7 @@ interface Prayer {
   title: string;
   description?: string;
   testimony?: string;
-  status: "PENDING" | "ANSWERED";
+  status: "PENDING" | "ANSWERED" | "CLOSED";
   prayedCount: number;
   createdAt: string;
 }
@@ -122,29 +122,37 @@ export default function OracaoPage() {
     fetchPrayers();
   }, [fetchPrayers]);
 
-  const handleAddPrayer = async (title: string, description?: string, isPublic?: boolean) => {
-    const res = await fetch("/api/prayers", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, description, isPublic }),
-    });
-    if (res.ok) {
+  const handleAddPrayer = async (title: string, description?: string, isPublic?: boolean): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/prayers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, description, isPublic }),
+      });
+      if (!res.ok) return false;
       const newPrayer = await res.json();
       setPrayers((prev) => [newPrayer, ...prev]);
+      return true;
+    } catch {
+      return false;
     }
   };
 
-  const handleMarkAnswered = async (id: string, testimony?: string) => {
-    const res = await fetch(`/api/prayers/${id}/answered`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ testimony }),
-    });
-    if (res.ok) {
+  const handleMarkAnswered = async (id: string, testimony?: string): Promise<boolean> => {
+    try {
+      const res = await fetch(`/api/prayers/${id}/answered`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ testimony }),
+      });
+      if (!res.ok) return false;
       const updated = await res.json();
       setPrayers((prev) =>
         prev.map((p) => (p.id === id ? { ...p, status: "ANSWERED" as const, testimony: updated.testimony } : p))
       );
+      return true;
+    } catch {
+      return false;
     }
   };
 
