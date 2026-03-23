@@ -38,12 +38,19 @@ function VersiculoContent() {
       setTimeout(() => { setPhase((p) => (p + 1) as 2 | 3 | 4); setResult(null); setUserInput(""); }, 1200);
     }
     if (correct && phase === 4) {
-      const saved = JSON.parse(localStorage.getItem("memorized-verses") ?? "[]");
-      const already = saved.find((v: { reference: string }) => v.reference === reference);
-      if (!already) {
-        saved.unshift({ reference, verse: verseToMemorize, completedAt: new Date().toISOString() });
-        localStorage.setItem("memorized-verses", JSON.stringify(saved));
-      }
+      // Salva no banco
+      fetch("/api/verses/memorized", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ verse: verseToMemorize, reference }),
+      }).catch(() => {
+        // Fallback offline: salva no localStorage
+        const saved = JSON.parse(localStorage.getItem("memorized-verses") ?? "[]");
+        if (!saved.find((v: { reference: string }) => v.reference === reference)) {
+          saved.unshift({ reference, verse: verseToMemorize, completedAt: new Date().toISOString() });
+          localStorage.setItem("memorized-verses", JSON.stringify(saved));
+        }
+      });
     }
   };
 

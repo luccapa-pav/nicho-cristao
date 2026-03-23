@@ -39,9 +39,10 @@ model User {
   reactions     Reaction[]
   devotionalLogs DevotionalLog[]
   sentInvites   GroupInvite[]  @relation("InviteSender")
-  fcmTokens     FcmToken[]
-  readingProgress ReadingProgress[]
-  journalEntries JournalEntry[]
+  fcmTokens        FcmToken[]
+  readingProgress  ReadingProgress[]
+  journalEntries   JournalEntry[]
+  memorizedVerses  MemorizedVerse[]
 
   @@map("users")
 }
@@ -291,4 +292,19 @@ model JournalEntry {
   updatedAt    DateTime    @updatedAt
 
   @@map("journal_entries")
+}
+
+// ─────────────────────────────────────────────
+// VERSÍCULOS MEMORIZADOS
+// ─────────────────────────────────────────────
+model MemorizedVerse {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  verse       String
+  reference   String
+  completedAt DateTime @default(now())
+
+  @@unique([userId, reference])
+  @@map("memorized_verses")
 }
