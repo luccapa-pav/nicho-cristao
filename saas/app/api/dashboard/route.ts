@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { computeEffectiveMax } from "@/lib/groupCapacity";
 
 export async function GET(request: Request) {
   const session = await getServerSession(authOptions);
@@ -77,6 +78,7 @@ export async function GET(request: Request) {
                     id: true,
                     name: true,
                     avatarUrl: true,
+                    plan: true,
                     streak: { select: { currentStreak: true, lastCheckIn: true } },
                   },
                 },
@@ -111,11 +113,14 @@ export async function GET(request: Request) {
       ? new Date(m.user.streak.lastCheckIn) > onlineThreshold
       : false,
   })) ?? [];
+  const maxMembers = group
+    ? computeEffectiveMax(group.members.map((m) => m.user.plan ?? "FREE"))
+    : 12;
 
   return NextResponse.json({
     user,
     streak: streak ?? { currentStreak: 0, longestStreak: 0 },
-    group: group ? { name: group.name, progress: group.progress, members } : null,
+    group: group ? { name: group.name, progress: group.progress, isPrivate: group.isPrivate, members, maxMembers } : null,
     devotional: devotional
       ? {
           id: devotional.id,

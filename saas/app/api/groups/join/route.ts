@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getEffectiveMaxMembers } from "@/lib/groupCapacity";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -18,8 +19,9 @@ export async function POST(req: NextRequest) {
   if (!invite) return NextResponse.json({ error: "Convite não encontrado" }, { status: 404 });
   if (invite.status !== "PENDING") return NextResponse.json({ error: "Este convite já foi usado" }, { status: 400 });
   if (invite.expiresAt < new Date()) return NextResponse.json({ error: "Este convite expirou" }, { status: 400 });
-  if (invite.group._count.members >= invite.group.maxMembers) {
-    return NextResponse.json({ error: "A fraternidade já está cheia (máx. 12 membros)" }, { status: 400 });
+  const effectiveMax = await getEffectiveMaxMembers(invite.groupId);
+  if (invite.group._count.members >= effectiveMax) {
+    return NextResponse.json({ error: `A fraternidade já está cheia (máx. ${effectiveMax} membros)` }, { status: 400 });
   }
 
   const alreadyMember = await prisma.groupMember.findUnique({

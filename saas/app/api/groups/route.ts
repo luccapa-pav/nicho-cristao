@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { computeEffectiveMax } from "@/lib/groupCapacity";
 
 // GET — lista grupos públicos (para usuários sem célula)
 export async function GET() {
@@ -12,23 +13,26 @@ export async function GET() {
       name: true,
       description: true,
       link: true,
-      maxMembers: true,
       _count: { select: { members: true } },
+      members: { select: { user: { select: { plan: true } } } },
     },
     orderBy: { createdAt: "desc" },
     take: 20,
   });
 
   return NextResponse.json(
-    groups.map((g) => ({
-      id: g.id,
-      name: g.name,
-      description: g.description,
-      link: g.link,
-      memberCount: g._count.members,
-      maxMembers: g.maxMembers,
-      isFull: g._count.members >= g.maxMembers,
-    }))
+    groups.map((g) => {
+      const effectiveMax = computeEffectiveMax(g.members.map((m) => m.user.plan ?? "FREE"));
+      return {
+        id: g.id,
+        name: g.name,
+        description: g.description,
+        link: g.link,
+        memberCount: g._count.members,
+        maxMembers: effectiveMax,
+        isFull: g._count.members >= effectiveMax,
+      };
+    })
   );
 }
 

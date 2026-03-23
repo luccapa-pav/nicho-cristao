@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getEffectiveMaxMembers } from "@/lib/groupCapacity";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -17,8 +18,9 @@ export async function POST(req: NextRequest) {
 
   if (!group) return NextResponse.json({ error: "Fraternidade não encontrada" }, { status: 404 });
   if (group.isPrivate) return NextResponse.json({ error: "Esta fraternidade é privada" }, { status: 403 });
-  if (group._count.members >= group.maxMembers) {
-    return NextResponse.json({ error: "A fraternidade já está cheia (máx. 12 membros)" }, { status: 400 });
+  const effectiveMax = await getEffectiveMaxMembers(groupId);
+  if (group._count.members >= effectiveMax) {
+    return NextResponse.json({ error: `A fraternidade já está cheia (máx. ${effectiveMax} membros)` }, { status: 400 });
   }
 
   const alreadyMember = await prisma.groupMember.findFirst({ where: { userId: session.user.id } });

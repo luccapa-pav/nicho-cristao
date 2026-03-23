@@ -22,6 +22,7 @@ interface GroupData {
   progress: number;
   isPrivate: boolean;
   members: Member[];
+  maxMembers?: number;
 }
 
 interface PublicGroup {
@@ -212,6 +213,7 @@ export default function CelulaPage() {
               name={group.name}
               progress={group.progress}
               members={group.members}
+              maxMembers={group.maxMembers}
               onInvite={handleOpenInvite}
               onPray={() => {}}
             />

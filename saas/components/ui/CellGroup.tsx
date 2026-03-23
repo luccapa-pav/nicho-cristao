@@ -17,6 +17,7 @@ interface CellGroupProps {
   name: string;
   progress: number;  // 0-100
   members: Member[];
+  maxMembers?: number;
   onInvite: () => void;
   onPray: (memberId: string) => void;
 }
@@ -52,10 +53,10 @@ function Avatar({ member }: { member: Member }) {
   );
 }
 
-export function CellGroup({ name, progress, members, onInvite, onPray }: CellGroupProps) {
+export function CellGroup({ name, progress, members, maxMembers = 12, onInvite, onPray }: CellGroupProps) {
   const [prayedFor, setPrayedFor] = useState<Set<string>>(new Set());
   const [lightBurst, setLightBurst] = useState<string | null>(null);
-  const slots = Array.from({ length: 12 });
+  const slots = Array.from({ length: maxMembers });
 
   const handlePray = useCallback((memberId: string) => {
     if (prayedFor.has(memberId)) return;
@@ -80,7 +81,7 @@ export function CellGroup({ name, progress, members, onInvite, onPray }: CellGro
             <p className="font-serif text-sm font-medium text-slate-700">{name}</p>
           </div>
         </div>
-        <span className="text-xs text-slate-400">{members.length}/12</span>
+        <span className="text-xs text-slate-400">{members.length}/{maxMembers}</span>
       </div>
 
       {/* Grid de avatares — 4×3 */}
@@ -164,7 +165,7 @@ export function CellGroup({ name, progress, members, onInvite, onPray }: CellGro
           </motion.div>
         </div>
         <p className="text-[10px] text-slate-400 text-right">
-          {Math.round((progress / 100) * members.length)}/{members.length} membros completaram hoje
+          {Math.round((progress / 100) * members.length)}/{maxMembers} membros completaram hoje
         </p>
       </div>
 
