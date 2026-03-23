@@ -114,6 +114,7 @@ model Group {
   progress    Float    @default(0)  // 0-100 progresso coletivo
   isPrivate   Boolean  @default(false)
   coverUrl    String?
+  link        String?  // link externo (WhatsApp, Telegram, etc.)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

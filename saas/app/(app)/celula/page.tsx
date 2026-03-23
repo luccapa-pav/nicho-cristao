@@ -28,6 +28,7 @@ interface PublicGroup {
   id: string;
   name: string;
   description: string | null;
+  link: string | null;
   memberCount: number;
   maxMembers: number;
   isFull: boolean;
@@ -71,6 +72,7 @@ export default function CelulaPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
+  const [link, setLink] = useState("");
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState("");
   const [joiningId, setJoiningId] = useState<string | null>(null);
@@ -107,7 +109,7 @@ export default function CelulaPage() {
     const res = await fetch("/api/groups", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, description, isPrivate }),
+      body: JSON.stringify({ name, description, isPrivate, link }),
     });
     const data = await res.json();
     setCreating(false);
@@ -359,6 +361,20 @@ export default function CelulaPage() {
               />
             </div>
 
+            <div>
+              <label className="text-sm font-semibold text-slate-700 mb-1.5 block">
+                Link do grupo <span className="text-slate-400 font-normal">(opcional)</span>
+              </label>
+              <input
+                type="url"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+                placeholder="Ex: https://chat.whatsapp.com/..."
+                className="w-full px-4 py-3 rounded-xl border-2 border-divine-200 bg-white text-base text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold transition-colors"
+              />
+              <p className="text-[10px] text-slate-400 mt-0.5">WhatsApp, Telegram, Discord…</p>
+            </div>
+
             {/* Toggle privacidade */}
             {isPremium ? (
               <div className="flex items-center justify-between p-4 rounded-xl bg-divine-50 border border-divine-200">
@@ -467,21 +483,34 @@ export default function CelulaPage() {
                       </p>
                     </div>
                   </div>
-                  {g.isFull ? (
-                    <span className="flex-shrink-0 text-[10px] text-slate-400 font-medium">Cheia</span>
-                  ) : (
-                    <button
-                      onClick={() => handleJoinPublic(g.id)}
-                      disabled={joiningId === g.id}
-                      className="flex-shrink-0 flex items-center gap-1 text-xs text-white font-semibold bg-gold hover:bg-gold-dark px-3 py-1.5 rounded-lg transition-colors disabled:opacity-60"
-                    >
-                      {joiningId === g.id
-                        ? <Loader2 className="w-3 h-3 animate-spin" />
-                        : <Plus className="w-3 h-3" />
-                      }
-                      Entrar
-                    </button>
-                  )}
+                  <div className="flex-shrink-0 flex flex-col items-end gap-1.5">
+                    {g.isFull ? (
+                      <span className="text-[10px] text-slate-400 font-medium">Cheia</span>
+                    ) : (
+                      <button
+                        onClick={() => handleJoinPublic(g.id)}
+                        disabled={joiningId === g.id}
+                        className="flex items-center gap-1 text-xs text-white font-semibold bg-gold hover:bg-gold-dark px-3 py-1.5 rounded-lg transition-colors disabled:opacity-60"
+                      >
+                        {joiningId === g.id
+                          ? <Loader2 className="w-3 h-3 animate-spin" />
+                          : <Plus className="w-3 h-3" />
+                        }
+                        Entrar
+                      </button>
+                    )}
+                    {g.link && (
+                      <a
+                        href={g.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-[10px] text-gold-dark hover:underline"
+                      >
+                        <Link2 className="w-2.5 h-2.5" />
+                        Abrir link
+                      </a>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

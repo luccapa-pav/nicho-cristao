@@ -11,6 +11,7 @@ export async function GET() {
       id: true,
       name: true,
       description: true,
+      link: true,
       maxMembers: true,
       _count: { select: { members: true } },
     },
@@ -23,6 +24,7 @@ export async function GET() {
       id: g.id,
       name: g.name,
       description: g.description,
+      link: g.link,
       memberCount: g._count.members,
       maxMembers: g.maxMembers,
       isFull: g._count.members >= g.maxMembers,
@@ -43,7 +45,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Você já faz parte de uma fraternidade" }, { status: 400 });
   }
 
-  const { name, description, isPrivate } = await req.json();
+  const { name, description, isPrivate, link } = await req.json();
 
   if (!name?.trim() || name.trim().length > 60) {
     return NextResponse.json({ error: "Nome inválido (máx. 60 caracteres)" }, { status: 400 });
@@ -63,6 +65,7 @@ export async function POST(req: NextRequest) {
         name: name.trim(),
         description: description?.trim() || null,
         isPrivate: groupIsPrivate,
+        link: link?.trim() || null,
       },
     });
     await tx.groupMember.create({
