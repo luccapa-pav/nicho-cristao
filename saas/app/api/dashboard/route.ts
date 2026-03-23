@@ -58,7 +58,7 @@ export async function GET(request: Request) {
 
     prisma.gratitudePost.findMany({
       orderBy: { createdAt: "desc" },
-      take: 20,
+      take: 10,
       include: {
         user: { select: { name: true } },
         reactions: { select: { userId: true, type: true } },

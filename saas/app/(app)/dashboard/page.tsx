@@ -111,29 +111,18 @@ export default function DashboardPage() {
   const [groupPrayers, setGroupPrayers] = useState<{ id: string; title: string; description?: string; status: string; prayedCount: number; createdAt: string; author: string }[]>([]);
 
   useEffect(() => {
-    // Phase 1: quick data (streak + devotional)
-    fetch("/api/dashboard?quick=1")
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then((d: Partial<DashboardData>) => {
-        setStreak(d.streak?.currentStreak ?? 0);
-        setCompletedToday(d.devotional?.completedToday ?? false);
-        // Phase 2: full data
-        return fetch("/api/dashboard");
-      })
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then((d: DashboardData) => {
+    Promise.all([
+      fetch("/api/dashboard").then((r) => { if (!r.ok) throw new Error(); return r.json(); }),
+      fetch("/api/prayers/group").then((r) => r.ok ? r.json() : []),
+    ])
+      .then(([d, gp]: [DashboardData, typeof groupPrayers]) => {
         setData(d);
         setStreak(d.streak?.currentStreak ?? 0);
         setCompletedToday(d.devotional?.completedToday ?? false);
+        setGroupPrayers(gp);
         if (!localStorage.getItem("notif")) setShowNotifPrompt(true);
       })
       .catch(() => setFetchError(true));
-
-    // Group prayers
-    fetch("/api/prayers/group")
-      .then((r) => r.ok ? r.json() : [])
-      .then((d) => setGroupPrayers(d))
-      .catch(() => {});
   }, []);
 
   useEffect(() => {
