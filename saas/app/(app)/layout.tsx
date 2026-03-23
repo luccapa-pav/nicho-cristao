@@ -8,9 +8,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       <Navbar />
 
       {/* Main content */}
-      <main className="flex-1 md:overflow-y-auto">
+      <main className="flex-1 md:overflow-y-auto min-w-0">
         {/* Padding top mobile para a top bar fixa */}
-        <div className="pt-14 md:pt-0 pb-20 md:pb-0">
+        <div className="pt-14 md:pt-0 pb-20 md:pb-0 min-h-full">
           {children}
         </div>
       </main>

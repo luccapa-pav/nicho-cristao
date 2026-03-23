@@ -195,7 +195,7 @@ export function Navbar() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.95 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-10 w-72 z-50"
+                  className="absolute right-0 top-10 w-[min(18rem,calc(100vw-1rem))] z-50"
                 >
                   {notifEnabled ? (
                     <div className="divine-card overflow-hidden shadow-divine">
@@ -227,7 +227,7 @@ export function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "tween", duration: 0.22 }}
-            className="md:hidden fixed top-14 right-0 bottom-0 w-64 border-l border-amber-100/60 z-20 p-5 flex flex-col gap-2"
+            className="md:hidden fixed top-14 right-0 bottom-0 w-3/4 max-w-xs border-l border-amber-100/60 z-20 p-5 flex flex-col gap-2"
             style={{ backgroundColor: "#FFFEF9" }}
           >
             {NAV_ITEMS.map(({ href, icon: Icon, label }) => {

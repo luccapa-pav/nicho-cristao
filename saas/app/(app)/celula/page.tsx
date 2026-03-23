@@ -100,7 +100,7 @@ export default function CelulaPage() {
   // Usuário já tem grupo
   if (group !== null) {
     return (
-      <div className="w-full px-6 md:px-10 py-10 md:py-14">
+      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 md:px-10 py-8 md:py-14">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="mb-8 text-center">
           <p className="text-sm font-bold uppercase tracking-[0.3em] text-gold-dark/60 mb-1">Minha Célula</p>
           <h1 className="font-serif text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
@@ -146,10 +146,10 @@ export default function CelulaPage() {
         <p className="text-lg text-slate-500 mt-2">Caminhe junto com outros irmãos na fé</p>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
 
         {/* Criar célula */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="divine-card p-8 flex flex-col gap-6">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="divine-card p-5 sm:p-6 md:p-8 flex flex-col gap-6">
           <div>
             <h2 className="font-serif text-2xl font-bold text-slate-800 text-center">Criar uma célula</h2>
             <p className="text-sm text-slate-500 text-center mt-1">Você será o líder do grupo</p>
@@ -171,7 +171,7 @@ export default function CelulaPage() {
 
             <div>
               <label className="text-base font-semibold text-slate-700 mb-2 block">
-                Descrição <span className="text-slate-400 font-normal text-sm">(opcional)</span>
+                Descrição <span className="text-slate-500 font-normal text-sm">(opcional)</span>
               </label>
               <textarea
                 value={description}

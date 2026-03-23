@@ -2,8 +2,9 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Timer, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { usePlan } from "@/hooks/usePlan";
 
 import { StreakCounter } from "@/components/ui/StreakCounter";
 import { VerseCard } from "@/components/ui/VerseCard";
@@ -97,6 +98,7 @@ function relativeTime(iso: string) {
 
 export default function DashboardPage() {
   const { data: session } = useSession();
+  const { isPremium } = usePlan();
   const [data, setData] = useState<DashboardData | null>(null);
   const [sosOpen, setSosOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
@@ -265,11 +267,11 @@ export default function DashboardPage() {
       />
 
       <div className="min-h-full relative z-10">
-        <div className="w-full px-6 md:px-16 py-6 md:py-6 space-y-8 md:space-y-8">
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-6 space-y-10">
 
           {/* Header */}
           <motion.div ref={headerRef} variants={fadeInUp} initial="hidden" animate="visible" custom={0}
-            className="relative flex flex-col items-center text-center"
+            className="relative flex flex-col items-center text-center divine-card px-8 py-8"
           >
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gold-dark mb-4">
               {new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}
@@ -303,17 +305,16 @@ export default function DashboardPage() {
           {/* Seção 01 */}
           <div>
             <div className="flex flex-col items-center text-center mb-4 gap-0.5">
-              <span className="text-[0.625rem] font-bold uppercase tracking-[0.35em] text-gold-dark/50">01</span>
               <h2 className="font-serif text-2xl md:text-3xl font-semibold text-slate-800 tracking-tight">
                 Devocional do Dia
               </h2>
               <div className="w-8 h-px bg-gold/40 mt-1" />
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={1} className="lg:col-span-1 h-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={1} className="md:col-span-1 lg:col-span-1 h-full">
                 <VerseCard verse={devotional.verse} reference={devotional.verseRef} theme={devotional.theme} />
               </motion.div>
-              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={2} className="lg:col-span-2 h-full">
+              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={2} className="md:col-span-1 lg:col-span-2 h-full">
                 <AudioPlayer
                   title={devotional.title}
                   duration={devotional.duration}
@@ -327,8 +328,8 @@ export default function DashboardPage() {
               <DevotionalHistory />
             </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={4} className="lg:col-span-1 h-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={4} className="md:col-span-1 lg:col-span-1 h-full">
                 <StreakCounter
                   days={streak}
                   longestStreak={data?.streak?.longestStreak ?? 0}
@@ -336,7 +337,7 @@ export default function DashboardPage() {
                   completedToday={completedToday}
                 />
               </motion.div>
-              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={5} className="lg:col-span-2 h-full">
+              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={5} className="md:col-span-1 lg:col-span-2 h-full">
                 {data.group ? (
                   <CellGroup
                     name={data.group.name}
@@ -374,23 +375,46 @@ export default function DashboardPage() {
 
           <div className="divine-divider" />
 
+          {/* Upsell banner — free only */}
+          {!isPremium && (
+            <motion.div
+              variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} custom={4.5}
+              className="relative overflow-hidden rounded-2xl border border-gold/40 bg-gradient-to-r from-amber-50 via-divine-50 to-amber-50 px-6 py-5 flex flex-col sm:flex-row items-center gap-4 shadow-sm"
+            >
+              {/* glow */}
+              <div className="pointer-events-none absolute inset-0 opacity-30"
+                style={{ background: "radial-gradient(ellipse at 60% 50%, rgba(212,175,55,0.25) 0%, transparent 70%)" }} />
+
+              <div className="flex-1 text-center sm:text-left">
+                <p className="font-serif text-lg font-bold text-slate-800 leading-tight">
+                  Sua fé merece ir mais fundo.
+                </p>
+                <p className="text-sm text-slate-500 mt-1">
+                  Oração guiada, planos de leitura bíblica, histórico espiritual completo — ferramentas para quem leva a fé a sério.
+                </p>
+                <p className="text-xs italic text-gold-dark mt-1.5">
+                  "Buscai primeiro o Reino de Deus." — Mt 6:33
+                </p>
+              </div>
+
+              <a
+                href="/perfil"
+                className="flex-shrink-0 btn-divine px-6 py-3 text-sm whitespace-nowrap"
+              >
+                ✦ Quero o Premium
+              </a>
+            </motion.div>
+          )}
+
           {/* Seção 02 */}
           <div>
-            <div className="flex flex-col items-center text-center mb-6 gap-1">
-              <span className="text-[0.625rem] font-bold uppercase tracking-[0.35em] text-gold-dark/50">02</span>
+            <div className="flex flex-col items-center text-center mb-6 gap-0.5">
               <h2 className="font-serif text-3xl md:text-4xl font-semibold text-slate-800 tracking-tight">
                 Oração & Comunidade
               </h2>
               <div className="w-8 h-px bg-gold/40 mt-1" />
-              <button
-                onClick={() => setTimerOpen(true)}
-                className="mt-3 flex items-center gap-2 px-6 py-3 rounded-full bg-divine-50 border border-amber-100 text-base font-semibold text-gold-dark hover:bg-divine-100 transition-colors"
-              >
-                <Timer className="w-4 h-4" />
-                Iniciar Oração
-              </button>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
               <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={5} className="h-full">
                 <PrayerList prayers={prayers} onAddPrayer={handleAddPrayer} onMarkAnswered={handleMarkAnswered} autoOpenForm={prayerFormOpen} onFormOpened={() => setPrayerFormOpen(false)} groupPrayers={groupPrayers} />
               </motion.div>
@@ -407,9 +431,9 @@ export default function DashboardPage() {
       <motion.button
         onClick={() => setSosOpen(true)}
         className="fixed bottom-20 md:bottom-8 right-4 md:right-8 z-20
-                   w-16 h-16 rounded-full shadow-divine-lg
+                   h-14 px-5 rounded-full shadow-divine-lg
                    bg-gradient-to-br from-gold to-gold-dark text-white
-                   flex items-center justify-center text-2xl
+                   flex items-center justify-center text-sm font-bold
                    hover:shadow-glow transition-shadow"
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.92 }}
@@ -421,12 +445,15 @@ export default function DashboardPage() {
         aria-label="SOS Bíblico"
         title="SOS Bíblico"
       >
-        🆘
+        🙏 SOS
       </motion.button>
 
       {showNotifPrompt && (
-        <div className="fixed bottom-24 md:bottom-10 left-4 right-4 md:left-72 md:right-8 z-40 max-w-sm">
-          <NotificationPrompt onDismiss={() => setShowNotifPrompt(false)} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setShowNotifPrompt(false)} />
+          <div className="relative w-full max-w-sm">
+            <NotificationPrompt onDismiss={() => setShowNotifPrompt(false)} />
+          </div>
         </div>
       )}
       <SOSModal open={sosOpen} onClose={() => setSosOpen(false)} onRequestPrayer={() => setPrayerFormOpen(true)} />

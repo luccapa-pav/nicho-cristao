@@ -257,7 +257,7 @@ export function PrayerList({
       </div>
 
       {/* ── Lista ── */}
-      <div className="flex flex-col gap-2 flex-1 overflow-y-auto custom-scroll pr-0.5 max-h-[32rem]">
+      <div className="flex flex-col gap-2 flex-1 overflow-y-auto custom-scroll pr-0.5 max-h-[55vh] md:max-h-[32rem]">
         <AnimatePresence initial={false}>
           {isLoading ? (
             [0, 1, 2].map((i) => (

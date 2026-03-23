@@ -207,7 +207,7 @@ export default function OracaoPage() {
             <motion.span
               animate={{ y: [0, -8, 0] }}
               transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-              className="relative text-5xl sm:text-6xl drop-shadow-md select-none z-10 py-4"
+              className="relative text-4xl sm:text-5xl md:text-6xl drop-shadow-md select-none z-10 py-4"
             >🙏</motion.span>
           </motion.div>
 
@@ -291,10 +291,10 @@ export default function OracaoPage() {
             </div>
             <button
               onClick={toggleReminder}
-              className={`relative w-14 h-8 rounded-full transition-colors ${reminderEnabled ? "bg-gold" : "bg-slate-200"}`}
+              className={`relative w-16 h-9 rounded-full transition-colors ${reminderEnabled ? "bg-gold" : "bg-slate-200"}`}
               aria-label={reminderEnabled ? "Desativar lembrete" : "Ativar lembrete"}
             >
-              <span className={`absolute top-1 w-6 h-6 rounded-full bg-white shadow transition-all ${reminderEnabled ? "left-7" : "left-1"}`} />
+              <span className={`absolute top-1 w-7 h-7 rounded-full bg-white shadow transition-all ${reminderEnabled ? "left-8" : "left-1"}`} />
             </button>
           </div>
           {reminderPermDenied && (

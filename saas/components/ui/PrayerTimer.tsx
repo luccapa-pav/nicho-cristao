@@ -289,7 +289,7 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
 
             {/* Timer circle */}
             <div className="flex flex-col items-center gap-4">
-              <div className={`relative flex items-center justify-center ${meditacao ? "w-48 h-48" : "w-32 h-32"}`}>
+              <div className={`relative flex items-center justify-center ${meditacao ? "w-40 h-40 sm:w-48 sm:h-48" : "w-32 h-32"}`}>
                 <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 120 120">
                   <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(212,175,55,0.12)" strokeWidth="8" />
                   <circle
@@ -312,7 +312,7 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
                     <span className="text-2xl">🙏</span>
                   ) : (
                     <>
-                      <span className={`font-serif font-bold text-gold tabular-nums leading-none ${meditacao ? "text-6xl" : "text-4xl"}`}>
+                      <span className={`font-serif font-bold text-gold tabular-nums leading-none ${meditacao ? "text-4xl sm:text-6xl" : "text-4xl"}`}>
                         {formatTime(remaining)}
                       </span>
                       <span className={`text-slate-400 mt-1 ${meditacao ? "text-base" : "text-sm"}`}>restante</span>

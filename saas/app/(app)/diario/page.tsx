@@ -67,7 +67,7 @@ export default function DiarioPage() {
   }, []);
 
   return (
-    <div className="w-full px-6 md:px-16 py-6 space-y-6 min-h-full relative z-10">
+    <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 md:px-10 py-6 space-y-6 min-h-full relative z-10">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-3">
@@ -180,7 +180,7 @@ export default function DiarioPage() {
                       </div>
                       <button
                         onClick={() => handleDelete(entry.id)}
-                        className="flex-shrink-0 p-1.5 text-slate-300 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                        className="flex-shrink-0 p-1.5 text-slate-300 hover:text-red-400 transition-colors"
                         aria-label="Excluir entrada"
                       >
                         <Trash2 className="w-4 h-4" />
