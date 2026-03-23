@@ -1,6 +1,7 @@
 /**
  * Gera 365 devocionais usando Gemini e salva em prisma/data/devotionals.json
  * Uso: GEMINI_API_KEY=sua_chave tsx prisma/generate-devotionals.ts
+ * Resumível: se o JSON já existir, continua de onde parou.
  */
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -17,12 +18,12 @@ const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 interface Devotional {
-  day: number; // 1–365, sendo 1 = hoje
+  day: number;
   title: string;
   verse: string;
   verseRef: string;
   theme: string;
-  reflection: string; // 2–3 frases de reflexão
+  reflection: string;
 }
 
 const THEMES = [
@@ -31,9 +32,13 @@ const THEMES = [
   "Louvor", "Renovação", "Sabedoria", "Misericórdia", "Humildade", "Perseverança", "Alegria",
 ];
 
-// Gera em lotes de 30 para não estourar o contexto
 const BATCH_SIZE = 30;
 const TOTAL = 365;
+const OUT_PATH = path.join(__dirname, "data", "devotionals.json");
+
+async function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
+}
 
 async function generateBatch(startDay: number, count: number): Promise<Devotional[]> {
   const themeList = Array.from({ length: count }, (_, i) =>
@@ -60,14 +65,11 @@ Responda APENAS com JSON válido, sem markdown, neste formato exato:
     "verseRef": "Livro Capítulo:Versículo",
     "theme": "Tema",
     "reflection": "Frase de reflexão 1. Frase de reflexão 2. Frase de reflexão 3."
-  },
-  ...
+  }
 ]`;
 
   const result = await model.generateContent(prompt);
   const text = result.response.text().trim();
-
-  // Remove possíveis blocos de markdown que o modelo às vezes inclui
   const clean = text.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
 
   try {
@@ -79,36 +81,55 @@ Responda APENAS com JSON válido, sem markdown, neste formato exato:
 }
 
 async function main() {
-  console.log("✨ Gerando 365 devocionais com Gemini...\n");
+  // Carrega progresso anterior se existir
+  let all: Devotional[] = [];
+  if (fs.existsSync(OUT_PATH)) {
+    all = JSON.parse(fs.readFileSync(OUT_PATH, "utf-8"));
+    console.log(`♻️  Retomando de onde parou — ${all.length} devocionais já gerados.\n`);
+  } else {
+    console.log("✨ Gerando 365 devocionais com Gemini...\n");
+  }
 
-  const all: Devotional[] = [];
+  const doneSet = new Set(all.map((d) => d.day));
   let day = 1;
 
   while (day <= TOTAL) {
     const count = Math.min(BATCH_SIZE, TOTAL - day + 1);
+
+    // Pula lotes já completos
+    const batchDays = Array.from({ length: count }, (_, i) => day + i);
+    if (batchDays.every((d) => doneSet.has(d))) {
+      day += count;
+      continue;
+    }
+
     process.stdout.write(`📖 Lote ${day}–${day + count - 1}... `);
 
-    try {
-      const batch = await generateBatch(day, count);
-      all.push(...batch);
-      console.log(`✅ (${batch.length} gerados)`);
-    } catch (err) {
-      console.error(`\n⚠️  Erro no lote ${day}. Tentando novamente em 5s...`);
-      await new Promise((r) => setTimeout(r, 5000));
-      const batch = await generateBatch(day, count);
-      all.push(...batch);
-      console.log(`✅ (${batch.length} gerados na 2ª tentativa)`);
+    let attempts = 0;
+    while (attempts < 4) {
+      try {
+        const batch = await generateBatch(day, count);
+        all.push(...batch);
+        batch.forEach((d) => doneSet.add(d.day));
+        // Salva após cada lote para não perder progresso
+        fs.writeFileSync(OUT_PATH, JSON.stringify(all, null, 2), "utf-8");
+        console.log(`✅ (${batch.length} gerados — total: ${all.length})`);
+        break;
+      } catch (err: unknown) {
+        attempts++;
+        const is429 = String(err).includes("429");
+        const waitSec = is429 ? 30 * attempts : 5;
+        console.error(`\n⚠️  Tentativa ${attempts}/4 falhou. Aguardando ${waitSec}s...`);
+        await sleep(waitSec * 1000);
+        if (attempts === 4) throw err;
+      }
     }
 
     day += count;
 
     // Pausa entre lotes para evitar rate limit
-    if (day <= TOTAL) await new Promise((r) => setTimeout(r, 1500));
+    if (day <= TOTAL) await sleep(8000);
   }
-
-  // Salva no arquivo
-  const outPath = path.join(__dirname, "data", "devotionals.json");
-  fs.writeFileSync(outPath, JSON.stringify(all, null, 2), "utf-8");
 
   console.log(`\n🎉 ${all.length} devocionais salvos em prisma/data/devotionals.json`);
 }

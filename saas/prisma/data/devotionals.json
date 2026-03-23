@@ -1,0 +1,2922 @@
+[
+  {
+    "day": 1,
+    "title": "Âncora da Alma",
+    "verse": "Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.",
+    "verseRef": "Provérbios 3:5",
+    "theme": "Confiança",
+    "reflection": "A confiança em Deus é a base de nossa jornada. Abandone o orgulho e entregue o controle a Ele. Ele guiará seus passos."
+  },
+  {
+    "day": 2,
+    "title": "Melodia do Coração Grato",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18",
+    "theme": "Gratidão",
+    "reflection": "A gratidão transforma a perspectiva. Reconheça as bênçãos diárias e expresse sua alegria a Deus. Um coração grato atrai mais motivos para agradecer."
+  },
+  {
+    "day": 3,
+    "title": "Farol na Escuridão",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1",
+    "theme": "Esperança",
+    "reflection": "A esperança é a âncora da alma. Mantenha a fé em meio às provações. Deus tem o controle e um futuro glorioso para você."
+  },
+  {
+    "day": 4,
+    "title": "Elo Eterno",
+    "verse": "O amor é paciente, o amor é bondoso. Não inveja, não se vangloria, não se orgulha.",
+    "verseRef": "1 Coríntios 13:4",
+    "theme": "Amor",
+    "reflection": "O amor é a essência de Deus. Ame incondicionalmente, como Cristo nos amou. Espalhe a bondade e a compaixão em cada interação."
+  },
+  {
+    "day": 5,
+    "title": "A Certeza Invisível",
+    "verse": "Porque vivemos por fé, e não por vista.",
+    "verseRef": "2 Coríntios 5:7",
+    "theme": "Fé",
+    "reflection": "Caminhe pela fé, mesmo quando não puder ver o caminho. Confie nas promessas de Deus e avance com coragem. A fé move montanhas."
+  },
+  {
+    "day": 6,
+    "title": "Sussurros ao Criador",
+    "verse": "Orai sem cessar.",
+    "verseRef": "1 Tessalonicenses 5:17",
+    "theme": "Oração",
+    "reflection": "A oração é o diálogo com Deus. Converse com Ele em todos os momentos, buscando Sua direção e força. A oração transforma vidas."
+  },
+  {
+    "day": 7,
+    "title": "Rocha Inabalável",
+    "verse": "O Senhor é a minha força e o meu escudo; nele o meu coração confia, e dele recebo ajuda.",
+    "verseRef": "Salmos 28:7",
+    "theme": "Força",
+    "reflection": "Encontre sua força em Deus. Ele é seu escudo e refúgio seguro. Confie Nele para superar os desafios da vida."
+  },
+  {
+    "day": 8,
+    "title": "Serenidade Divina",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27",
+    "theme": "Paz",
+    "reflection": "A paz de Deus excede todo o entendimento. Busque essa paz em oração e meditação na Palavra. Deixe que ela governe seu coração."
+  },
+  {
+    "day": 9,
+    "title": "Tesouro Imerecido",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós, é dom de Deus.",
+    "verseRef": "Efésios 2:8",
+    "theme": "Graça",
+    "reflection": "A graça de Deus é um presente imerecido. Receba-a com humildade e gratidão. Viva de acordo com o amor e o perdão que você recebeu."
+  },
+  {
+    "day": 10,
+    "title": "Rumo ao Destino",
+    "verse": "Porque somos feitura sua, criados em Cristo Jesus para boas obras, as quais Deus antes preparou para que andássemos nelas.",
+    "verseRef": "Efésios 2:10",
+    "theme": "Propósito",
+    "reflection": "Deus tem um propósito único para sua vida. Descubra seus dons e talentos. Use-os para servir a Ele e ao próximo."
+  },
+  {
+    "day": 11,
+    "title": "Eco da Voz Divina",
+    "verse": "Se me amardes, guardareis os meus mandamentos.",
+    "verseRef": "João 14:15",
+    "theme": "Obediência",
+    "reflection": "A obediência a Deus é uma demonstração de amor. Siga seus mandamentos e viva de acordo com a Sua vontade. A obediência traz bênçãos."
+  },
+  {
+    "day": 12,
+    "title": "Em Companhia do Eterno",
+    "verse": "Não temas, porque eu sou contigo; não te assombres, porque eu sou o teu Deus; eu te fortaleço, e te ajudo, e te sustento com a destra da minha justiça.",
+    "verseRef": "Isaías 41:10",
+    "theme": "Presença de Deus",
+    "reflection": "Deus está sempre presente em sua vida. Sinta Sua presença em cada momento, em cada decisão. Ele te fortalece e te sustenta."
+  },
+  {
+    "day": 13,
+    "title": "Resgate Glorioso",
+    "verse": "Se, com a tua boca, confessares Jesus como Senhor e, em teu coração, creres que Deus o ressuscitou dentre os mortos, serás salvo.",
+    "verseRef": "Romanos 10:9",
+    "theme": "Salvação",
+    "reflection": "A salvação é o maior presente que podemos receber. Confesse Jesus como seu Senhor e Salvador. Viva uma vida transformada pela graça."
+  },
+  {
+    "day": 14,
+    "title": "Canções Celestiais",
+    "verse": "Louvai ao Senhor, porque ele é bom; porque a sua benignidade dura para sempre.",
+    "verseRef": "Salmos 136:1",
+    "theme": "Louvor",
+    "reflection": "Louve a Deus em todos os momentos. Ele é digno de todo louvor e adoração. O louvor abre portas e traz alegria."
+  },
+  {
+    "day": 15,
+    "title": "Novo Amanhecer",
+    "verse": "Assim que, se alguém está em Cristo, nova criatura é; as coisas velhas já passaram; eis que tudo se fez novo.",
+    "verseRef": "2 Coríntios 5:17",
+    "theme": "Renovação",
+    "reflection": "Em Cristo, você é uma nova criatura. Deixe o passado para trás e abrace o futuro que Deus tem para você. A renovação é constante."
+  },
+  {
+    "day": 16,
+    "title": "Pérolas do Entendimento",
+    "verse": "O temor do Senhor é o princípio da sabedoria, e o conhecimento do Santo, a prudência.",
+    "verseRef": "Provérbios 9:10",
+    "theme": "Sabedoria",
+    "reflection": "Busque a sabedoria de Deus em todas as suas decisões. O temor do Senhor é o princípio de toda a sabedoria. Peça a Ele discernimento."
+  },
+  {
+    "day": 17,
+    "title": "O Coração Compassivo",
+    "verse": "O Senhor é misericordioso e compassivo; longânimo e grande em benignidade.",
+    "verseRef": "Salmos 103:8",
+    "theme": "Misericórdia",
+    "reflection": "A misericórdia de Deus é infinita. Receba Seu perdão e estenda a misericórdia aos outros. Seja compassivo e bondoso."
+  },
+  {
+    "day": 18,
+    "title": "Vestes da Modéstia",
+    "verse": "Humilhai-vos, pois, debaixo da potente mão de Deus, para que, a seu tempo, vos exalte.",
+    "verseRef": "1 Pedro 5:6",
+    "theme": "Humildade",
+    "reflection": "A humildade agrada a Deus. Reconheça sua dependência Dele. Ele te exaltará no tempo certo."
+  },
+  {
+    "day": 19,
+    "title": "A Corrida da Fé",
+    "verse": "Corramos com perseverança a carreira que nos está proposta, fitando os olhos em Jesus, autor e consumador da nossa fé.",
+    "verseRef": "Hebreus 12:1-2",
+    "theme": "Perseverança",
+    "reflection": "Persevere em sua jornada de fé. Mantenha os olhos fixos em Jesus. Ele te dará forças para continuar."
+  },
+  {
+    "day": 20,
+    "title": "Rios de Gozo",
+    "verse": "Regozijai-vos sempre no Senhor; outra vez digo, regozijai-vos!",
+    "verseRef": "Filipenses 4:4",
+    "theme": "Alegria",
+    "reflection": "Alegre-se sempre no Senhor. A alegria Dele é a sua força. Cultive a alegria em sua vida diária."
+  },
+  {
+    "day": 21,
+    "title": "Fortaleza Inabalável",
+    "verse": "O Senhor é bom, um refúgio em tempos de angústia. Ele conhece aqueles que nele confiam.",
+    "verseRef": "Naum 1:7",
+    "theme": "Confiança",
+    "reflection": "Confie no Senhor em todos os momentos. Ele é seu refúgio seguro. Entregue suas preocupações a Ele."
+  },
+  {
+    "day": 22,
+    "title": "Eco da Benção",
+    "verse": "Rendei graças ao Senhor, porque ele é bom; o seu amor dura para sempre.",
+    "verseRef": "Salmos 107:1",
+    "theme": "Gratidão",
+    "reflection": "Seja grato a Deus por Suas bênçãos. Expresse sua gratidão em oração e ações. Um coração grato atrai mais bênçãos."
+  },
+  {
+    "day": 23,
+    "title": "A Luz do Amanhã",
+    "verse": "Sei que o meu Redentor vive, e que no fim se levantará sobre a terra.",
+    "verseRef": "Jó 19:25",
+    "theme": "Esperança",
+    "reflection": "Mantenha a esperança em Cristo. Ele é o nosso Redentor. Ele voltará e nos levará para casa."
+  },
+  {
+    "day": 24,
+    "title": "Vínculo Sagrado",
+    "verse": "Acima de tudo, porém, revistam-se do amor, que é o elo perfeito.",
+    "verseRef": "Colossenses 3:14",
+    "theme": "Amor",
+    "reflection": "Vista-se de amor em todas as suas ações. O amor é o elo perfeito que une todas as coisas. Ame a Deus e ao próximo."
+  },
+  {
+    "day": 25,
+    "title": "A Chave Divina",
+    "verse": "Respondeu Jesus: 'Eu sou o caminho, a verdade e a vida. Ninguém vem ao Pai, a não ser por mim'.",
+    "verseRef": "João 14:6",
+    "theme": "Fé",
+    "reflection": "Jesus é o caminho, a verdade e a vida. Coloque sua fé Nele e siga Seus ensinamentos. Ele te guiará ao Pai."
+  },
+  {
+    "day": 26,
+    "title": "Comunhão Profunda",
+    "verse": "Clama a mim, e responder-te-ei, e anunciar-te-ei coisas grandes e firmes que não sabes.",
+    "verseRef": "Jeremias 33:3",
+    "theme": "Oração",
+    "reflection": "Clame a Deus em oração. Ele te ouvirá e responderá. Ele te revelará coisas grandes e maravilhosas."
+  },
+  {
+    "day": 27,
+    "title": "Escudo Protetor",
+    "verse": "O Senhor é a minha rocha, a minha fortaleza e o meu libertador; o meu Deus é o meu rochedo, em quem me refugio. Ele é o meu escudo e o poder que me salva, a minha torre alta.",
+    "verseRef": "Salmos 18:2",
+    "theme": "Força",
+    "reflection": "Deus é sua rocha, fortaleza e libertador. Refugie-se Nele em tempos de dificuldade. Ele te dará a força para vencer."
+  },
+  {
+    "day": 28,
+    "title": "Calmaria Divina",
+    "verse": "E a paz de Deus, que excede todo o entendimento, guardará o coração e a mente de vocês em Cristo Jesus.",
+    "verseRef": "Filipenses 4:7",
+    "theme": "Paz",
+    "reflection": "Busque a paz de Deus que excede todo o entendimento. Deixe que ela guarde seu coração e sua mente em Cristo Jesus. Confie Nele."
+  },
+  {
+    "day": 29,
+    "title": "Dom Inefável",
+    "verse": "Mas o dom gratuito não é como a ofensa. Pois se muitos morreram por causa da ofensa de um só, muito mais a graça de Deus, isto é, o dom de Deus, que veio por meio de um só homem, Jesus Cristo, transbordou para muitos!",
+    "verseRef": "Romanos 5:15",
+    "theme": "Graça",
+    "reflection": "A graça de Deus é um dom inefável. Receba-a com alegria e gratidão. Compartilhe a graça com os outros."
+  },
+  {
+    "day": 30,
+    "title": "Direção Divina",
+    "verse": "Em seu coração o homem planeja o seu caminho, mas o Senhor determina os seus passos.",
+    "verseRef": "Provérbios 16:9",
+    "theme": "Propósito",
+    "reflection": "Planeje seu caminho, mas confie em Deus para determinar seus passos. Busque a direção Dele em tudo o que fizer. Ele te guiará ao Seu propósito."
+  },
+  {
+    "day": 31,
+    "title": "O Eco da Obediência",
+    "verse": "Se me amardes, guardareis os meus mandamentos.",
+    "verseRef": "João 14:15",
+    "theme": "Obediência",
+    "reflection": "Amar a Deus é demonstrado pela obediência. A obediência não é fardo, mas prova de amor. Deixe seu amor transbordar em ações."
+  },
+  {
+    "day": 32,
+    "title": "O Santuário Interior",
+    "verse": "Porventura, não sabeis que o vosso corpo é o templo do Espírito Santo, que habita em vós, proveniente de Deus, e que não sois de vós mesmos?",
+    "verseRef": "1 Coríntios 6:19",
+    "theme": "Presença de Deus",
+    "reflection": "Deus habita em você! Trate seu corpo como um templo sagrado. Honre a presença divina em cada ação."
+  },
+  {
+    "day": 33,
+    "title": "A Âncora da Salvação",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós; é dom de Deus.",
+    "verseRef": "Efésios 2:8",
+    "theme": "Salvação",
+    "reflection": "A salvação é um presente, não um mérito. Receba-a com gratidão e viva em fé. Abrace a dádiva divina."
+  },
+  {
+    "day": 34,
+    "title": "Melodia do Coração Grato",
+    "verse": "Louvai ao Senhor, porque ele é bom; porque a sua benignidade dura para sempre.",
+    "verseRef": "Salmos 136:1",
+    "theme": "Louvor",
+    "reflection": "Louvar a Deus é reconhecer Sua bondade. Seu amor é eterno, motivo de celebração constante. Cante com alegria e gratidão."
+  },
+  {
+    "day": 35,
+    "title": "A Primavera da Alma",
+    "verse": "Assim que, se alguém está em Cristo, nova criatura é; as coisas velhas já passaram; eis que tudo se fez novo.",
+    "verseRef": "2 Coríntios 5:17",
+    "theme": "Renovação",
+    "reflection": "Em Cristo, somos transformados. Deixe o passado para trás e abrace o novo. Viva a renovação diária em Sua graça."
+  },
+  {
+    "day": 36,
+    "title": "Farol da Discernimento",
+    "verse": "O temor do Senhor é o princípio da sabedoria, e o conhecimento do Santo, a prudência.",
+    "verseRef": "Provérbios 9:10",
+    "theme": "Sabedoria",
+    "reflection": "A sabedoria começa com o temor a Deus. Busque conhecimento e discernimento. Caminhe com prudência e fé."
+  },
+  {
+    "day": 37,
+    "title": "Rio de Compaixão Divina",
+    "verse": "Misericordioso e piedoso é o Senhor; longânimo e grande em benignidade.",
+    "verseRef": "Salmos 103:8",
+    "theme": "Misericórdia",
+    "reflection": "Deus é misericordioso e compassivo. Ele nos ama incondicionalmente. Compartilhe Sua misericórdia com o próximo."
+  },
+  {
+    "day": 38,
+    "title": "A Coroa da Simplicidade",
+    "verse": "Humilhai-vos perante o Senhor, e ele vos exaltará.",
+    "verseRef": "Tiago 4:10",
+    "theme": "Humildade",
+    "reflection": "Humildade atrai a graça de Deus. Reconheça sua dependência Dele. Seja humilde em espírito e ação."
+  },
+  {
+    "day": 39,
+    "title": "A Maratona da Fé",
+    "verse": "Mas aquele que perseverar até ao fim será salvo.",
+    "verseRef": "Mateus 24:13",
+    "theme": "Perseverança",
+    "reflection": "A jornada cristã exige perseverança. Não desista diante dos desafios. Mantenha o foco em Cristo e siga em frente."
+  },
+  {
+    "day": 40,
+    "title": "Raio de Sol Interior",
+    "verse": "Regozijai-vos sempre no Senhor; outra vez digo: regozijai-vos.",
+    "verseRef": "Filipenses 4:4",
+    "theme": "Alegria",
+    "reflection": "Alegria verdadeira vem de Deus. Regozije-se sempre, mesmo em tempos difíceis. Deixe a alegria do Senhor brilhar em você."
+  },
+  {
+    "day": 41,
+    "title": "O Abrigo Seguro",
+    "verse": "Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.",
+    "verseRef": "Provérbios 3:5",
+    "theme": "Confiança",
+    "reflection": "Confie em Deus em todos os momentos. Não se apoie em sua própria sabedoria. Entregue seus caminhos a Ele."
+  },
+  {
+    "day": 42,
+    "title": "Coração Transbordante",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18",
+    "theme": "Gratidão",
+    "reflection": "A gratidão agrada a Deus. Seja grato por tudo, mesmo nas dificuldades. Reconheça as bênçãos diárias em sua vida."
+  },
+  {
+    "day": 43,
+    "title": "A Luz no Horizonte",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1",
+    "theme": "Esperança",
+    "reflection": "A esperança em Cristo é a nossa âncora. Creia no invisível e espere com fé. Sua esperança não será frustrada."
+  },
+  {
+    "day": 44,
+    "title": "O Elo Eterno",
+    "verse": "O amor é sofredor, é benigno; o amor não é invejoso, o amor não trata com leviandade, não se ensoberbece.",
+    "verseRef": "1 Coríntios 13:4",
+    "theme": "Amor",
+    "reflection": "O amor é a essência do cristianismo. Ame a Deus e ao próximo como a si mesmo. Que o amor seja a sua maior marca."
+  },
+  {
+    "day": 45,
+    "title": "A Chave do Impossível",
+    "verse": "Respondeu Jesus: Se podes! Tudo é possível ao que crê.",
+    "verseRef": "Marcos 9:23",
+    "theme": "Fé",
+    "reflection": "A fé remove montanhas. Creia no poder de Deus para realizar o impossível. Fortaleça sua fé através da oração e leitura da Palavra."
+  },
+  {
+    "day": 46,
+    "title": "O Diálogo Divino",
+    "verse": "Orai sem cessar.",
+    "verseRef": "1 Tessalonicenses 5:17",
+    "theme": "Oração",
+    "reflection": "A oração é a comunicação com Deus. Busque-O em oração constante. A oração transforma vidas e situações."
+  },
+  {
+    "day": 47,
+    "title": "A Fortaleza Interior",
+    "verse": "O Senhor é a minha força e o meu escudo; nele confiou o meu coração, e fui socorrido; pelo que o meu coração salta de prazer, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7",
+    "theme": "Força",
+    "reflection": "Deus é sua força em tempos de fraqueza. Confie Nele e seja fortalecido. Louve-O por Seu poder e proteção."
+  },
+  {
+    "day": 48,
+    "title": "O Jardim Tranquilo",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27",
+    "theme": "Paz",
+    "reflection": "A paz de Cristo excede todo o entendimento. Não se preocupe, confie em Deus. Permita que a paz divina acalme seu coração."
+  },
+  {
+    "day": 49,
+    "title": "A Dádiva Imerecida",
+    "verse": "Porque a graça de Deus se manifestou salvadora a todos os homens.",
+    "verseRef": "Tito 2:11",
+    "theme": "Graça",
+    "reflection": "A graça de Deus é um presente gratuito. Receba-a com humildade e gratidão. Viva de acordo com essa graça transformadora."
+  },
+  {
+    "day": 50,
+    "title": "A Bússola da Vida",
+    "verse": "Muitos propósitos há no coração do homem, mas o conselho do Senhor permanecerá.",
+    "verseRef": "Provérbios 19:21",
+    "theme": "Propósito",
+    "reflection": "Busque o propósito de Deus para sua vida. Seus planos são maiores e melhores. Deixe que Ele direcione seus passos."
+  },
+  {
+    "day": 51,
+    "title": "A Melodia da Submissão",
+    "verse": "Se estais dispostos a obedecer, comereis o melhor desta terra.",
+    "verseRef": "Isaías 1:19",
+    "theme": "Obediência",
+    "reflection": "A obediência traz bênçãos abundantes. Esteja disposto a seguir a vontade de Deus. A submissão revela um coração temente."
+  },
+  {
+    "day": 52,
+    "title": "O Refúgio Secreto",
+    "verse": "Aquele que habita no esconderijo do Altíssimo, à sombra do Onipotente descansará.",
+    "verseRef": "Salmos 91:1",
+    "theme": "Presença de Deus",
+    "reflection": "Na presença de Deus, encontramos refúgio. Busque intimidade com Ele. Descanse em Sua sombra protetora."
+  },
+  {
+    "day": 53,
+    "title": "O Resgate Divino",
+    "verse": "Vinde a mim, todos os que estais cansados e oprimidos, e eu vos aliviarei.",
+    "verseRef": "Mateus 11:28",
+    "theme": "Salvação",
+    "reflection": "Jesus oferece alívio e descanso. Entregue suas cargas a Ele. Encontre a salvação em Seus braços."
+  },
+  {
+    "day": 54,
+    "title": "A Canção da Alma",
+    "verse": "Cantai louvores ao Senhor, vós que sois seus santos, e celebrai a memória da sua santidade.",
+    "verseRef": "Salmos 30:4",
+    "theme": "Louvor",
+    "reflection": "Louvar a Deus é celebrar Sua santidade. Expresse sua adoração com alegria. Que sua vida seja um hino de louvor."
+  },
+  {
+    "day": 55,
+    "title": "Uma Nova Aurora",
+    "verse": "E renovai-vos no espírito da vossa mente.",
+    "verseRef": "Efésios 4:23",
+    "theme": "Renovação",
+    "reflection": "Renove sua mente com a Palavra de Deus. Transforme seus pensamentos e atitudes. Viva uma vida de renovação constante."
+  },
+  {
+    "day": 56,
+    "title": "O Tesouro da Prudence",
+    "verse": "Feliz é o homem que acha sabedoria, e o homem que adquire conhecimento.",
+    "verseRef": "Provérbios 3:13",
+    "theme": "Sabedoria",
+    "reflection": "A sabedoria traz felicidade e discernimento. Busque conhecimento e aplique-o com prudência. Seja sábio em todas as suas decisões."
+  },
+  {
+    "day": 57,
+    "title": "O Oceano do Perdão",
+    "verse": "Quem é Deus semelhante a ti, que perdoa a iniquidade e que passa por cima da rebelião do restante da sua herança? Ele não retém a sua ira para sempre, porque tem prazer na benignidade.",
+    "verseRef": "Miquéias 7:18",
+    "theme": "Misericórdia",
+    "reflection": "Deus é rico em misericórdia e perdão. Ele não guarda rancor, mas se alegra em perdoar. Receba Seu perdão e perdoe também."
+  },
+  {
+    "day": 58,
+    "title": "O Caminho da Exaltação",
+    "verse": "Revesti-vos, pois, como eleitos de Deus, santos e amados, de entranhas de misericórdia, de benignidade, humildade, mansidão, longanimidade.",
+    "verseRef": "Colossenses 3:12",
+    "theme": "Humildade",
+    "reflection": "Vista-se de humildade e mansidão. Seja bondoso e compassivo com os outros. A humildade agrada a Deus e atrai Sua graça."
+  },
+  {
+    "day": 59,
+    "title": "A Escalada da Vitória",
+    "verse": "Corramos com perseverança a carreira que nos está proposta.",
+    "verseRef": "Hebreus 12:1",
+    "theme": "Perseverança",
+    "reflection": "A vida cristã é uma maratona, não uma corrida de velocidade. Persevere com fé, mantendo os olhos em Jesus. A vitória está garantida."
+  },
+  {
+    "day": 60,
+    "title": "A Fonte Inesgotável",
+    "verse": "Alegrai-vos na esperança, sede pacientes na tribulação, perseverai na oração.",
+    "verseRef": "Romanos 12:12",
+    "theme": "Alegria",
+    "reflection": "Alegrem-se sempre, mesmo em tempos difíceis. A alegria do Senhor é a nossa força. A fonte da alegria é inesgotável em Cristo."
+  },
+  {
+    "day": 61,
+    "title": "Refúgio na Tempestade",
+    "verse": "Deus é o nosso refúgio e fortaleza, socorro bem presente na angústia.",
+    "verseRef": "Salmos 46:1 (ARC)",
+    "theme": "Confiança",
+    "reflection": "Confie em Deus em todos os momentos. Ele é seu porto seguro. Busque-O em oração."
+  },
+  {
+    "day": 62,
+    "title": "Corações Agradecidos",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18 (ARC)",
+    "theme": "Gratidão",
+    "reflection": "Reconheça as bênçãos diárias. A gratidão abre portas para mais bênçãos. Agradeça a Deus por tudo."
+  },
+  {
+    "day": 63,
+    "title": "Âncora da Alma",
+    "verse": "Temos essa esperança como âncora da alma, firme e segura, a qual adentra o santuário interior, por trás do véu.",
+    "verseRef": "Hebreus 6:19 (NVI)",
+    "theme": "Esperança",
+    "reflection": "Mantenha sua esperança em Cristo. Ele é a sua firmeza. Agarre-se a Ele."
+  },
+  {
+    "day": 64,
+    "title": "Vínculo Perfeito",
+    "verse": "Acima de tudo, porém, revistam-se do amor, que é o elo perfeito.",
+    "verseRef": "Colossenses 3:14 (NVI)",
+    "theme": "Amor",
+    "reflection": "O amor é a base de tudo. Ame a Deus e ao próximo. Demonstre o amor de Cristo."
+  },
+  {
+    "day": 65,
+    "title": "A Certeza que Move",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1 (ARC)",
+    "theme": "Fé",
+    "reflection": "Tenha fé em Deus e em Suas promessas. A fé te impulsiona. Creia no impossível."
+  },
+  {
+    "day": 66,
+    "title": "A Chave do Coração de Deus",
+    "verse": "Orai sem cessar.",
+    "verseRef": "1 Tessalonicenses 5:17 (ARC)",
+    "theme": "Oração",
+    "reflection": "Mantenha uma comunicação constante com Deus. A oração te fortalece. Busque a face de Deus."
+  },
+  {
+    "day": 67,
+    "title": "Escudo e Baluarte",
+    "verse": "O Senhor é a minha força e o meu escudo; nele o meu coração confia, e dele recebo ajuda. Alegre-se, pois, o meu coração, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7 (NVI)",
+    "theme": "Força",
+    "reflection": "Deus é a sua força em tempos de fraqueza. Confie n'Ele. Ele te sustentará."
+  },
+  {
+    "day": 68,
+    "title": "A Calma no Caos",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27 (ARC)",
+    "theme": "Paz",
+    "reflection": "A paz de Cristo excede todo o entendimento. Receba a paz que só Ele pode dar. Descanse em Deus."
+  },
+  {
+    "day": 69,
+    "title": "O Dom Inefável",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós, é dom de Deus.",
+    "verseRef": "Efésios 2:8 (ARC)",
+    "theme": "Graça",
+    "reflection": "A salvação é um presente de Deus. A graça te alcança. Receba a graça com alegria."
+  },
+  {
+    "day": 70,
+    "title": "Rumo ao Alvo",
+    "verse": "Prossigo para o alvo, pelo prêmio da soberana vocação de Deus em Cristo Jesus.",
+    "verseRef": "Filipenses 3:14 (ARC)",
+    "theme": "Propósito",
+    "reflection": "Descubra o propósito de Deus para sua vida. Siga em frente com determinação. Deus te guiará."
+  },
+  {
+    "day": 71,
+    "title": "Ouvir e Praticar",
+    "verse": "E sede cumpridores da palavra, e não somente ouvintes, enganando-vos a vós mesmos.",
+    "verseRef": "Tiago 1:22 (ARC)",
+    "theme": "Obediência",
+    "reflection": "Obedeça à Palavra de Deus. A obediência traz bênçãos. Viva o que você ouve."
+  },
+  {
+    "day": 72,
+    "title": "Emanuel, Deus Conosco",
+    "verse": "Eis que a virgem conceberá e dará à luz um filho, e ele será chamado Emanuel, que significa 'Deus conosco'.",
+    "verseRef": "Mateus 1:23 (NVI)",
+    "theme": "Presença de Deus",
+    "reflection": "Deus está sempre presente em sua vida. Sinta a presença Dele. Ele nunca te abandona."
+  },
+  {
+    "day": 73,
+    "title": "Libertos para a Vida",
+    "verse": "Se, pois, o Filho vos libertar, verdadeiramente sereis livres.",
+    "verseRef": "João 8:36 (ARC)",
+    "theme": "Salvação",
+    "reflection": "Cristo te liberta do pecado. A salvação é completa. Viva em liberdade."
+  },
+  {
+    "day": 74,
+    "title": "A Melodia da Alma",
+    "verse": "Louvai ao Senhor, porque ele é bom; porque a sua benignidade dura para sempre.",
+    "verseRef": "Salmos 136:1 (ARC)",
+    "theme": "Louvor",
+    "reflection": "Louve a Deus em todos os momentos. O louvor alegra o coração. Exalte o nome do Senhor."
+  },
+  {
+    "day": 75,
+    "title": "Recomeço Divino",
+    "verse": "Assim que, se alguém está em Cristo, nova criatura é; as coisas velhas já passaram; eis que tudo se fez novo.",
+    "verseRef": "2 Coríntios 5:17 (ARC)",
+    "theme": "Renovação",
+    "reflection": "Em Cristo, você é uma nova criatura. Deixe o passado para trás. Viva o novo de Deus."
+  },
+  {
+    "day": 76,
+    "title": "Tesouro Inestimável",
+    "verse": "O temor do Senhor é o princípio da sabedoria, e o conhecimento do Santo a prudência.",
+    "verseRef": "Provérbios 9:10 (ARC)",
+    "theme": "Sabedoria",
+    "reflection": "Busque a sabedoria de Deus. A sabedoria te guia no caminho certo. Temor a Deus é o princípio da sabedoria."
+  },
+  {
+    "day": 77,
+    "title": "O Amor que Perdoa",
+    "verse": "O Senhor é misericordioso e compassivo, paciente e transbordante de amor.",
+    "verseRef": "Salmos 103:8 (NVI)",
+    "theme": "Misericórdia",
+    "reflection": "Deus é cheio de misericórdia. Receba o perdão de Deus. Perdoe também."
+  },
+  {
+    "day": 78,
+    "title": "Vestidos de Mansidão",
+    "verse": "Revesti-vos, pois, como eleitos de Deus, santos e amados, de entranhas de misericórdia, de benignidade, humildade, mansidão, longanimidade.",
+    "verseRef": "Colossenses 3:12 (ARC)",
+    "theme": "Humildade",
+    "reflection": "Seja humilde em todas as situações. A humildade agrada a Deus. Reconheça suas limitações."
+  },
+  {
+    "day": 79,
+    "title": "Coragem para Seguir",
+    "verse": "Portanto nós também, pois que estamos rodeados de uma tão grande nuvem de testemunhas, deixemos todo o embaraço, e o pecado que tão de perto nos rodeia, e corramos com paciência a carreira que nos está proposta.",
+    "verseRef": "Hebreus 12:1 (ARC)",
+    "theme": "Perseverança",
+    "reflection": "Não desista diante das dificuldades. Persevere na fé. Deus te dará forças para continuar."
+  },
+  {
+    "day": 80,
+    "title": "A Canção da Alma",
+    "verse": "Regozijai-vos sempre no Senhor; outra vez digo, regozijai-vos!",
+    "verseRef": "Filipenses 4:4 (ARC)",
+    "theme": "Alegria",
+    "reflection": "Alegre-se em Deus em todos os momentos. A alegria do Senhor é a sua força. Celebre a vida com Cristo."
+  },
+  {
+    "day": 81,
+    "title": "Firme como a Rocha",
+    "verse": "O Senhor é a minha rocha, a minha fortaleza e o meu libertador; o meu Deus é o meu rochedo, em quem me refugio. Ele é o meu escudo e o poder que me salva, a minha torre alta.",
+    "verseRef": "Salmos 18:2 (NVI)",
+    "theme": "Confiança",
+    "reflection": "Confie plenamente em Deus. Ele é sua rocha e fortaleza. Refugie-se Nele."
+  },
+  {
+    "day": 82,
+    "title": "Tesouro do Coração",
+    "verse": "Cada um dê conforme determinou em seu coração, não com pesar ou por obrigação, pois Deus ama quem dá com alegria.",
+    "verseRef": "2 Coríntios 9:7 (NVI)",
+    "theme": "Gratidão",
+    "reflection": "Seja grato a Deus por tudo que Ele te dá. Compartilhe com alegria. Deus abençoa o coração grato."
+  },
+  {
+    "day": 83,
+    "title": "Luz no Caminho",
+    "verse": "Lâmpada para os meus pés é a tua palavra, e luz para o meu caminho.",
+    "verseRef": "Salmos 119:105 (ARC)",
+    "theme": "Esperança",
+    "reflection": "A Palavra de Deus ilumina seu caminho. Busque a orientação de Deus. Sua Palavra é a verdade."
+  },
+  {
+    "day": 84,
+    "title": "Elo Eterno",
+    "verse": "Ninguém jamais viu a Deus; se amarmos uns aos outros, Deus permanece em nós, e o seu amor está aperfeiçoado em nós.",
+    "verseRef": "1 João 4:12 (ARC)",
+    "theme": "Amor",
+    "reflection": "Ame a Deus e ao próximo incondicionalmente. O amor de Deus aperfeiçoa. Demonstre o amor de Cristo."
+  },
+  {
+    "day": 85,
+    "title": "Apostando no Invisível",
+    "verse": "Sem fé é impossível agradar a Deus, pois quem dele se aproxima precisa crer que ele existe e que recompensa aqueles que o buscam.",
+    "verseRef": "Hebreus 11:6 (NVI)",
+    "theme": "Fé",
+    "reflection": "Agrade a Deus com sua fé. Creia nas promessas divinas. Ele recompensa quem o busca."
+  },
+  {
+    "day": 86,
+    "title": "Conversa com o Pai",
+    "verse": "E tudo o que pedirdes em oração, crendo, recebereis.",
+    "verseRef": "Mateus 21:22 (ARC)",
+    "theme": "Oração",
+    "reflection": "Ore com fé e confiança. Deus ouve suas orações. Creia no poder da oração."
+  },
+  {
+    "day": 87,
+    "title": "Invencível em Cristo",
+    "verse": "O Senhor é a minha força e o meu escudo; nele o meu coração confia, e dele recebo ajuda. Alegre-se, pois, o meu coração, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7 (NVI)",
+    "theme": "Força",
+    "reflection": "Confie em Deus para receber força. Ele é seu escudo. Louve a Deus em todo tempo."
+  },
+  {
+    "day": 88,
+    "title": "Repouso na Alma",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27 (ARC)",
+    "theme": "Paz",
+    "reflection": "Busque a paz que só Cristo pode dar. A paz de Cristo acalma o coração. Descanse na paz de Deus."
+  },
+  {
+    "day": 89,
+    "title": "Favor Imerecido",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós; é dom de Deus.",
+    "verseRef": "Efésios 2:8 (ARC)",
+    "theme": "Graça",
+    "reflection": "A graça de Deus te alcança. Receba a salvação pela fé. Agradeça a Deus pela Sua graça."
+  },
+  {
+    "day": 90,
+    "title": "Desígnios Divinos",
+    "verse": "Muitos propósitos há no coração do homem, mas o conselho do Senhor permanecerá.",
+    "verseRef": "Provérbios 19:21 (ARC)",
+    "theme": "Propósito",
+    "reflection": "Deixe Deus guiar seus passos. O propósito de Deus prevalece. Confie nos planos de Deus."
+  },
+  {
+    "day": 91,
+    "title": "O Eco da Obediência",
+    "verse": "Se me amardes, guardareis os meus mandamentos.",
+    "verseRef": "João 14:15",
+    "theme": "Obediência",
+    "reflection": "O amor a Deus se manifesta na obediência. Que nossas ações reflitam a nossa fé. Obedecer é demonstrar amor e confiança."
+  },
+  {
+    "day": 92,
+    "title": "A Dança da Presença Divina",
+    "verse": "Chegai-vos a Deus, e ele se chegará a vós. Alimpai as mãos, pecadores; e, vós de duplo ânimo, purificai o coração.",
+    "verseRef": "Tiago 4:8",
+    "theme": "Presença de Deus",
+    "reflection": "Aproxime-se de Deus com um coração puro. Ele anseia por sua presença. Busque a intimidade com o Pai."
+  },
+  {
+    "day": 93,
+    "title": "O Resgate da Alma",
+    "verse": "Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna.",
+    "verseRef": "João 3:16",
+    "theme": "Salvação",
+    "reflection": "A salvação é um presente de Deus. Creia em Jesus e receba a vida eterna. Abrace a graça salvadora."
+  },
+  {
+    "day": 94,
+    "title": "Melodia da Gratidão",
+    "verse": "Louvai ao Senhor, porque é bom cantar louvores ao nosso Deus, porque agradável e decoroso é o louvor.",
+    "verseRef": "Salmos 147:1",
+    "theme": "Louvor",
+    "reflection": "Eleve seu coração em louvor a Deus. O louvor alegra o coração de Deus e o seu. Louve com alegria e gratidão."
+  },
+  {
+    "day": 95,
+    "title": "Renascer da Esperança",
+    "verse": "E, assim, se alguém está em Cristo, é nova criatura; as coisas antigas já passaram; eis que se fizeram novas.",
+    "verseRef": "2 Coríntios 5:17",
+    "theme": "Renovação",
+    "reflection": "Em Cristo, você é uma nova criatura. Deixe o passado para trás e abrace o futuro. Abrace a renovação que Cristo oferece."
+  },
+  {
+    "day": 96,
+    "title": "A Pérola da Sabedoria",
+    "verse": "O temor do Senhor é o princípio da sabedoria, e o conhecimento do Santo a prudência.",
+    "verseRef": "Provérbios 9:10",
+    "theme": "Sabedoria",
+    "reflection": "A sabedoria começa no temor do Senhor. Busque a sabedoria em Deus. Deixe que Deus guie suas decisões."
+  },
+  {
+    "day": 97,
+    "title": "O Oceano da Compaixão",
+    "verse": "Mas tu, Senhor, és um Deus cheio de compaixão, e piedoso, sofredor de longanimidade, e grande em benignidade e em verdade.",
+    "verseRef": "Salmos 86:15",
+    "theme": "Misericórdia",
+    "reflection": "Deus é cheio de compaixão e misericórdia. Receba o Seu amor e perdoe como Ele perdoa. Compartilhe a misericórdia com os outros."
+  },
+  {
+    "day": 98,
+    "title": "A Coroa da Humildade",
+    "verse": "Humilhai-vos, pois, debaixo da potente mão de Deus, para que, a seu tempo, vos exalte.",
+    "verseRef": "1 Pedro 5:6",
+    "theme": "Humildade",
+    "reflection": "Humilhe-se diante de Deus e Ele te exaltará. A humildade agrada a Deus. Reconheça a sua dependência de Deus."
+  },
+  {
+    "day": 99,
+    "title": "A Sinfonia da Resiliência",
+    "verse": "Mas aquele que perseverar até ao fim será salvo.",
+    "verseRef": "Mateus 24:13",
+    "theme": "Perseverança",
+    "reflection": "Persevere na fé, mesmo nas dificuldades. A recompensa da perseverança é a salvação. Mantenha o foco em Cristo."
+  },
+  {
+    "day": 100,
+    "title": "O Sol da Alegria",
+    "verse": "Regozijai-vos sempre no Senhor; outra vez digo, regozijai-vos.",
+    "verseRef": "Filipenses 4:4",
+    "theme": "Alegria",
+    "reflection": "Encontre alegria no Senhor, sempre. A alegria do Senhor é a nossa força. Deixe a alegria de Deus transbordar em sua vida."
+  },
+  {
+    "day": 101,
+    "title": "Âncora Inabalável",
+    "verse": "Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.",
+    "verseRef": "Provérbios 3:5",
+    "theme": "Confiança",
+    "reflection": "Confie em Deus de todo o seu coração. Não dependa apenas do seu próprio entendimento. Ele guiará os seus passos."
+  },
+  {
+    "day": 102,
+    "title": "O Jardim da Gratidão",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18",
+    "theme": "Gratidão",
+    "reflection": "Seja grato em todas as circunstâncias. A gratidão agrada a Deus. Reconheça as bênçãos em sua vida."
+  },
+  {
+    "day": 103,
+    "title": "A Aurora da Esperança",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1",
+    "theme": "Esperança",
+    "reflection": "Mantenha a esperança viva em seu coração. A fé é a base da esperança. Espere com confiança no Senhor."
+  },
+  {
+    "day": 104,
+    "title": "A Chama do Amor Divino",
+    "verse": "O amor é paciente, o amor é bondoso. Não inveja, não se vangloria, não se orgulha.",
+    "verseRef": "1 Coríntios 13:4",
+    "theme": "Amor",
+    "reflection": "Deixe o amor de Deus guiar suas ações. Ame com paciência e bondade. Que o amor seja a marca de sua vida."
+  },
+  {
+    "day": 105,
+    "title": "As Asas da Fé",
+    "verse": "Porque vivemos por fé, e não por vista.",
+    "verseRef": "2 Coríntios 5:7",
+    "theme": "Fé",
+    "reflection": "Viva pela fé, não pelas aparências. A fé agrada a Deus. Confie em Deus, mesmo quando não puder ver."
+  },
+  {
+    "day": 106,
+    "title": "O Silêncio da Oração",
+    "verse": "Orai sem cessar.",
+    "verseRef": "1 Tessalonicenses 5:17",
+    "theme": "Oração",
+    "reflection": "Mantenha um coração em oração constante. A oração te conecta a Deus. Busque a Deus em oração."
+  },
+  {
+    "day": 107,
+    "title": "A Fortaleza Interior",
+    "verse": "O Senhor é a minha força e o meu escudo; nele confiou o meu coração, e fui socorrido; pelo que o meu coração salta de prazer, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7",
+    "theme": "Força",
+    "reflection": "Deus é a sua força e proteção. Confie Nele e Ele te ajudará. Louve a Deus pela força que Ele te dá."
+  },
+  {
+    "day": 108,
+    "title": "O Jardim Secreto da Paz",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27",
+    "theme": "Paz",
+    "reflection": "Receba a paz que Jesus te oferece. Não se preocupe, confie em Deus. Deixe a paz de Cristo governar seu coração."
+  },
+  {
+    "day": 109,
+    "title": "O Rastro da Graça",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós, é dom de Deus.",
+    "verseRef": "Efésios 2:8",
+    "theme": "Graça",
+    "reflection": "A salvação é um presente da graça de Deus. Receba este presente com gratidão. Viva na graça de Deus."
+  },
+  {
+    "day": 110,
+    "title": "O Mapa do Propósito",
+    "verse": "Porque somos feitura sua, criados em Cristo Jesus para as boas obras, as quais Deus preparou para que andássemos nelas.",
+    "verseRef": "Efésios 2:10",
+    "theme": "Propósito",
+    "reflection": "Você foi criado com um propósito especial. Descubra o plano de Deus para sua vida. Viva o seu propósito com alegria."
+  },
+  {
+    "day": 111,
+    "title": "A Canção da Submissão",
+    "verse": "Portanto, sujeitai-vos a Deus, resisti ao diabo, e ele fugirá de vós.",
+    "verseRef": "Tiago 4:7",
+    "theme": "Obediência",
+    "reflection": "Submeta-se a Deus em todas as áreas da sua vida. Resistir ao diabo é obedecer a Deus. A obediência traz vitória sobre o mal."
+  },
+  {
+    "day": 112,
+    "title": "O Abraço Onipresente",
+    "verse": "Para onde me irei do teu Espírito, ou para onde fugirei da tua face? Se subir ao céu, tu aí estás; se fizer no Sheol a minha cama, eis que tu ali estás também.",
+    "verseRef": "Salmos 139:7-8",
+    "theme": "Presença de Deus",
+    "reflection": "Deus está sempre presente em sua vida. Não importa onde você esteja, Ele está lá. Sinta o abraço da presença divina."
+  },
+  {
+    "day": 113,
+    "title": "O Farol da Redenção",
+    "verse": "Se confessarmos os nossos pecados, ele é fiel e justo para nos perdoar os pecados e nos purificar de toda injustiça.",
+    "verseRef": "1 João 1:9",
+    "theme": "Salvação",
+    "reflection": "Confesse seus pecados a Deus e Ele te perdoará. A salvação é um processo contínuo de confissão e perdão. Caminhe na luz da redenção."
+  },
+  {
+    "day": 114,
+    "title": "A Celebração Divina",
+    "verse": "Cantai louvores a Deus, cantai louvores; cantai louvores ao nosso Rei, cantai louvores.",
+    "verseRef": "Salmos 47:6",
+    "theme": "Louvor",
+    "reflection": "Louvar a Deus é celebrar a Sua grandeza. Exalte o nome do Senhor com alegria. Que seu louvor seja uma oferta agradável a Deus."
+  },
+  {
+    "day": 115,
+    "title": "A Alvorada do Espírito",
+    "verse": "Não pelas obras de justiça que houvéssemos feito, mas segundo a sua misericórdia, nos salvou pela lavagem da regeneração e da renovação do Espírito Santo,",
+    "verseRef": "Tito 3:5",
+    "theme": "Renovação",
+    "reflection": "A renovação vem do Espírito Santo. Deixe o Espírito Santo te transformar. Seja renovado diariamente pelo poder do Espírito."
+  },
+  {
+    "day": 116,
+    "title": "O Tesouro da Discernimento",
+    "verse": "Se algum de vós tem falta de sabedoria, peça-a a Deus, que a todos dá liberalmente e não censura, e ser-lhe-á dada.",
+    "verseRef": "Tiago 1:5",
+    "theme": "Sabedoria",
+    "reflection": "Peça sabedoria a Deus e Ele te dará. Deus dá sabedoria a quem pede com fé. Busque a sabedoria divina em todas as decisões."
+  },
+  {
+    "day": 117,
+    "title": "A Fonte Inesgotável de Bondade",
+    "verse": "O Senhor é longânimo e grande em benignidade, que perdoa a iniquidade e a transgressão, ainda que não inocenta totalmente o culpado;...",
+    "verseRef": "Números 14:18",
+    "theme": "Misericórdia",
+    "reflection": "A misericórdia de Deus é grande e abundante. Ele perdoa os nossos pecados. Busque o perdão e a misericórdia de Deus."
+  },
+  {
+    "day": 118,
+    "title": "O Espelho da Modéstia",
+    "verse": "Revesti-vos, pois, como eleitos de Deus, santos e amados, de entranhas de misericórdia, de benignidade, humildade, mansidão, longanimidade,",
+    "verseRef": "Colossenses 3:12",
+    "theme": "Humildade",
+    "reflection": "Vista-se de humildade em todas as suas ações. A humildade agrada a Deus e edifica o próximo. Seja humilde e manso de coração."
+  },
+  {
+    "day": 119,
+    "title": "A Maratona da Esperança",
+    "verse": "Sede, pois, pacientes, irmãos, até à vinda do Senhor. Eis que o lavrador espera o precioso fruto da terra, aguardando-o com paciência, até que receba a chuva temporã e a serôdia.",
+    "verseRef": "Tiago 5:7",
+    "theme": "Perseverança",
+    "reflection": "Seja paciente e perseverante na fé. Espere com paciência pela vinda do Senhor. A recompensa virá no tempo certo."
+  },
+  {
+    "day": 120,
+    "title": "O Coro Celestial da Exultação",
+    "verse": "Até agora nada pedistes em meu nome; pedi, e recebereis, para que a vossa alegria seja completa.",
+    "verseRef": "João 16:24",
+    "theme": "Alegria",
+    "reflection": "Peça a Deus em nome de Jesus e Ele te responderá. A alegria completa vem de Deus. Receba a alegria que vem do Senhor."
+  },
+  {
+    "day": 121,
+    "title": "Farol da Confiança",
+    "verse": "Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.",
+    "verseRef": "Provérbios 3:5",
+    "theme": "Confiança",
+    "reflection": "Abra mão do controle e entregue suas preocupações a Deus. Ele te guiará em cada passo. Confie no plano Dele, mesmo quando não entender."
+  },
+  {
+    "day": 122,
+    "title": "Cântico da Alma Grata",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18",
+    "theme": "Gratidão",
+    "reflection": "Reconheça as bênçãos diárias, grandes ou pequenas. Um coração grato atrai mais motivos para agradecer. A gratidão transforma a perspectiva da vida."
+  },
+  {
+    "day": 123,
+    "title": "Âncora da Esperança Viva",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam, e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1",
+    "theme": "Esperança",
+    "reflection": "Mantenha a esperança acesa, pois a fé a sustenta. Creia no poder de Deus para realizar o impossível. A esperança é a luz no fim do túnel."
+  },
+  {
+    "day": 124,
+    "title": "Elo do Amor Divino",
+    "verse": "O amor é sofredor, é benigno; o amor não é invejoso; o amor não trata com leviandade, não se ensoberbece.",
+    "verseRef": "1 Coríntios 13:4",
+    "theme": "Amor",
+    "reflection": "Ame como Cristo amou, com paciência e bondade. Deixe o amor guiar suas ações e palavras. O amor é a maior força transformadora."
+  },
+  {
+    "day": 125,
+    "title": "Escudo da Fé Inabalável",
+    "verse": "Porque todo o que é nascido de Deus vence o mundo; e esta é a vitória que vence o mundo: a nossa fé.",
+    "verseRef": "1 João 5:4",
+    "theme": "Fé",
+    "reflection": "A fé em Deus te fortalece para superar os desafios. Confie que Ele está no controle, mesmo nas provações. A fé te leva à vitória."
+  },
+  {
+    "day": 126,
+    "title": "Santuário da Oração Fervorosa",
+    "verse": "Orai sem cessar.",
+    "verseRef": "1 Tessalonicenses 5:17",
+    "theme": "Oração",
+    "reflection": "Converse com Deus em todos os momentos do seu dia. A oração te conecta com o Pai e te traz paz. A oração é a chave da vitória."
+  },
+  {
+    "day": 127,
+    "title": "Fortaleza da Alma Resiliente",
+    "verse": "O Senhor é a minha força e o meu escudo; nele confiou o meu coração, e fui socorrido; pelo que o meu coração salta de prazer, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7",
+    "theme": "Força",
+    "reflection": "Encontre sua força em Deus, Ele é o seu refúgio seguro. Confie Nele e Ele te dará a força para seguir. Louve a Ele em todos os momentos."
+  },
+  {
+    "day": 128,
+    "title": "Oásis da Paz Interior",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27",
+    "theme": "Paz",
+    "reflection": "A paz de Cristo excede todo o entendimento. Busque a paz interior através da oração e da meditação na Palavra. Não se deixe abalar pelas tribulações do mundo."
+  },
+  {
+    "day": 129,
+    "title": "Rio da Graça Transbordante",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós, é dom de Deus.",
+    "verseRef": "Efésios 2:8",
+    "theme": "Graça",
+    "reflection": "A salvação é um presente da graça de Deus. Receba esse presente com alegria e gratidão. Viva em gratidão pela graça recebida."
+  },
+  {
+    "day": 130,
+    "title": "Bússola do Propósito Divino",
+    "verse": "Porque somos feitura sua, criados em Cristo Jesus para as boas obras, as quais Deus preparou para que andássemos nelas.",
+    "verseRef": "Efésios 2:10",
+    "theme": "Propósito",
+    "reflection": "Deus tem um propósito único para sua vida. Descubra seus talentos e use-os para servir ao Reino. Busque a vontade de Deus em tudo que fizer."
+  },
+  {
+    "day": 131,
+    "title": "Caminho da Obediência Feliz",
+    "verse": "Se me amardes, guardareis os meus mandamentos.",
+    "verseRef": "João 14:15",
+    "theme": "Obediência",
+    "reflection": "A obediência a Deus é uma demonstração de amor. Siga os mandamentos de Deus com alegria e sinceridade. A obediência te aproxima de Deus."
+  },
+  {
+    "day": 132,
+    "title": "Presença Divina Constante",
+    "verse": "Não te deixarei, nem te desampararei.",
+    "verseRef": "Hebreus 13:5",
+    "theme": "Presença de Deus",
+    "reflection": "Deus está sempre presente em sua vida, te guiando e protegendo. Sinta a presença Dele em cada momento, bom ou ruim. Confie que Ele nunca te abandonará."
+  },
+  {
+    "day": 133,
+    "title": "Porta da Salvação Eterna",
+    "verse": "Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna.",
+    "verseRef": "João 3:16",
+    "theme": "Salvação",
+    "reflection": "A salvação em Cristo é o maior presente que podemos receber. Creia em Jesus e receba a vida eterna. Compartilhe essa boa notícia com o mundo."
+  },
+  {
+    "day": 134,
+    "title": "Melodia do Louvor Contínuo",
+    "verse": "Louvai ao Senhor, porque ele é bom; porque a sua benignidade dura para sempre.",
+    "verseRef": "Salmos 136:1",
+    "theme": "Louvor",
+    "reflection": "Louvar a Deus é reconhecer Sua grandeza e bondade. Louve a Ele em todos os momentos, com alegria e gratidão. O louvor eleva o espírito e fortalece a fé."
+  },
+  {
+    "day": 135,
+    "title": "Manhã da Renovação Espiritual",
+    "verse": "Renovai-vos, pois, no espírito da vossa mente.",
+    "verseRef": "Efésios 4:23",
+    "theme": "Renovação",
+    "reflection": "Permita que Deus renove sua mente e coração diariamente. Abandone velhos hábitos e abrace uma nova vida em Cristo. Busque a renovação espiritual através da oração e da Palavra."
+  },
+  {
+    "day": 136,
+    "title": "Tesouro da Sabedoria Divina",
+    "verse": "O temor do Senhor é o princípio da sabedoria, e o conhecimento do Santo a prudência.",
+    "verseRef": "Provérbios 9:10",
+    "theme": "Sabedoria",
+    "reflection": "Busque a sabedoria de Deus em todas as decisões. O temor do Senhor te guiará no caminho certo. A sabedoria divina te protege e te abençoa."
+  },
+  {
+    "day": 137,
+    "title": "Abraço da Misericórdia Infinita",
+    "verse": "O Senhor é longânimo e grande em misericórdia; que perdoa a iniqüidade e a transgressão, que de maneira nenhuma terá por inocente o culpado; que visita a iniqüidade dos pais sobre os filhos até à terceira e quarta geração.",
+    "verseRef": "Números 14:18",
+    "theme": "Misericórdia",
+    "reflection": "A misericórdia de Deus é infinita e alcança a todos que se arrependem. Confie na misericórdia divina para perdoar seus pecados. Seja misericordioso com os outros, assim como Deus é com você."
+  },
+  {
+    "day": 138,
+    "title": "Vestes da Humildade Genuína",
+    "verse": "Humilhai-vos, pois, debaixo da potente mão de Deus, para que, a seu tempo, vos exalte.",
+    "verseRef": "1 Pedro 5:6",
+    "theme": "Humildade",
+    "reflection": "Seja humilde diante de Deus e dos outros. A humildade te leva a reconhecer suas fraquezas e a depender de Deus. Deus exalta os humildes de coração."
+  },
+  {
+    "day": 139,
+    "title": "Jornada da Perseverança Cristã",
+    "verse": "Mas aquele que perseverar até ao fim será salvo.",
+    "verseRef": "Mateus 24:13",
+    "theme": "Perseverança",
+    "reflection": "Mantenha-se firme na fé, mesmo diante das dificuldades. Persevere na caminhada cristã, confiando na promessa de salvação. A perseverança te leva à vitória final."
+  },
+  {
+    "day": 140,
+    "title": "Celebração da Alegria em Cristo",
+    "verse": "Regozijai-vos sempre no Senhor; outra vez digo, regozijai-vos.",
+    "verseRef": "Filipenses 4:4",
+    "theme": "Alegria",
+    "reflection": "Encontre sua alegria em Cristo, a fonte de toda felicidade. Regozije-se em Deus, mesmo nas tribulações. A alegria do Senhor é a sua força."
+  },
+  {
+    "day": 141,
+    "title": "Abrigo da Confiança Plena",
+    "verse": "Em Deus pus a minha confiança, não temerei; que me pode fazer o homem?",
+    "verseRef": "Salmos 56:11",
+    "theme": "Confiança",
+    "reflection": "Confie em Deus em todas as circunstâncias da vida. Não tema as adversidades, pois Deus está contigo. A confiança em Deus te dará paz e segurança."
+  },
+  {
+    "day": 142,
+    "title": "Hino da Gratidão Eterna",
+    "verse": "Rendei graças ao Senhor, porque ele é bom; porque a sua misericórdia dura para sempre.",
+    "verseRef": "Salmos 107:1",
+    "theme": "Gratidão",
+    "reflection": "Seja grato a Deus por todas as bênçãos recebidas. Reconheça a Sua bondade e misericórdia em sua vida. A gratidão transforma o coração e atrai mais bênçãos."
+  },
+  {
+    "day": 143,
+    "title": "Luz da Esperança Radiante",
+    "verse": "Espera no Senhor, anima-te, e ele fortalecerá o teu coração; espera, pois, no Senhor.",
+    "verseRef": "Salmos 27:14",
+    "theme": "Esperança",
+    "reflection": "Espere em Deus com paciência e confiança. Ele fortalecerá seu coração e te dará a vitória. A esperança em Deus é a âncora da alma."
+  },
+  {
+    "day": 144,
+    "title": "Vínculo do Amor Fraternal",
+    "verse": "Nisto todos conhecerão que sois meus discípulos, se vos amardes uns aos outros.",
+    "verseRef": "João 13:35",
+    "theme": "Amor",
+    "reflection": "Ame seus irmãos em Cristo com sinceridade e compaixão. Demonstre o amor de Deus através de suas ações. O amor fraterno é um testemunho poderoso."
+  },
+  {
+    "day": 145,
+    "title": "Alicerce da Fé Verdadeira",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1 (NVI)",
+    "theme": "Fé",
+    "reflection": "A fé é acreditar naquilo que não vemos, mas que sabemos que é real. Confie em Deus, mesmo quando as circunstâncias forem contrárias. A fé move montanhas."
+  },
+  {
+    "day": 146,
+    "title": "Diálogo da Oração Sincera",
+    "verse": "Clama a mim, e responder-te-ei e anunciar-te-ei coisas grandes e firmes, que não sabes.",
+    "verseRef": "Jeremias 33:3",
+    "theme": "Oração",
+    "reflection": "Ore a Deus com sinceridade e Ele te responderá. Busque a face do Senhor em oração e Ele te revelará Seus mistérios. A oração é o caminho para a intimidade com Deus."
+  },
+  {
+    "day": 147,
+    "title": "Fonte da Força Inesgotável",
+    "verse": "O Senhor Deus é a minha força, e fará os meus pés como os das cervas, e me fará andar sobre as minhas alturas.",
+    "verseRef": "Habacuque 3:19",
+    "theme": "Força",
+    "reflection": "Deus é a sua força, mesmo quando você se sente fraco. Ele te capacitará para superar qualquer obstáculo. Confie no poder de Deus e siga em frente."
+  },
+  {
+    "day": 148,
+    "title": "Refúgio da Paz Sublime",
+    "verse": "Tu conservarás em perfeita paz aquele cujo propósito é firme; porque ele confia em ti.",
+    "verseRef": "Isaías 26:3",
+    "theme": "Paz",
+    "reflection": "Mantenha seus pensamentos fixos em Deus e Ele te dará paz. Confie em Deus em todas as situações. A paz de Deus excede todo o entendimento."
+  },
+  {
+    "day": 149,
+    "title": "Caminho da Graça Imerecida",
+    "verse": "Porque a lei foi dada por Moisés; a graça e a verdade vieram por Jesus Cristo.",
+    "verseRef": "João 1:17",
+    "theme": "Graça",
+    "reflection": "A graça de Deus é um presente imerecido que recebemos através de Jesus Cristo. Viva em gratidão pela graça que te alcançou. A graça te liberta e te transforma."
+  },
+  {
+    "day": 150,
+    "title": "Mapa do Propósito Eterno",
+    "verse": "Muitos propósitos há no coração do homem, mas o conselho do Senhor permanecerá.",
+    "verseRef": "Provérbios 19:21",
+    "theme": "Propósito",
+    "reflection": "Busque o propósito de Deus para sua vida e siga Seus planos. Confie que o conselho do Senhor permanecerá para sempre. Deus te guiará no caminho certo."
+  },
+  {
+    "day": 151,
+    "title": "O Eco da Obediência",
+    "verse": "Se me amardes, guardareis os meus mandamentos.",
+    "verseRef": "João 14:15",
+    "theme": "Obediência",
+    "reflection": "A obediência é a prova do nosso amor por Cristo. Que nossas ações reflitam a nossa fé. Obedecer é um ato de adoração."
+  },
+  {
+    "day": 152,
+    "title": "O Abrigo da Presença Divina",
+    "verse": "Em tua presença há abundância de alegria; à tua mão direita há delícias perpetuamente.",
+    "verseRef": "Salmos 16:11",
+    "theme": "Presença de Deus",
+    "reflection": "Busque a presença de Deus em todos os momentos. Nela encontramos alegria e paz. Deixe que Ele te guie."
+  },
+  {
+    "day": 153,
+    "title": "A Âncora da Salvação",
+    "verse": "Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna.",
+    "verseRef": "João 3:16",
+    "theme": "Salvação",
+    "reflection": "A salvação é um presente de Deus, recebido pela fé em Jesus. Abrace essa dádiva e viva em Sua graça. Anuncie o amor de Cristo."
+  },
+  {
+    "day": 154,
+    "title": "Sinfonia de Louvor",
+    "verse": "Louvai ao Senhor, porque ele é bom; porque a sua misericórdia dura para sempre.",
+    "verseRef": "Salmos 136:1",
+    "theme": "Louvor",
+    "reflection": "Eleve seu louvor a Deus por Sua bondade e misericórdia. Reconheça Suas obras em sua vida. Que sua vida seja um hino a Ele."
+  },
+  {
+    "day": 155,
+    "title": "Ressurreição Interior",
+    "verse": "Portanto, se alguém está em Cristo, nova criatura é; as coisas velhas já passaram; eis que tudo se fez novo.",
+    "verseRef": "2 Coríntios 5:17",
+    "theme": "Renovação",
+    "reflection": "Em Cristo, somos transformados e renovados. Deixe o passado para trás e abrace o novo. Caminhe em novidade de vida."
+  },
+  {
+    "day": 156,
+    "title": "Tesouros da Sabedoria",
+    "verse": "O temor do Senhor é o princípio da sabedoria; bom entendimento têm todos os que cumprem os seus preceitos; o seu louvor permanece para sempre.",
+    "verseRef": "Salmos 111:10",
+    "theme": "Sabedoria",
+    "reflection": "Busque a sabedoria de Deus em todas as suas decisões. O temor do Senhor é o caminho. Confie na Sua direção."
+  },
+  {
+    "day": 157,
+    "title": "O Rio da Misericórdia",
+    "verse": "Misericordioso e piedoso é o Senhor; tardio em irar-se e grande em benignidade.",
+    "verseRef": "Salmos 103:8",
+    "theme": "Misericórdia",
+    "reflection": "Abrace a misericórdia de Deus, que se renova a cada dia. Seja também misericordioso com os outros. Perdoe e ame."
+  },
+  {
+    "day": 158,
+    "title": "A Coroa da Humildade",
+    "verse": "Humilhai-vos, pois, debaixo da potente mão de Deus, para que, a seu tempo, vos exalte.",
+    "verseRef": "1 Pedro 5:6",
+    "theme": "Humildade",
+    "reflection": "A humildade nos leva a reconhecer nossa dependência de Deus. Ele exalta os humildes de coração. Sirva com amor."
+  },
+  {
+    "day": 159,
+    "title": "A Dança da Perseverança",
+    "verse": "Mas aquele que perseverar até ao fim será salvo.",
+    "verseRef": "Mateus 24:13",
+    "theme": "Perseverança",
+    "reflection": "Não desista, mesmo diante das dificuldades. Persevere na fé e na busca por Deus. A recompensa virá."
+  },
+  {
+    "day": 160,
+    "title": "O Sol da Alegria",
+    "verse": "Regozijai-vos sempre no Senhor; outra vez digo: regozijai-vos.",
+    "verseRef": "Filipenses 4:4",
+    "theme": "Alegria",
+    "reflection": "Encontre alegria em Deus, em todas as circunstâncias. A alegria do Senhor é a nossa força. Compartilhe essa alegria."
+  },
+  {
+    "day": 161,
+    "title": "O Escudo da Confiança",
+    "verse": "Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.",
+    "verseRef": "Provérbios 3:5",
+    "theme": "Confiança",
+    "reflection": "Confie em Deus, mesmo quando não entender os Seus planos. Ele sabe o que é melhor para você. Entregue-se a Ele."
+  },
+  {
+    "day": 162,
+    "title": "A Melodia da Gratidão",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18",
+    "theme": "Gratidão",
+    "reflection": "Seja grato a Deus por todas as bênçãos em sua vida. A gratidão abre portas para mais bênçãos. Reconheça o Seu amor."
+  },
+  {
+    "day": 163,
+    "title": "O Farol da Esperança",
+    "verse": "Ora, a esperança não confunde, porque o amor de Deus é derramado em nosso coração pelo Espírito Santo que nos foi dado.",
+    "verseRef": "Romanos 5:5",
+    "theme": "Esperança",
+    "reflection": "Mantenha a esperança em Deus, mesmo em tempos difíceis. O amor de Deus é a base da nossa esperança. Creia no futuro."
+  },
+  {
+    "day": 164,
+    "title": "A Ponte do Amor",
+    "verse": "O amor é paciente, o amor é bondoso. Não inveja, não se vangloria, não se orgulha.",
+    "verseRef": "1 Coríntios 13:4",
+    "theme": "Amor",
+    "reflection": "Ame como Cristo amou, com paciência e bondade. O amor verdadeiro edifica e transforma. Seja um canal do amor de Deus."
+  },
+  {
+    "day": 165,
+    "title": "A Rocha da Fé",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1",
+    "theme": "Fé",
+    "reflection": "A fé é a certeza de que Deus cumprirá Suas promessas. Creia, mesmo quando não vir. Confie no poder de Deus."
+  },
+  {
+    "day": 166,
+    "title": "O Elo da Oração",
+    "verse": "Orai sem cessar.",
+    "verseRef": "1 Tessalonicenses 5:17",
+    "theme": "Oração",
+    "reflection": "Mantenha uma comunicação constante com Deus através da oração. Ele ouve e responde às suas orações. Ore com fé."
+  },
+  {
+    "day": 167,
+    "title": "A Muralha da Força",
+    "verse": "O Senhor é a minha força e o meu escudo; nele confiou o meu coração, e fui socorrido; pelo que o meu coração salta de prazer, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7",
+    "theme": "Força",
+    "reflection": "Encontre força em Deus, Ele é o seu refúgio seguro. Confie nEle em todas as situações. Ele te sustentará."
+  },
+  {
+    "day": 168,
+    "title": "O Oásis da Paz",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27",
+    "theme": "Paz",
+    "reflection": "Receba a paz de Cristo, que excede todo o entendimento. Confie nEle em meio às tempestades. Deixe que Ele acalme seu coração."
+  },
+  {
+    "day": 169,
+    "title": "O Jardim da Graça",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós, é dom de Deus.",
+    "verseRef": "Efésios 2:8",
+    "theme": "Graça",
+    "reflection": "A salvação é um presente da graça de Deus. Abrace essa graça e viva em Sua liberdade. Seja grato por Sua bondade."
+  },
+  {
+    "day": 170,
+    "title": "A Bússola do Propósito",
+    "verse": "Porque somos feitura sua, criados em Cristo Jesus para as boas obras, as quais Deus preparou para que andássemos nelas.",
+    "verseRef": "Efésios 2:10",
+    "theme": "Propósito",
+    "reflection": "Deus tem um propósito para sua vida. Descubra e cumpra o Seu chamado. Sirva com alegria e paixão."
+  },
+  {
+    "day": 171,
+    "title": "A Doce Canção da Obediência",
+    "verse": "Se guardardes os meus mandamentos, permanecereis no meu amor; assim como também eu tenho guardado os mandamentos de meu Pai e permaneço no seu amor.",
+    "verseRef": "João 15:10",
+    "theme": "Obediência",
+    "reflection": "A obediência nos conecta ao amor de Deus. Permaneça em Seu amor através da obediência. Que Seu amor te motive a obedecer."
+  },
+  {
+    "day": 172,
+    "title": "Um Encontro na Presença",
+    "verse": "Cheguem-se a Deus, e ele se chegará a vocês.",
+    "verseRef": "Tiago 4:8a",
+    "theme": "Presença de Deus",
+    "reflection": "Aproxime-se de Deus em oração e meditação. Ele anseia por um relacionamento íntimo contigo. Experimente a Sua proximidade."
+  },
+  {
+    "day": 173,
+    "title": "Um Tesouro Inestimável: A Salvação",
+    "verse": "E em nenhum outro há salvação, porque também debaixo do céu nenhum outro nome há, dado entre os homens, pelo qual devamos ser salvos.",
+    "verseRef": "Atos 4:12",
+    "theme": "Salvação",
+    "reflection": "A salvação é encontrada somente em Jesus Cristo. Ele é o único caminho para a vida eterna. Anuncie essa verdade libertadora."
+  },
+  {
+    "day": 174,
+    "title": "Um Hino de Gratidão e Louvor",
+    "verse": "Rendei graças ao Senhor, invocai o seu nome; fazei conhecidas as suas obras entre os povos.",
+    "verseRef": "Salmos 105:1",
+    "theme": "Louvor",
+    "reflection": "Compartilhe as maravilhas de Deus com o mundo. Seu louvor pode inspirar outros a conhecerem a Cristo. Seja um instrumento de bênção."
+  },
+  {
+    "day": 175,
+    "title": "Transformados Pela Renovação",
+    "verse": "E não vos conformeis com este mundo, mas transformai-vos pela renovação da vossa mente, para que experimenteis qual seja a boa, agradável e perfeita vontade de Deus.",
+    "verseRef": "Romanos 12:2",
+    "theme": "Renovação",
+    "reflection": "Permita que Deus renove sua mente e seu coração. Busque discernir a Sua vontade em todas as áreas da sua vida. Viva em conformidade com o Espírito."
+  },
+  {
+    "day": 176,
+    "title": "O Caminho da Sabedoria Divina",
+    "verse": "Adquire a sabedoria, adquire o entendimento, e não te esqueças nem te desvies das palavras da minha boca.",
+    "verseRef": "Provérbios 4:5",
+    "theme": "Sabedoria",
+    "reflection": "A sabedoria é mais valiosa que as riquezas. Busque a sabedoria que vem de Deus e siga os Seus ensinamentos. Ela te guiará em segurança."
+  },
+  {
+    "day": 177,
+    "title": "A Infinita Misericórdia Divina",
+    "verse": "Lembra-te, Senhor, das tuas misericórdias e das tuas bondades, porque são desde a eternidade.",
+    "verseRef": "Salmos 25:6",
+    "theme": "Misericórdia",
+    "reflection": "A misericórdia de Deus é eterna e inesgotável. Confie em Sua misericórdia para perdoar seus pecados. Demonstre misericórdia aos outros."
+  },
+  {
+    "day": 178,
+    "title": "A Essência da Humildade",
+    "verse": "Revesti-vos, pois, como eleitos de Deus, santos e amados, de entranhas de misericórdia, de benignidade, humildade, mansidão, longanimidade.",
+    "verseRef": "Colossenses 3:12",
+    "theme": "Humildade",
+    "reflection": "A humildade é um atributo essencial do cristão. Vista-se de humildade em seus relacionamentos. Seja um exemplo de mansidão e longanimidade."
+  },
+  {
+    "day": 179,
+    "title": "A Recompensa da Perseverança",
+    "verse": "Bem-aventurado o homem que suporta a provação; porque, depois de aprovado, receberá a coroa da vida, que o Senhor prometeu aos que o amam.",
+    "verseRef": "Tiago 1:12",
+    "theme": "Perseverança",
+    "reflection": "A perseverança é fundamental para alcançar a vitória. Suporte as provações com fé e esperança. A coroa da vida te espera."
+  },
+  {
+    "day": 180,
+    "title": "Transbordando de Alegria",
+    "verse": "Alegrai-vos sempre no Senhor. Repito: alegrai-vos!",
+    "verseRef": "Filipenses 4:4 (NVI)",
+    "theme": "Alegria",
+    "reflection": "Deixe a alegria do Senhor transbordar em sua vida. Compartilhe sua alegria com os outros. A alegria em Cristo é a nossa força."
+  },
+  {
+    "day": 181,
+    "title": "Âncora da Alma",
+    "verse": "Tendo esta esperança como âncora da alma, segura e firme, que penetra além do véu.",
+    "verseRef": "Hebreus 6:19",
+    "theme": "Confiança",
+    "reflection": "A esperança em Cristo é a nossa âncora. Agarre-se a ela em meio às tempestades. Confie na promessa de Deus."
+  },
+  {
+    "day": 182,
+    "title": "Melodia do Coração Grato",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18",
+    "theme": "Gratidão",
+    "reflection": "Cultive um coração grato em todas as circunstâncias. A gratidão abre portas para a alegria e a bênção. Expresse sua gratidão a Deus hoje."
+  },
+  {
+    "day": 183,
+    "title": "A Luz na Escuridão",
+    "verse": "O povo que andava em trevas viu uma grande luz; sobre os que habitavam na terra da sombra da morte resplandeceu a luz.",
+    "verseRef": "Isaías 9:2",
+    "theme": "Esperança",
+    "reflection": "Mesmo na escuridão, a luz de Cristo brilha. Abrace a esperança que Ele oferece. Confie que Ele te guiará."
+  },
+  {
+    "day": 184,
+    "title": "O Elo Perfeito",
+    "verse": "E, sobre tudo isto, revesti-vos de amor, que é o vínculo da perfeição.",
+    "verseRef": "Colossenses 3:14",
+    "theme": "Amor",
+    "reflection": "O amor é o maior de todos os dons. Ame a Deus e ao próximo incondicionalmente. Que o amor seja a marca do seu discipulado."
+  },
+  {
+    "day": 185,
+    "title": "A Certeza do Invisível",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1",
+    "theme": "Fé",
+    "reflection": "A fé é a chave para experimentar o poder de Deus. Creia, mesmo quando não puder ver. Confie na fidelidade de Deus."
+  },
+  {
+    "day": 186,
+    "title": "Súplica da Alma",
+    "verse": "Orai sem cessar.",
+    "verseRef": "1 Tessalonicenses 5:17",
+    "theme": "Oração",
+    "reflection": "Mantenha um diálogo constante com Deus. A oração é o canal da Sua graça e poder. Ele está sempre pronto a ouvir."
+  },
+  {
+    "day": 187,
+    "title": "Rocha Inabalável",
+    "verse": "O Senhor é a minha força e o meu escudo; nele confiou o meu coração, e fui socorrido; pelo que o meu coração salta de alegria, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7",
+    "theme": "Força",
+    "reflection": "Deus é a sua fonte de força e proteção. Confie Nele em todos os momentos. Louve-O pela Sua fidelidade."
+  },
+  {
+    "day": 188,
+    "title": "Calmaria Divina",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27",
+    "theme": "Paz",
+    "reflection": "A paz de Cristo é diferente da paz do mundo. Busque a paz que excede todo o entendimento. Deixe que Ele acalme o seu coração."
+  },
+  {
+    "day": 189,
+    "title": "Favor Imerecido",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós, é dom de Deus.",
+    "verseRef": "Efésios 2:8",
+    "theme": "Graça",
+    "reflection": "A salvação é um presente da graça de Deus. Receba este presente com gratidão e humildade. Viva em obediência a Ele."
+  },
+  {
+    "day": 190,
+    "title": "Rumo ao Alvo",
+    "verse": "Prossigo para o alvo, pelo prêmio da soberana vocação de Deus em Cristo Jesus.",
+    "verseRef": "Filipenses 3:14",
+    "theme": "Propósito",
+    "reflection": "Deus tem um propósito para a sua vida. Busque conhecer e cumprir esse propósito. Siga em frente com fé e determinação."
+  },
+  {
+    "day": 191,
+    "title": "A Voz do Mestre",
+    "verse": "Se me amardes, guardareis os meus mandamentos.",
+    "verseRef": "João 14:15",
+    "theme": "Obediência",
+    "reflection": "A obediência é uma demonstração de amor a Deus. Obedeça aos Seus mandamentos com alegria. Experimente as bênçãos da obediência."
+  },
+  {
+    "day": 192,
+    "title": "Emanuel: Deus Conosco",
+    "verse": "Eis que a virgem conceberá e dará à luz um filho, e ele será chamado pelo nome de Emanuel, que quer dizer: Deus conosco.",
+    "verseRef": "Mateus 1:23",
+    "theme": "Presença de Deus",
+    "reflection": "Deus está sempre presente em sua vida. Sinta a presença Dele em cada momento. Busque a comunhão íntima com Ele."
+  },
+  {
+    "day": 193,
+    "title": "A Porta da Vida",
+    "verse": "Eu sou a porta; se alguém entrar por mim, salvar-se-á, e entrará, e sairá, e achará pastagens.",
+    "verseRef": "João 10:9",
+    "theme": "Salvação",
+    "reflection": "Jesus é a porta da salvação. Arrependa-se dos seus pecados e creia Nele. Receba a vida eterna e abundante."
+  },
+  {
+    "day": 194,
+    "title": "Cântico de Adoração",
+    "verse": "Louvai ao Senhor, porque ele é bom; porque a sua benignidade dura para sempre.",
+    "verseRef": "Salmos 136:1",
+    "theme": "Louvor",
+    "reflection": "Louve ao Senhor em todos os momentos. O louvor alegra o coração de Deus e o seu. Declare a bondade e a fidelidade de Deus."
+  },
+  {
+    "day": 195,
+    "title": "Um Novo Amanhecer",
+    "verse": "Assim que, se alguém está em Cristo, nova criatura é; as coisas velhas já passaram; eis que tudo se fez novo.",
+    "verseRef": "2 Coríntios 5:17",
+    "theme": "Renovação",
+    "reflection": "Em Cristo, você é uma nova criatura. Deixe para trás o passado e abrace o futuro. Viva em novidade de vida."
+  },
+  {
+    "day": 196,
+    "title": "Tesouro Escondido",
+    "verse": "O temor do Senhor é o princípio da sabedoria, e o conhecimento do Santo a prudência.",
+    "verseRef": "Provérbios 9:10",
+    "theme": "Sabedoria",
+    "reflection": "A sabedoria começa com o temor do Senhor. Busque a sabedoria de Deus em todas as suas decisões. Peça a Ele direção e discernimento."
+  },
+  {
+    "day": 197,
+    "title": "Rio de Compaixão",
+    "verse": "Misericordioso e piedoso é o Senhor; longânimo e grande em benignidade.",
+    "verseRef": "Salmos 103:8",
+    "theme": "Misericórdia",
+    "reflection": "Deus é cheio de misericórdia e compaixão. Receba a Sua misericórdia e estenda-a aos outros. Perdoe como você foi perdoado."
+  },
+  {
+    "day": 198,
+    "title": "Vestes da Modéstia",
+    "verse": "Revesti-vos, pois, como eleitos de Deus, santos e amados, de entranhas de misericórdia, de benignidade, humildade, mansidão, longanimidade;",
+    "verseRef": "Colossenses 3:12",
+    "theme": "Humildade",
+    "reflection": "A humildade agrada a Deus e atrai Sua graça. Seja humilde em seus pensamentos, palavras e ações. Reconheça a sua dependência de Deus."
+  },
+  {
+    "day": 199,
+    "title": "Firmeza Inabalável",
+    "verse": "Mas aquele que perseverar até ao fim será salvo.",
+    "verseRef": "Mateus 24:13",
+    "theme": "Perseverança",
+    "reflection": "A vida cristã exige perseverança. Não desista, mesmo diante das dificuldades. Mantenha-se firme na fé até o fim."
+  },
+  {
+    "day": 200,
+    "title": "Cachoeira de Contentamento",
+    "verse": "Regozijai-vos sempre no Senhor; outra vez digo: regozijai-vos.",
+    "verseRef": "Filipenses 4:4",
+    "theme": "Alegria",
+    "reflection": "A alegria do Senhor é a sua força. Encontre alegria em Cristo, não importa as circunstâncias. Compartilhe a sua alegria com os outros."
+  },
+  {
+    "day": 201,
+    "title": "Abrigo Seguro",
+    "verse": "O Senhor é bom, um refúgio em tempos de angústia. Ele protege os que nele confiam.",
+    "verseRef": "Naum 1:7",
+    "theme": "Confiança",
+    "reflection": "Confie no Senhor em todos os momentos. Ele é o seu refúgio seguro em tempos de angústia. Descanse no Seu amor e cuidado."
+  },
+  {
+    "day": 202,
+    "title": "Eco da Benção",
+    "verse": "Cada um dê conforme determinou em seu coração, não com pesar ou por obrigação, pois Deus ama quem dá com alegria.",
+    "verseRef": "2 Coríntios 9:7",
+    "theme": "Gratidão",
+    "reflection": "Seja grato por tudo que você tem. Compartilhe suas bênçãos com alegria e generosidade. Deus ama quem dá com um coração grato."
+  },
+  {
+    "day": 203,
+    "title": "Farol da Fé",
+    "verse": "Ora, a esperança não confunde, porque o amor de Deus foi derramado em nosso coração pelo Espírito Santo que nos foi dado.",
+    "verseRef": "Romanos 5:5",
+    "theme": "Esperança",
+    "reflection": "A esperança em Deus não decepciona. Deixe o amor de Deus encher o seu coração. Caminhe com esperança em direção ao futuro."
+  },
+  {
+    "day": 204,
+    "title": "Compasso Divino",
+    "verse": "Ninguém tem maior amor do que este: de dar alguém a própria vida pelos seus amigos.",
+    "verseRef": "João 15:13",
+    "theme": "Amor",
+    "reflection": "O amor sacrificial é a maior demonstração de amor. Ame seus amigos e inimigos como Cristo os amou. Seja um exemplo do amor de Deus no mundo."
+  },
+  {
+    "day": 205,
+    "title": "Alimento da Alma",
+    "verse": "Respondeu Jesus: Está escrito: Nem só de pão viverá o homem, mas de toda palavra que procede da boca de Deus.",
+    "verseRef": "Mateus 4:4",
+    "theme": "Fé",
+    "reflection": "Alimente sua fé com a Palavra de Deus. A Bíblia é o alimento para a sua alma. Medite nas Escrituras e deixe que ela te transforme."
+  },
+  {
+    "day": 206,
+    "title": "Conexão Celestial",
+    "verse": "E tudo quanto pedirdes em meu nome, eu o farei, para que o Pai seja glorificado no Filho.",
+    "verseRef": "João 14:13",
+    "theme": "Oração",
+    "reflection": "Ore em nome de Jesus e veja o poder de Deus se manifestar. Apresente seus pedidos a Ele com fé e confiança. Deus responderá no tempo Dele."
+  },
+  {
+    "day": 207,
+    "title": "Baluarte Divino",
+    "verse": "O Senhor é a minha força e o meu cântico; ele se tornou a minha salvação.",
+    "verseRef": "Êxodo 15:2",
+    "theme": "Força",
+    "reflection": "Deus é a sua força e a sua canção. Ele te dará a força necessária para enfrentar os desafios. Cante louvores a Ele e fortaleça sua fé."
+  },
+  {
+    "day": 208,
+    "title": "Oásis Interior",
+    "verse": "E a paz de Deus, que excede todo o entendimento, guardará o vosso coração e a vossa mente em Cristo Jesus.",
+    "verseRef": "Filipenses 4:7",
+    "theme": "Paz",
+    "reflection": "A paz de Deus protege seu coração e sua mente. Busque essa paz através da oração e da meditação. Confie que Ele está no controle."
+  },
+  {
+    "day": 209,
+    "title": "Herança Divina",
+    "verse": "Porque somos feitura sua, criados em Cristo Jesus para boas obras, as quais Deus antes preparou para que andássemos nelas.",
+    "verseRef": "Efésios 2:10",
+    "theme": "Graça",
+    "reflection": "Você foi criado por Deus para realizar boas obras. Descubra o propósito Dele para a sua vida. Deixe a graça de Deus guiá-lo em cada passo."
+  },
+  {
+    "day": 210,
+    "title": "Mapa da Vida",
+    "verse": "O coração do homem planeja o seu caminho, mas o Senhor lhe dirige os passos.",
+    "verseRef": "Provérbios 16:9",
+    "theme": "Propósito",
+    "reflection": "Planeje seus caminhos, mas confie na direção de Deus. Deixe que Ele guie seus passos. Ele conhece o melhor caminho para você."
+  },
+  {
+    "day": 211,
+    "title": "A Canção da Obediência",
+    "verse": "Se me amardes, guardareis os meus mandamentos.",
+    "verseRef": "João 14:15",
+    "theme": "Obediência",
+    "reflection": "O amor a Deus se manifesta na obediência. Guarde Seus mandamentos com alegria. Sua vida será abençoada."
+  },
+  {
+    "day": 212,
+    "title": "O Refúgio da Presença Divina",
+    "verse": "Chegai-vos a Deus, e ele se chegará a vós.",
+    "verseRef": "Tiago 4:8",
+    "theme": "Presença de Deus",
+    "reflection": "Busque a Deus em oração e meditação. Ele está sempre pronto a te receber. Sinta a paz que excede todo o entendimento."
+  },
+  {
+    "day": 213,
+    "title": "A Âncora da Salvação",
+    "verse": "Crê no Senhor Jesus Cristo e serás salvo, tu e a tua casa.",
+    "verseRef": "Atos 16:31",
+    "theme": "Salvação",
+    "reflection": "A salvação é um presente de Deus. Receba-o com fé e gratidão. Compartilhe essa esperança com seus familiares."
+  },
+  {
+    "day": 214,
+    "title": "Um Hino de Louvor",
+    "verse": "Louvai ao Senhor, porque ele é bom; porque a sua benignidade dura para sempre.",
+    "verseRef": "Salmos 136:1",
+    "theme": "Louvor",
+    "reflection": "Eleve seu louvor a Deus em todos os momentos. Reconheça Sua bondade e misericórdia. Sua vida será transformada pela gratidão."
+  },
+  {
+    "day": 215,
+    "title": "As Águas da Renovação",
+    "verse": "Assim que, se alguém está em Cristo, nova criatura é; as coisas velhas já passaram; eis que tudo se fez novo.",
+    "verseRef": "2 Coríntios 5:17",
+    "theme": "Renovação",
+    "reflection": "Em Cristo, você é uma nova criação. Deixe para trás o passado e abrace o futuro. Viva intensamente essa transformação."
+  },
+  {
+    "day": 216,
+    "title": "A Pérola da Sabedoria",
+    "verse": "O temor do Senhor é o princípio da sabedoria; bom entendimento têm todos os que cumprem os seus mandamentos; o seu louvor permanece para sempre.",
+    "verseRef": "Salmos 111:10",
+    "theme": "Sabedoria",
+    "reflection": "Busque a sabedoria no temor do Senhor. Aplique Seus ensinamentos em sua vida. Sua jornada será guiada pela luz divina."
+  },
+  {
+    "day": 217,
+    "title": "Um Oceano de Misericórdia",
+    "verse": "Misericordioso e piedoso é o Senhor; longânimo e grande em benignidade.",
+    "verseRef": "Salmos 103:8",
+    "theme": "Misericórdia",
+    "reflection": "A misericórdia de Deus é infinita. Confie em Seu perdão e amor. Seja misericordioso com os outros também."
+  },
+  {
+    "day": 218,
+    "title": "A Beleza da Humildade",
+    "verse": "Revesti-vos, pois, como eleitos de Deus, santos e amados, de entranhas de misericórdia, de benignidade, humildade, mansidão, longanimidade.",
+    "verseRef": "Colossenses 3:12",
+    "theme": "Humildade",
+    "reflection": "A humildade nos aproxima de Deus. Rejeite a arrogância e o orgulho. Sirva ao próximo com amor e generosidade."
+  },
+  {
+    "day": 219,
+    "title": "A Força da Perseverança",
+    "verse": "Mas aquele que perseverar até ao fim será salvo.",
+    "verseRef": "Mateus 24:13",
+    "theme": "Perseverança",
+    "reflection": "Não desista, mesmo diante das dificuldades. Persevere na fé e na oração. A recompensa é a salvação eterna."
+  },
+  {
+    "day": 220,
+    "title": "A Sinfonia da Alegria",
+    "verse": "Alegrai-vos sempre no Senhor; outra vez digo: alegrai-vos.",
+    "verseRef": "Filipenses 4:4",
+    "theme": "Alegria",
+    "reflection": "Alegre-se em Deus, independentemente das circunstâncias. A alegria do Senhor é a sua força. Transborde essa alegria em seu dia a dia."
+  },
+  {
+    "day": 221,
+    "title": "O Porto Seguro da Confiança",
+    "verse": "Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.",
+    "verseRef": "Provérbios 3:5",
+    "theme": "Confiança",
+    "reflection": "Confie em Deus em todos os momentos. Não dependa apenas da sua sabedoria. Ele guiará seus passos com segurança."
+  },
+  {
+    "day": 222,
+    "title": "Um Jardim de Gratidão",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18",
+    "theme": "Gratidão",
+    "reflection": "Seja grato a Deus por todas as bênçãos. Reconheça as pequenas alegrias do dia a dia. A gratidão abre as portas para novas bênçãos."
+  },
+  {
+    "day": 223,
+    "title": "O Farol da Esperança",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1",
+    "theme": "Esperança",
+    "reflection": "Mantenha a esperança em Deus, mesmo em tempos difíceis. A fé é a base para crer no invisível. Espere com confiança na Sua providência."
+  },
+  {
+    "day": 224,
+    "title": "O Elixir do Amor",
+    "verse": "O amor é sofredor, é benigno; o amor não é invejoso; o amor não trata com leviandade, não se ensoberbece.",
+    "verseRef": "1 Coríntios 13:4",
+    "theme": "Amor",
+    "reflection": "Ame a Deus e ao próximo como a si mesmo. Pratique o amor em todas as suas ações. O amor cura e transforma vidas."
+  },
+  {
+    "day": 225,
+    "title": "A Escada da Fé",
+    "verse": "Sem fé é impossível agradar a Deus, porquanto é necessário que aquele que se aproxima de Deus creia que ele existe e que é galardoador dos que o buscam.",
+    "verseRef": "Hebreus 11:6",
+    "theme": "Fé",
+    "reflection": "A fé é essencial para se aproximar de Deus. Creia que Ele existe e recompensa aqueles que O buscam. Fortaleça sua fé através da oração e leitura da Bíblia."
+  },
+  {
+    "day": 226,
+    "title": "O Segredo da Oração",
+    "verse": "Orai sem cessar.",
+    "verseRef": "1 Tessalonicenses 5:17",
+    "theme": "Oração",
+    "reflection": "Mantenha uma comunicação constante com Deus. Ore em todos os momentos do dia. A oração fortalece sua fé e te aproxima do Pai."
+  },
+  {
+    "day": 227,
+    "title": "A Armadura da Força",
+    "verse": "O Senhor é a minha força e o meu escudo; nele confiou o meu coração, e fui socorrido; pelo que o meu coração salta de prazer, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7",
+    "theme": "Força",
+    "reflection": "Deus é a sua força e escudo. Confie n'Ele em todas as circunstâncias. Ele te fortalecerá e te dará a vitória."
+  },
+  {
+    "day": 228,
+    "title": "O Rio da Paz",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27",
+    "theme": "Paz",
+    "reflection": "A paz de Cristo é diferente da paz do mundo. Busque a paz que excede todo o entendimento. Deixe que a paz de Deus governe seu coração."
+  },
+  {
+    "day": 229,
+    "title": "A Chuva da Graça",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós, é dom de Deus.",
+    "verseRef": "Efésios 2:8",
+    "theme": "Graça",
+    "reflection": "A salvação é um presente da graça de Deus. Receba-a com humildade e gratidão. Viva em conformidade com essa graça."
+  },
+  {
+    "day": 230,
+    "title": "A Bússola do Propósito",
+    "verse": "Muitos propósitos há no coração do homem, mas o conselho do Senhor permanecerá.",
+    "verseRef": "Provérbios 19:21",
+    "theme": "Propósito",
+    "reflection": "Busque o propósito de Deus para sua vida. Seus planos são maiores e melhores que os seus. Deixe que Ele guie seus passos."
+  },
+  {
+    "day": 231,
+    "title": "Os Frutos da Obediência",
+    "verse": "Se ouvires diligentemente a voz do Senhor, teu Deus, e fizeres o que é reto diante dos seus olhos, e deres ouvidos aos seus mandamentos, e guardares todos os seus estatutos, nenhuma das enfermidades porei sobre ti, que pus sobre o Egito; porque eu sou o Senhor, que te sara.",
+    "verseRef": "Êxodo 15:26",
+    "theme": "Obediência",
+    "reflection": "A obediência traz cura e proteção divina. Ouça a voz de Deus e siga Seus mandamentos. Ele cuidará de você e te livrará de todo o mal."
+  },
+  {
+    "day": 232,
+    "title": "O Altar da Presença",
+    "verse": "Em tua presença há abundância de alegria; à tua mão direita há delícias perpetuamente.",
+    "verseRef": "Salmos 16:11",
+    "theme": "Presença de Deus",
+    "reflection": "Na presença de Deus encontramos alegria plena. Busque estar perto dEle em oração e adoração. Desfrute das delícias que Ele tem para você."
+  },
+  {
+    "day": 233,
+    "title": "A Porta da Salvação",
+    "verse": "Eu sou a porta; se alguém entrar por mim, salvar-se-á, e entrará, e sairá, e achará pastagens.",
+    "verseRef": "João 10:9",
+    "theme": "Salvação",
+    "reflection": "Jesus é a porta da salvação. Entre por Ele e encontre a vida eterna. Ele te guiará e suprirá todas as suas necessidades."
+  },
+  {
+    "day": 234,
+    "title": "A Melodia do Louvor",
+    "verse": "Cantai louvores a Deus, cantai louvores; cantai louvores ao nosso Rei, cantai louvores.",
+    "verseRef": "Salmos 47:6",
+    "theme": "Louvor",
+    "reflection": "Eleve seus louvores a Deus com alegria. Cante com todo o seu coração. O louvor transforma o ambiente e te conecta com o céu."
+  },
+  {
+    "day": 235,
+    "title": "O Vento da Renovação",
+    "verse": "E renovai-vos no espírito da vossa mente.",
+    "verseRef": "Efésios 4:23",
+    "theme": "Renovação",
+    "reflection": "Renove sua mente com a Palavra de Deus. Deixe que o Espírito Santo te guie. A renovação da mente transforma sua vida."
+  },
+  {
+    "day": 236,
+    "title": "A Fonte da Sabedoria",
+    "verse": "Se algum de vós tem falta de sabedoria, peça-a a Deus, que a todos dá liberalmente e não censura, e ser-lhe-á dada.",
+    "verseRef": "Tiago 1:5",
+    "theme": "Sabedoria",
+    "reflection": "Peça sabedoria a Deus em suas decisões. Ele te dará abundantemente. Confie em Sua direção e siga Seus conselhos."
+  },
+  {
+    "day": 237,
+    "title": "O Coração da Misericórdia",
+    "verse": "Sede, pois, misericordiosos, como também vosso Pai é misericordioso.",
+    "verseRef": "Lucas 6:36",
+    "theme": "Misericórdia",
+    "reflection": "Seja misericordioso com os outros, como Deus é misericordioso com você. Perdoe e ajude aqueles que precisam. A misericórdia transforma vidas."
+  },
+  {
+    "day": 238,
+    "title": "O Caminho da Humildade",
+    "verse": "Humilhai-vos, pois, debaixo da potente mão de Deus, para que, a seu tempo, vos exalte.",
+    "verseRef": "1 Pedro 5:6",
+    "theme": "Humildade",
+    "reflection": "Humilhe-se diante de Deus e confie em Seu poder. Ele te exaltará no tempo certo. A humildade te aproxima do coração de Deus."
+  },
+  {
+    "day": 239,
+    "title": "A Coroa da Perseverança",
+    "verse": "Bem-aventurado o varão que sofre a tentação; porque, quando for provado, receberá a coroa da vida, a qual o Senhor tem prometido aos que o amam.",
+    "verseRef": "Tiago 1:12",
+    "theme": "Perseverança",
+    "reflection": "A perseverança na fé traz recompensa. Resista às tentações e confie em Deus. A coroa da vida te espera."
+  },
+  {
+    "day": 240,
+    "title": "O Jardim da Alegria",
+    "verse": "Até agora nada pedistes em meu nome; pedi e recebereis, para que a vossa alegria seja completa.",
+    "verseRef": "João 16:24",
+    "theme": "Alegria",
+    "reflection": "Peça a Deus em nome de Jesus e receba. A alegria completa está em Cristo. Desfrute da alegria que Ele te dá."
+  },
+  {
+    "day": 241,
+    "title": "Castelo Forte na Tempestade",
+    "verse": "O Senhor é a minha rocha, e o meu lugar forte, e o meu libertador; o meu Deus, a minha fortaleza, em quem confio; o meu escudo, a força da minha salvação, e o meu alto refúgio.",
+    "verseRef": "Salmos 18:2",
+    "theme": "Confiança",
+    "reflection": "Em meio às tribulações, confie no Senhor. Ele é seu refúgio seguro. Deposite sua fé Nele."
+  },
+  {
+    "day": 242,
+    "title": "Coração Grato, Alma Leve",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18",
+    "theme": "Gratidão",
+    "reflection": "A gratidão transforma a perspectiva. Reconheça as bênçãos diárias. Agradeça sempre a Deus."
+  },
+  {
+    "day": 243,
+    "title": "Farol na Escuridão",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam, e a prova das coisas que se não vêem.",
+    "verseRef": "Hebreus 11:1",
+    "theme": "Esperança",
+    "reflection": "Mantenha a esperança acesa. A fé é a âncora da alma. Creia no poder de Deus."
+  },
+  {
+    "day": 244,
+    "title": "Vínculo Inquebrável",
+    "verse": "Nós amamos porque ele nos amou primeiro.",
+    "verseRef": "1 João 4:19",
+    "theme": "Amor",
+    "reflection": "O amor de Deus é a base de tudo. Ame ao próximo como a si mesmo. Transborde o amor divino."
+  },
+  {
+    "day": 245,
+    "title": "A Certeza que Transforma",
+    "verse": "Respondeu Jesus: Eu sou o caminho, e a verdade, e a vida; ninguém vem ao Pai senão por mim.",
+    "verseRef": "João 14:6",
+    "theme": "Fé",
+    "reflection": "Jesus é o caminho, a verdade e a vida. A fé Nele te conduzirá. Siga Seus ensinamentos."
+  },
+  {
+    "day": 246,
+    "title": "A Chave do Céu",
+    "verse": "Orai sem cessar.",
+    "verseRef": "1 Tessalonicenses 5:17",
+    "theme": "Oração",
+    "reflection": "A oração é o diálogo com Deus. Fale com Ele em todos os momentos. Confie suas necessidades a Ele."
+  },
+  {
+    "day": 247,
+    "title": "Braços que Sustentam",
+    "verse": "O Senhor é a minha força e o meu escudo; nele confiou o meu coração, e fui socorrido; pelo que o meu coração salta de prazer, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7",
+    "theme": "Força",
+    "reflection": "Deus é sua força e escudo. Confie Nele para superar desafios. Louve-O em todo tempo."
+  },
+  {
+    "day": 248,
+    "title": "O Silêncio Divino",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27",
+    "theme": "Paz",
+    "reflection": "A paz de Cristo acalma a alma. Não se preocupe, confie em Deus. Busque a paz que excede todo entendimento."
+  },
+  {
+    "day": 249,
+    "title": "O Favor Imerecido",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós, é dom de Deus.",
+    "verseRef": "Efésios 2:8",
+    "theme": "Graça",
+    "reflection": "A salvação é um presente da graça de Deus. Aceite este dom com humildade. Viva em gratidão por Sua graça."
+  },
+  {
+    "day": 250,
+    "title": "Rumo ao Destino",
+    "verse": "Porque somos feitura sua, criados em Cristo Jesus para boas obras, as quais Deus antes preparou para que andássemos nelas.",
+    "verseRef": "Efésios 2:10",
+    "theme": "Propósito",
+    "reflection": "Deus tem um propósito para sua vida. Descubra seus dons e talentos. Use-os para glorificar o nome de Deus."
+  },
+  {
+    "day": 251,
+    "title": "Ouvir e Praticar",
+    "verse": "Se me amardes, guardareis os meus mandamentos.",
+    "verseRef": "João 14:15",
+    "theme": "Obediência",
+    "reflection": "A obediência é prova de amor a Deus. Siga Seus mandamentos com alegria. Caminhe em retidão e santidade."
+  },
+  {
+    "day": 252,
+    "title": "Companhia Constante",
+    "verse": "Não te deixarei, nem te desampararei.",
+    "verseRef": "Hebreus 13:5",
+    "theme": "Presença de Deus",
+    "reflection": "Deus está sempre presente em sua vida. Nunca se sinta sozinho. Ele te acompanha em cada passo."
+  },
+  {
+    "day": 253,
+    "title": "Livres para Voar",
+    "verse": "Se, pois, o Filho vos libertar, verdadeiramente sereis livres.",
+    "verseRef": "João 8:36",
+    "theme": "Salvação",
+    "reflection": "A salvação em Cristo liberta do pecado. Viva em liberdade e alegria. Testemunhe o amor de Deus."
+  },
+  {
+    "day": 254,
+    "title": "Canções ao Rei",
+    "verse": "Louvai ao Senhor, porque é bom cantar louvores ao nosso Deus, porque é agradável; decoroso é o louvor.",
+    "verseRef": "Salmos 147:1",
+    "theme": "Louvor",
+    "reflection": "O louvor alegra o coração de Deus. Exalte o nome do Senhor com cânticos. Agradeça por Suas maravilhas."
+  },
+  {
+    "day": 255,
+    "title": "Um Novo Amanhecer",
+    "verse": "Assim que, se alguém está em Cristo, nova criatura é; as coisas velhas já passaram; eis que tudo se fez novo.",
+    "verseRef": "2 Coríntios 5:17",
+    "theme": "Renovação",
+    "reflection": "Em Cristo, somos renovados. Deixe para trás o passado. Viva uma nova vida em Deus."
+  },
+  {
+    "day": 256,
+    "title": "Luz para o Caminho",
+    "verse": "Lâmpada para os meus pés é a tua palavra, e luz para o meu caminho.",
+    "verseRef": "Salmos 119:105",
+    "theme": "Sabedoria",
+    "reflection": "A Palavra de Deus é sabedoria. Guia seus passos e ilumina seu caminho. Medite nas Escrituras diariamente."
+  },
+  {
+    "day": 257,
+    "title": "O Rio de Amor",
+    "verse": "O Senhor é longânimo, e grande em misericórdia; que perdoa a iniqüidade e a transgressão, que ao culpado não tem por inocente; e visita a iniqüidade dos pais sobre os filhos até à terceira e quarta geração.",
+    "verseRef": "Números 14:18",
+    "theme": "Misericórdia",
+    "reflection": "A misericórdia de Deus é infinita. Ele perdoa nossos pecados. Busque Sua face e Sua graça."
+  },
+  {
+    "day": 258,
+    "title": "Coração Contrito",
+    "verse": "Humilhai-vos perante o Senhor, e ele vos exaltará.",
+    "verseRef": "Tiago 4:10",
+    "theme": "Humildade",
+    "reflection": "Seja humilde diante de Deus. Reconheça sua dependência Dele. Ele te exaltará no tempo certo."
+  },
+  {
+    "day": 259,
+    "title": "Firmeza na Fé",
+    "verse": "Mas aquele que perseverar até ao fim, esse será salvo.",
+    "verseRef": "Mateus 24:13",
+    "theme": "Perseverança",
+    "reflection": "Persevere na fé, mesmo em tempos difíceis. Não desista de seguir a Cristo. A recompensa é eterna."
+  },
+  {
+    "day": 260,
+    "title": "Alegria Inabalável",
+    "verse": "Regozijai-vos sempre no Senhor; outra vez digo, regozijai-vos.",
+    "verseRef": "Filipenses 4:4",
+    "theme": "Alegria",
+    "reflection": "A alegria do Senhor é sua força. Regozije-se em Sua presença. Louve a Deus com alegria."
+  },
+  {
+    "day": 261,
+    "title": "Abrigo Seguro",
+    "verse": "O Senhor é bom, um refúgio em tempos de angústia. Ele protege os que nele confiam.",
+    "verseRef": "Naum 1:7",
+    "theme": "Confiança",
+    "reflection": "Confie no Senhor em todos os momentos. Ele é seu refúgio e protetor. Ele nunca te abandonará."
+  },
+  {
+    "day": 262,
+    "title": "Tesouros do Coração",
+    "verse": "Assim, pois, como recebestes a Cristo Jesus, o Senhor, assim também andai nele, arraigados e edificados nele, e confirmados na fé, assim como fostes ensinados, abundando em ação de graças.",
+    "verseRef": "Colossenses 2:6-7",
+    "theme": "Gratidão",
+    "reflection": "Seja grato por tudo que você tem. Agradeça a Deus por Sua bondade. A gratidão enche o coração de alegria."
+  },
+  {
+    "day": 263,
+    "title": "Vislumbre do Futuro",
+    "verse": "Porque eu sei os pensamentos que tenho a vosso respeito, diz o Senhor; pensamentos de paz, e não de mal, para vos dar o fim que esperais.",
+    "verseRef": "Jeremias 29:11",
+    "theme": "Esperança",
+    "reflection": "Deus tem planos de esperança para você. Confie em Seus planos. Espere com paciência e fé."
+  },
+  {
+    "day": 264,
+    "title": "Elo Divino",
+    "verse": "Acima de tudo, porém, revistam-se do amor, que é o elo perfeito.",
+    "verseRef": "Colossenses 3:14",
+    "theme": "Amor",
+    "reflection": "O amor é o vínculo que une a todos. Ame a Deus e ao próximo. O amor de Cristo transforma vidas."
+  },
+  {
+    "day": 265,
+    "title": "Base Firme",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam, e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1 (ARC)",
+    "theme": "Fé",
+    "reflection": "A fé é a certeza do que esperamos. Creia em Deus e em Suas promessas. A fé move montanhas."
+  },
+  {
+    "day": 266,
+    "title": "Conexão Celestial",
+    "verse": "E esta é a confiança que temos nele, que, se pedirmos alguma coisa, segundo a sua vontade, ele nos ouve.",
+    "verseRef": "1 João 5:14",
+    "theme": "Oração",
+    "reflection": "Ore com fé e confiança. Deus ouve suas orações. Peça segundo a vontade Dele."
+  },
+  {
+    "day": 267,
+    "title": "Escudo Protetor",
+    "verse": "O Senhor é a minha força e o meu escudo; nele confiou o meu coração, e fui socorrido; pelo que o meu coração salta de prazer, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7 (ARC)",
+    "theme": "Força",
+    "reflection": "Deus é sua força e proteção. Confie Nele em todas as circunstâncias. Ele te fortalecerá."
+  },
+  {
+    "day": 268,
+    "title": "Calmaria na Alma",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27 (ARC)",
+    "theme": "Paz",
+    "reflection": "A paz de Cristo acalma o coração. Não se deixe abalar pelas tribulações. Busque a paz que só Ele pode dar."
+  },
+  {
+    "day": 269,
+    "title": "Presente Divino",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós, é dom de Deus.",
+    "verseRef": "Efésios 2:8 (ARC)",
+    "theme": "Graça",
+    "reflection": "A salvação é um presente da graça de Deus. Aceite esse dom com alegria. Viva em gratidão a Ele."
+  },
+  {
+    "day": 270,
+    "title": "Caminho Iluminado",
+    "verse": "Confie no Senhor de todo o seu coração e não se apóie em seu próprio entendimento; reconheça o Senhor em todos os seus caminhos, e ele endireitará as suas veredas.",
+    "verseRef": "Provérbios 3:5-6 (NVI)",
+    "theme": "Propósito",
+    "reflection": "Confie no Senhor para guiar seus passos. Ele te mostrará o caminho certo. Busque o propósito Dele para sua vida."
+  },
+  {
+    "day": 271,
+    "title": "A Voz que Guia",
+    "verse": "Instruir-te-ei e ensinar-te-ei o caminho que deves seguir; guiar-te-ei com os meus olhos.",
+    "verseRef": "Salmos 32:8",
+    "theme": "Obediência",
+    "reflection": "Deixe Deus te guiar em cada decisão. Obedecer à Sua voz traz segurança e direção. Confie no Seu amoroso cuidado."
+  },
+  {
+    "day": 272,
+    "title": "Em Seu Santo Cenário",
+    "verse": "Porque, onde estiverem dois ou três reunidos em meu nome, ali estou no meio deles.",
+    "verseRef": "Mateus 18:20",
+    "theme": "Presença de Deus",
+    "reflection": "Sinta a presença de Deus em sua vida diária. Ele está perto, pronto para te confortar e fortalecer. Busque-O em oração e comunhão."
+  },
+  {
+    "day": 273,
+    "title": "Livre da Escuridão",
+    "verse": "Eis que estou à porta e bato; se alguém ouvir a minha voz e abrir a porta, entrarei em sua casa e cearei com ele, e ele comigo.",
+    "verseRef": "Apocalipse 3:20",
+    "theme": "Salvação",
+    "reflection": "Abra seu coração para Jesus e receba a salvação. Ele anseia por entrar em sua vida e transformá-la. Deixe-O te guiar à luz."
+  },
+  {
+    "day": 274,
+    "title": "Melodia Celestial",
+    "verse": "Louvai ao Senhor, porque é bom cantar louvores ao nosso Deus, porque é agradável e decoroso o louvor.",
+    "verseRef": "Salmos 147:1",
+    "theme": "Louvor",
+    "reflection": "Eleve seu coração em louvor ao Senhor. Sua gratidão alegra o coração de Deus. Cante com alegria e fé."
+  },
+  {
+    "day": 275,
+    "title": "Um Novo Amanhecer",
+    "verse": "Assim que, se alguém está em Cristo, nova criatura é; as coisas velhas já passaram; eis que tudo se fez novo.",
+    "verseRef": "2 Coríntios 5:17",
+    "theme": "Renovação",
+    "reflection": "Em Cristo, você é uma nova criação. Deixe o passado para trás e abrace o futuro. Deus te renova a cada dia."
+  },
+  {
+    "day": 276,
+    "title": "Tesouro da Alma",
+    "verse": "Bem-aventurado o homem que acha sabedoria, e o homem que adquire conhecimento.",
+    "verseRef": "Provérbios 3:13",
+    "theme": "Sabedoria",
+    "reflection": "Busque a sabedoria de Deus em todas as áreas da sua vida. Ela te guiará em decisões sábias e justas. A sabedoria é um tesouro inestimável."
+  },
+  {
+    "day": 277,
+    "title": "O Toque Divino",
+    "verse": "Mas tu, Senhor, és um Deus compassivo e bondoso, muito paciente, rico em amor e em fidelidade.",
+    "verseRef": "Salmos 86:15",
+    "theme": "Misericórdia",
+    "reflection": "Abrace a misericórdia e o amor de Deus. Ele te perdoa e te levanta quando você cai. Confie em Seu amor incondicional."
+  },
+  {
+    "day": 278,
+    "title": "Vestes de Mansidão",
+    "verse": "Revesti-vos, pois, como eleitos de Deus, santos e amados, de entranhas de misericórdia, de benignidade, humildade, mansidão, longanimidade;",
+    "verseRef": "Colossenses 3:12",
+    "theme": "Humildade",
+    "reflection": "Cultive a humildade em seu coração. Reconheça que tudo vem de Deus. Seja manso e gentil com todos."
+  },
+  {
+    "day": 279,
+    "title": "A Coroa da Vida",
+    "verse": "Bem-aventurado o homem que suporta a tentação; porque, quando for provado, receberá a coroa da vida, a qual o Senhor tem prometido aos que o amam.",
+    "verseRef": "Tiago 1:12",
+    "theme": "Perseverança",
+    "reflection": "Persevere na fé, mesmo em meio às dificuldades. Deus te fortalecerá para superar os desafios. A recompensa eterna te espera."
+  },
+  {
+    "day": 280,
+    "title": "A Fonte Transbordante",
+    "verse": "Regozijai-vos sempre no Senhor; outra vez digo: regozijai-vos.",
+    "verseRef": "Filipenses 4:4",
+    "theme": "Alegria",
+    "reflection": "Encontre alegria em Deus, mesmo nas provações. A alegria do Senhor é a sua força. Regozije-se sempre nEle."
+  },
+  {
+    "day": 281,
+    "title": "A Rocha Eterna",
+    "verse": "O Senhor é a minha rocha, e a minha fortaleza, e o meu libertador; o meu Deus, o meu rochedo, em quem confio; o meu escudo, a força da minha salvação, e o meu alto refúgio.",
+    "verseRef": "Salmos 18:2",
+    "theme": "Confiança",
+    "reflection": "Confie no Senhor em todos os momentos. Ele é a sua rocha e refúgio seguro. Deposite sua fé nEle."
+  },
+  {
+    "day": 282,
+    "title": "Cântico de Agradecimento",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18",
+    "theme": "Gratidão",
+    "reflection": "Seja grato a Deus por todas as bênçãos. A gratidão abre portas para mais bênçãos. Agradeça em todos os momentos."
+  },
+  {
+    "day": 283,
+    "title": "A Âncora da Alma",
+    "verse": "Temos esta esperança como âncora da alma, firme e segura, e que adentra o santuário interior, por trás do véu,",
+    "verseRef": "Hebreus 6:19",
+    "theme": "Esperança",
+    "reflection": "Mantenha a esperança em Deus, mesmo em tempos difíceis. Ele é a sua âncora segura. A esperança te sustenta."
+  },
+  {
+    "day": 284,
+    "title": "O Elo Perfeito",
+    "verse": "E sobre tudo isto, revesti-vos de amor, que é o vínculo perfeito.",
+    "verseRef": "Colossenses 3:14",
+    "theme": "Amor",
+    "reflection": "Ame a Deus e ao próximo como a si mesmo. O amor é o elo que une todas as coisas. Ame incondicionalmente."
+  },
+  {
+    "day": 285,
+    "title": "A Certeza do Invisível",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam, e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1",
+    "theme": "Fé",
+    "reflection": "Tenha fé em Deus, mesmo quando não puder ver. A fé te conecta com o poder divino. Creia e confie."
+  },
+  {
+    "day": 286,
+    "title": "A Chave do Céu",
+    "verse": "Orai sem cessar.",
+    "verseRef": "1 Tessalonicenses 5:17",
+    "theme": "Oração",
+    "reflection": "Ore continuamente, buscando a Deus em todos os momentos. A oração te conecta com o céu. Converse com o Pai."
+  },
+  {
+    "day": 287,
+    "title": "Escudo Invencível",
+    "verse": "O Senhor é a minha força e o meu escudo; nele confiou o meu coração, e fui socorrido; pelo que o meu coração salta de prazer, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7",
+    "theme": "Força",
+    "reflection": "Encontre sua força em Deus. Ele te capacita para enfrentar qualquer desafio. Confie em Seu poder."
+  },
+  {
+    "day": 288,
+    "title": "O Rio Tranquilo",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27",
+    "theme": "Paz",
+    "reflection": "Receba a paz de Deus em seu coração. Não deixe que as preocupações te abalem. Confie em Sua paz que excede todo o entendimento."
+  },
+  {
+    "day": 289,
+    "title": "O Favor Imerecido",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós, é dom de Deus.",
+    "verseRef": "Efésios 2:8",
+    "theme": "Graça",
+    "reflection": "Abrace a graça de Deus em sua vida. É um presente imerecido que te transforma. Viva em gratidão pela Sua graça."
+  },
+  {
+    "day": 290,
+    "title": "Rumo ao Alvo",
+    "verse": "Prossigo para o alvo, pelo prêmio da soberana vocação de Deus em Cristo Jesus.",
+    "verseRef": "Filipenses 3:14",
+    "theme": "Propósito",
+    "reflection": "Descubra o propósito de Deus para sua vida. Siga em frente com fé e determinação. Não desista até alcançar o alvo."
+  },
+  {
+    "day": 291,
+    "title": "A Melodia Divina",
+    "verse": "Se me amardes, guardareis os meus mandamentos.",
+    "verseRef": "João 14:15",
+    "theme": "Obediência",
+    "reflection": "Ame a Deus acima de tudo e obedeça aos seus mandamentos. A obediência demonstra o nosso amor por Ele. Viva em conformidade com a Sua vontade."
+  },
+  {
+    "day": 292,
+    "title": "O Abraço do Eterno",
+    "verse": "Chegai-vos a Deus, e ele se chegará a vós. Alimpai as mãos, pecadores; e, vós de duplo ânimo, purificai os corações.",
+    "verseRef": "Tiago 4:8",
+    "theme": "Presença de Deus",
+    "reflection": "Aproxime-se de Deus com um coração sincero. Ele está sempre pronto para te receber. Busque-O com fervor e intimidade."
+  },
+  {
+    "day": 293,
+    "title": "O Resgate Divino",
+    "verse": "Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna.",
+    "verseRef": "João 3:16",
+    "theme": "Salvação",
+    "reflection": "Agradeça a Deus pelo sacrifício de Jesus. Receba a salvação e a vida eterna. Confie em Seu amor incondicional."
+  },
+  {
+    "day": 294,
+    "title": "O Cântico da Alma",
+    "verse": "Cantai louvores a Deus, cantai louvores; cantai louvores ao nosso Rei, cantai louvores.",
+    "verseRef": "Salmos 47:6",
+    "theme": "Louvor",
+    "reflection": "Exalte a Deus com cânticos de louvor. Seu louvor alegra o coração do Pai. Cante com alegria e gratidão."
+  },
+  {
+    "day": 295,
+    "title": "Uma Nova Criatura",
+    "verse": "E, renovando-se para o conhecimento, segundo a imagem daquele que o criou;",
+    "verseRef": "Colossenses 3:10",
+    "theme": "Renovação",
+    "reflection": "Permita que Deus te renove a cada dia. Busque o conhecimento da Sua palavra e se conforme à Sua imagem. Seja transformado pelo Seu amor."
+  },
+  {
+    "day": 296,
+    "title": "O Caminho da Luz",
+    "verse": "O temor do Senhor é o princípio da sabedoria, e o conhecimento do Santo a prudência.",
+    "verseRef": "Provérbios 9:10",
+    "theme": "Sabedoria",
+    "reflection": "Tema ao Senhor e busque a sabedoria divina. O temor do Senhor é o princípio da sabedoria. Viva com prudência e discernimento."
+  },
+  {
+    "day": 297,
+    "title": "As Entranhas da Compaixão",
+    "verse": "Lembra-te, Senhor, da tua misericórdia e das tuas benignidades, que são desde a antiguidade.",
+    "verseRef": "Salmos 25:6",
+    "theme": "Misericórdia",
+    "reflection": "Confie na misericórdia e na bondade de Deus. Ele te perdoa e te ampara em todas as situações. Abrace a Sua compaixão."
+  },
+  {
+    "day": 298,
+    "title": "A Coroa da Honra",
+    "verse": "O temor do Senhor é a instrução da sabedoria, e precederá a honra a humildade.",
+    "verseRef": "Provérbios 15:33",
+    "theme": "Humildade",
+    "reflection": "Seja humilde em todas as suas atitudes. A humildade precede a honra. Reconheça que tudo vem de Deus."
+  },
+  {
+    "day": 299,
+    "title": "A Firmeza da Fé",
+    "verse": "Mas aquele que perseverar até ao fim será salvo.",
+    "verseRef": "Mateus 24:13",
+    "theme": "Perseverança",
+    "reflection": "Persevere na fé até o fim. Não desista diante das dificuldades. A salvação é para aqueles que perseveram."
+  },
+  {
+    "day": 300,
+    "title": "O Coração Exultante",
+    "verse": "Alegrai-vos sempre no Senhor; outra vez digo, alegrai-vos.",
+    "verseRef": "Filipenses 4:4",
+    "theme": "Alegria",
+    "reflection": "Encontre a verdadeira alegria em Deus. A alegria do Senhor é a sua força. Regozije-se em Sua presença."
+  },
+  {
+    "day": 301,
+    "title": "Âncora da Alma",
+    "verse": "Tendo esta esperança como âncora da alma, segura e firme, que penetra até ao interior do véu.",
+    "verseRef": "Hebreus 6:19 (ARC)",
+    "theme": "Confiança",
+    "reflection": "Em meio às tempestades, a esperança em Cristo é nossa âncora. Confie Nele para te guiar e fortalecer. Ele é a segurança que você precisa."
+  },
+  {
+    "day": 302,
+    "title": "Cântico do Coração Grato",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18 (ARC)",
+    "theme": "Gratidão",
+    "reflection": "A gratidão transforma o fardo em leveza e a tristeza em alegria. Agradeça a Deus por cada detalhe, grande ou pequeno. Seu coração se encherá de paz."
+  },
+  {
+    "day": 303,
+    "title": "Farol na Escuridão",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1 (ARC)",
+    "theme": "Esperança",
+    "reflection": "A esperança é a luz que nos guia em meio à escuridão. Creia no invisível e veja o impossível se tornar realidade. Deus cumpre Suas promessas."
+  },
+  {
+    "day": 304,
+    "title": "Rio de Amor Inesgotável",
+    "verse": "Nós amamos porque ele nos amou primeiro.",
+    "verseRef": "1 João 4:19 (NVI)",
+    "theme": "Amor",
+    "reflection": "O amor de Deus é a fonte inesgotável de todo amor verdadeiro. Deixe que esse amor te transforme e transborde em sua vida. Ame como Cristo amou."
+  },
+  {
+    "day": 305,
+    "title": "Escudo da Alma",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1 (ARC)",
+    "theme": "Fé",
+    "reflection": "A fé é a ponte entre o humano e o divino. Creia com todo o seu coração e veja milagres acontecerem. Sua fé é o escudo que te protege."
+  },
+  {
+    "day": 306,
+    "title": "Sussurros ao Criador",
+    "verse": "Orai sem cessar.",
+    "verseRef": "1 Tessalonicenses 5:17 (ARC)",
+    "theme": "Oração",
+    "reflection": "A oração é a chave que abre as portas do céu. Converse com Deus em todos os momentos e Ele te ouvirá. A oração te fortalece e te guia."
+  },
+  {
+    "day": 307,
+    "title": "Força do Alto",
+    "verse": "O Senhor é a minha força e o meu escudo; nele o meu coração confia, e dele recebo ajuda. Alegre-se, pois, o meu coração, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7 (NVI)",
+    "theme": "Força",
+    "reflection": "Em Deus encontramos a força que precisamos para vencer. Confie Nele e Ele te sustentará em todos os momentos. Ele é a rocha firme em sua vida."
+  },
+  {
+    "day": 308,
+    "title": "Oásis da Alma",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27 (ARC)",
+    "theme": "Paz",
+    "reflection": "A paz de Cristo excede todo o entendimento humano. Busque essa paz em oração e meditação na Palavra. Ela acalma o coração e te renova."
+  },
+  {
+    "day": 309,
+    "title": "Tesouro Inestimável",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós, é dom de Deus.",
+    "verseRef": "Efésios 2:8 (ARC)",
+    "theme": "Graça",
+    "reflection": "A graça de Deus é um presente imerecido que nos salva. Aceite esse presente com humildade e gratidão. Viva de acordo com o amor de Cristo."
+  },
+  {
+    "day": 310,
+    "title": "Rumo ao Destino Divino",
+    "verse": "Porque somos criação de Deus realizada em Cristo Jesus para fazermos boas obras, as quais Deus preparou antes para nós as praticarmos.",
+    "verseRef": "Efésios 2:10 (NVI)",
+    "theme": "Propósito",
+    "reflection": "Deus tem um propósito único e especial para sua vida. Descubra esse propósito e viva de acordo com a vontade de Deus. Ele te guiará em cada passo."
+  },
+  {
+    "day": 311,
+    "title": "Caminho da Luz",
+    "verse": "Se me amardes, guardareis os meus mandamentos.",
+    "verseRef": "João 14:15 (ARC)",
+    "theme": "Obediência",
+    "reflection": "A obediência a Deus é a prova do nosso amor por Ele. Siga Seus mandamentos e desfrute de uma vida plena e abençoada. Ele te recompensará."
+  },
+  {
+    "day": 312,
+    "title": "Em Companhia Divina",
+    "verse": "E eis que estou convosco todos os dias, até à consumação dos séculos. Amém.",
+    "verseRef": "Mateus 28:20 (ARC)",
+    "theme": "Presença de Deus",
+    "reflection": "Deus está sempre presente em nossas vidas, nos guiando e protegendo. Sinta a presença Dele em cada momento e confie em Seu amor. Ele nunca te abandona."
+  },
+  {
+    "day": 313,
+    "title": "Porta da Eternidade",
+    "verse": "Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna.",
+    "verseRef": "João 3:16 (ARC)",
+    "theme": "Salvação",
+    "reflection": "A salvação é o maior presente que podemos receber. Aceite Jesus como seu Salvador e receba a vida eterna. Ele te ama incondicionalmente."
+  },
+  {
+    "day": 314,
+    "title": "Canções ao Rei",
+    "verse": "Louvai ao Senhor, porque é bom; porque a sua benignidade dura para sempre.",
+    "verseRef": "Salmos 136:1 (ARC)",
+    "theme": "Louvor",
+    "reflection": "O louvor é uma forma de expressar nossa gratidão e amor a Deus. Louve-O com todo o seu coração e alma. O louvor alegra o coração de Deus."
+  },
+  {
+    "day": 315,
+    "title": "Novo Amanhecer",
+    "verse": "Assim que, se alguém está em Cristo, nova criatura é; as coisas velhas já passaram; eis que tudo se fez novo.",
+    "verseRef": "2 Coríntios 5:17 (ARC)",
+    "theme": "Renovação",
+    "reflection": "Em Cristo, somos renovados e transformados. Deixe o passado para trás e abrace o novo que Deus tem para você. Ele te dará forças para recomeçar."
+  },
+  {
+    "day": 316,
+    "title": "Luz do Entendimento",
+    "verse": "Se, porém, algum de vós necessita de sabedoria, peça-a a Deus, que a todos dá liberalmente e nada lhes impropera; e ser-lhe-á concedida.",
+    "verseRef": "Tiago 1:5 (ARC)",
+    "theme": "Sabedoria",
+    "reflection": "A sabedoria de Deus nos guia em todas as decisões. Peça a Ele sabedoria e Ele te dará abundantemente. Ele te mostrará o caminho certo a seguir."
+  },
+  {
+    "day": 317,
+    "title": "O Toque da Compaixão",
+    "verse": "O Senhor é misericordioso e compassivo; longânimo e assaz benigno.",
+    "verseRef": "Salmos 103:8 (ARC)",
+    "theme": "Misericórdia",
+    "reflection": "A misericórdia de Deus é infinita e nos alcança mesmo quando falhamos. Receba Seu perdão e compartilhe essa misericórdia com os outros. Ele te ama incondicionalmente."
+  },
+  {
+    "day": 318,
+    "title": "Vestes da Simplicidade",
+    "verse": "Humilhai-vos, pois, debaixo da potente mão de Deus, para que, a seu tempo, vos exalte.",
+    "verseRef": "1 Pedro 5:6 (ARC)",
+    "theme": "Humildade",
+    "reflection": "A humildade é a chave para a graça de Deus. Reconheça sua dependência Dele e Ele te exaltará no tempo certo. A humildade abre portas."
+  },
+  {
+    "day": 319,
+    "title": "Firmeza na Jornada",
+    "verse": "Mas aquele que perseverar até ao fim será salvo.",
+    "verseRef": "Mateus 24:13 (ARC)",
+    "theme": "Perseverança",
+    "reflection": "A perseverança é essencial para alcançar os objetivos de Deus. Não desista, mesmo quando as dificuldades surgirem. Ele te dará forças para continuar."
+  },
+  {
+    "day": 320,
+    "title": "Melodia da Alma Radiante",
+    "verse": "Regozijai-vos sempre no Senhor; outra vez digo, regozijai-vos.",
+    "verseRef": "Filipenses 4:4 (ARC)",
+    "theme": "Alegria",
+    "reflection": "A alegria do Senhor é a nossa força. Busque a alegria em Deus e ela te preencherá por completo. Compartilhe essa alegria com os outros."
+  },
+  {
+    "day": 321,
+    "title": "A Fortaleza da Certeza",
+    "verse": "Entrega o teu caminho ao Senhor; confia nele, e ele tudo fará.",
+    "verseRef": "Salmos 37:5 (ARC)",
+    "theme": "Confiança",
+    "reflection": "Confie em Deus em todos os momentos, entregue a Ele suas preocupações. Ele tem o melhor para você e cuidará de tudo. Ele é a sua rocha."
+  },
+  {
+    "day": 322,
+    "title": "O Jardim do Agradecimento",
+    "verse": "Rendei graças ao Senhor, porque ele é bom, porque a sua misericórdia dura para sempre.",
+    "verseRef": "Salmos 118:1 (ARC)",
+    "theme": "Gratidão",
+    "reflection": "Seja grato por todas as bênçãos em sua vida, grandes e pequenas. A gratidão abre as portas para mais bênçãos. Agradeça sempre a Deus."
+  },
+  {
+    "day": 323,
+    "title": "A Luz no Fim do Túnel",
+    "verse": "Porque eu bem sei os pensamentos que tenho a vosso respeito, diz o Senhor; pensamentos de paz, e não de mal, para vos dar o fim que esperais.",
+    "verseRef": "Jeremias 29:11 (ARC)",
+    "theme": "Esperança",
+    "reflection": "Mantenha a esperança, mesmo em tempos difíceis, pois Deus tem planos de paz para você. Ele tem um futuro glorioso reservado para você. Confie em Seu amor."
+  },
+  {
+    "day": 324,
+    "title": "O Elo Divino",
+    "verse": "O amor é paciente, o amor é bondoso. Não inveja, não se vangloria, não se orgulha.",
+    "verseRef": "1 Coríntios 13:4 (NVI)",
+    "theme": "Amor",
+    "reflection": "Pratique o amor em todas as suas ações, seja paciente, bondoso e compreensivo. O amor de Deus transforma vidas e cura corações. Ame incondicionalmente."
+  },
+  {
+    "day": 325,
+    "title": "A Chave dos Milagres",
+    "verse": "Disse-lhe Jesus: Se podes! Tudo é possível ao que crê.",
+    "verseRef": "Marcos 9:23 (ARC)",
+    "theme": "Fé",
+    "reflection": "Creia em Deus e no Seu poder para realizar milagres em sua vida. A fé move montanhas e transforma o impossível em possível. Tenha fé em Deus."
+  },
+  {
+    "day": 326,
+    "title": "O Diálogo com o Céu",
+    "verse": "E tudo o que pedirdes em oração, crendo, recebereis.",
+    "verseRef": "Mateus 21:22 (ARC)",
+    "theme": "Oração",
+    "reflection": "Ore com fé e confiança, crendo que Deus ouvirá suas orações. Ele responderá no tempo certo e da maneira que for melhor. A oração é poderosa."
+  },
+  {
+    "day": 327,
+    "title": "A Energia Celestial",
+    "verse": "O Senhor é a minha força e o meu cântico; ele se tornou a minha salvação; este é o meu Deus, e eu o louvarei; o Deus de meu pai, e eu o exaltarei.",
+    "verseRef": "Êxodo 15:2 (ARC)",
+    "theme": "Força",
+    "reflection": "Encontre sua força em Deus, Ele é o seu escudo e protetor. Louve-O em todos os momentos e Ele te fortalecerá. Ele é o seu refúgio seguro."
+  },
+  {
+    "day": 328,
+    "title": "A Serenidade Divina",
+    "verse": "Em paz me deito e logo pego no sono, porque só tu, Senhor, me fazes repousar seguro.",
+    "verseRef": "Salmos 4:8 (NVI)",
+    "theme": "Paz",
+    "reflection": "Encontre a paz em Deus, Ele te protege e te dá segurança. Descanse em Seus braços e confie em Seu amor. Ele te acalma e te renova."
+  },
+  {
+    "day": 329,
+    "title": "O Dom Incomparável",
+    "verse": "Porque o salário do pecado é a morte, mas o dom gratuito de Deus é a vida eterna em Cristo Jesus, nosso Senhor.",
+    "verseRef": "Romanos 6:23 (ARC)",
+    "theme": "Graça",
+    "reflection": "Abrace a graça de Deus, um presente imerecido que nos salva do pecado. Viva em gratidão por esse dom e compartilhe o amor de Cristo. Ele te oferece vida eterna."
+  },
+  {
+    "day": 330,
+    "title": "A Missão Sagrada",
+    "verse": "Assim resplandeça a vossa luz diante dos homens, para que vejam as vossas boas obras e glorifiquem a vosso Pai, que está nos céus.",
+    "verseRef": "Mateus 5:16 (ARC)",
+    "theme": "Propósito",
+    "reflection": "Descubra o propósito de Deus para sua vida e deixe sua luz brilhar. Sirva a Ele com alegria e amor, impactando o mundo ao seu redor. Glorifique o nome de Deus através de suas ações."
+  },
+  {
+    "day": 331,
+    "title": "A Melodia da Obediência",
+    "verse": "Se me amardes, guardareis os meus mandamentos.",
+    "verseRef": "João 14:15",
+    "theme": "Obediência",
+    "reflection": "Amar a Deus é demonstrado pela obediência. Seus mandamentos não são um fardo, mas um guia para a vida plena. Obedeça e experimente a alegria da comunhão verdadeira."
+  },
+  {
+    "day": 332,
+    "title": "No Abraço da Presença Divina",
+    "verse": "Não temas, porque eu sou contigo; não te assombres, porque eu sou o teu Deus; eu te esforço, e te ajudo, e te sustento com a destra da minha justiça.",
+    "verseRef": "Isaías 41:10",
+    "theme": "Presença de Deus",
+    "reflection": "Em meio ao medo, lembre-se: Deus está presente. Ele te fortalece, te ajuda e te sustenta. Confie na presença constante Dele em sua vida."
+  },
+  {
+    "day": 333,
+    "title": "A Âncora da Salvação",
+    "verse": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós; é dom de Deus.",
+    "verseRef": "Efésios 2:8",
+    "theme": "Salvação",
+    "reflection": "A salvação é um presente, não algo que merecemos. Receba este dom pela fé em Jesus Cristo. Viva em gratidão pela graça que te alcançou."
+  },
+  {
+    "day": 334,
+    "title": "Uma Canção no Coração",
+    "verse": "Louvai ao Senhor, porque é bom; cantai louvores ao seu nome, porque é agradável.",
+    "verseRef": "Salmos 135:3",
+    "theme": "Louvor",
+    "reflection": "O louvor alegra o coração de Deus. Cante, ore e dance em gratidão por Suas maravilhas. Deixe o louvor fluir livremente em sua vida."
+  },
+  {
+    "day": 335,
+    "title": "Ressurreição da Alma",
+    "verse": "Assim que, se alguém está em Cristo, nova criatura é; as coisas velhas já passaram; eis que tudo se fez novo.",
+    "verseRef": "2 Coríntios 5:17",
+    "theme": "Renovação",
+    "reflection": "Em Cristo, você é uma nova criação. Deixe o passado para trás e abrace o novo que Deus tem para você. Permita que Ele renove sua mente e espírito."
+  },
+  {
+    "day": 336,
+    "title": "A Luz da Sabedoria",
+    "verse": "O temor do Senhor é o princípio da sabedoria, e o conhecimento do Santo a prudência.",
+    "verseRef": "Provérbios 9:10",
+    "theme": "Sabedoria",
+    "reflection": "A verdadeira sabedoria começa com o temor a Deus. Busque conhecê-Lo e viva de acordo com Seus princípios. A sabedoria divina te guiará em todas as decisões."
+  },
+  {
+    "day": 337,
+    "title": "O Rio da Compaixão",
+    "verse": "Misericordioso e piedoso é o Senhor; longânimo e grande em benignidade.",
+    "verseRef": "Salmos 103:8",
+    "theme": "Misericórdia",
+    "reflection": "Deus é rico em misericórdia e compaixão. Busque refletir essa misericórdia em seus relacionamentos. Perdoe, ame e estenda a mão aos necessitados."
+  },
+  {
+    "day": 338,
+    "title": "A Coroa da Modéstia",
+    "verse": "Revesti-vos, pois, como eleitos de Deus, santos e amados, de entranhas de misericórdia, de benignidade, humildade, mansidão, longanimidade.",
+    "verseRef": "Colossenses 3:12",
+    "theme": "Humildade",
+    "reflection": "A humildade agrada a Deus e atrai bênçãos. Rejeite o orgulho e aprenda com os outros. Sirva com amor e reconheça que tudo vem de Deus."
+  },
+  {
+    "day": 339,
+    "title": "A Maratona da Fé",
+    "verse": "Portanto, também nós, visto que temos a rodear-nos tão grande nuvem de testemunhas, desembaraçando-nos de todo peso e do pecado que tenazmente nos assedia, corramos com perseverança a carreira que nos está proposta,",
+    "verseRef": "Hebreus 12:1",
+    "theme": "Perseverança",
+    "reflection": "A vida cristã é uma jornada de perseverança. Não desista diante dos obstáculos, mas continue correndo com fé. Deus te fortalecerá para alcançar a vitória."
+  },
+  {
+    "day": 340,
+    "title": "A Sinfonia da Felicidade",
+    "verse": "Alegrai-vos sempre no Senhor; outra vez digo, alegrai-vos.",
+    "verseRef": "Filipenses 4:4",
+    "theme": "Alegria",
+    "reflection": "A verdadeira alegria vem de Deus, não das circunstâncias. Escolha se alegrar no Senhor em todos os momentos. A alegria Dele é a sua força."
+  },
+  {
+    "day": 341,
+    "title": "A Rocha Inabalável",
+    "verse": "Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.",
+    "verseRef": "Provérbios 3:5",
+    "theme": "Confiança",
+    "reflection": "Entregue suas preocupações e planos a Deus. Confie Nele de todo o seu coração. Ele te guiará no caminho certo."
+  },
+  {
+    "day": 342,
+    "title": "O Jardim da Gratidão",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18",
+    "theme": "Gratidão",
+    "reflection": "Cultive um coração grato em todas as situações. A gratidão abre as portas para mais bênçãos. Reconheça as maravilhas de Deus em sua vida."
+  },
+  {
+    "day": 343,
+    "title": "A Estrela da Manhã",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1",
+    "theme": "Esperança",
+    "reflection": "A esperança em Deus é um farol em meio à escuridão. Mantenha seus olhos fixos em Jesus e confie em Suas promessas. A esperança te sustentará até o fim."
+  },
+  {
+    "day": 344,
+    "title": "O Elo Divino",
+    "verse": "O amor é paciente, o amor é bondoso. Não inveja, não se vangloria, não se orgulha.",
+    "verseRef": "1 Coríntios 13:4",
+    "theme": "Amor",
+    "reflection": "O amor de Deus é a base de todos os relacionamentos. Ame como Cristo amou, com paciência, bondade e humildade. Deixe o amor ser a sua marca."
+  },
+  {
+    "day": 345,
+    "title": "A Chave do Milagre",
+    "verse": "Respondeu Jesus: Se podes! Tudo é possível ao que crê.",
+    "verseRef": "Marcos 9:23",
+    "theme": "Fé",
+    "reflection": "A fé move montanhas e realiza milagres. Creia no poder de Deus para transformar sua vida. Não duvide, apenas creia."
+  },
+  {
+    "day": 346,
+    "title": "O Suspiro da Alma",
+    "verse": "Orai sem cessar.",
+    "verseRef": "1 Tessalonicenses 5:17",
+    "theme": "Oração",
+    "reflection": "A oração é a ponte que te conecta a Deus. Busque a presença Dele em oração constante. Ele te ouvirá e responderá."
+  },
+  {
+    "day": 347,
+    "title": "A Fortaleza Interior",
+    "verse": "O Senhor é a minha força e o meu escudo; nele confiou o meu coração, e fui ajudado; pelo que o meu coração salta de prazer, e com o meu cântico o louvarei.",
+    "verseRef": "Salmos 28:7",
+    "theme": "Força",
+    "reflection": "Deus é a sua força em tempos de fraqueza. Confie Nele e seja fortalecido pelo Seu poder. Louve-O por Sua fidelidade."
+  },
+  {
+    "day": 348,
+    "title": "O Remanso Tranquilo",
+    "verse": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+    "verseRef": "João 14:27",
+    "theme": "Paz",
+    "reflection": "A paz de Cristo excede todo o entendimento. Receba essa paz e deixe que ela governe seu coração. Não se preocupe, confie em Deus."
+  },
+  {
+    "day": 349,
+    "title": "A Dádiva Imerecida",
+    "verse": "Porque a graça de Deus se manifestou, trazendo salvação a todos os homens,",
+    "verseRef": "Tito 2:11",
+    "theme": "Graça",
+    "reflection": "A graça de Deus é um presente imerecido. Receba essa graça e viva em liberdade. Ela te capacita a viver uma vida que agrada a Deus."
+  },
+  {
+    "day": 350,
+    "title": "A Rota Divina",
+    "verse": "Muitos propósitos há no coração do homem, mas o conselho do Senhor permanecerá.",
+    "verseRef": "Provérbios 19:21",
+    "theme": "Propósito",
+    "reflection": "Deus tem um propósito único para sua vida. Busque a vontade Dele em oração e obediência. Ele te guiará no caminho certo."
+  },
+  {
+    "day": 351,
+    "title": "Ecoando a Voz Divina",
+    "verse": "E sede cumpridores da palavra e não somente ouvintes, enganando-vos a vós mesmos.",
+    "verseRef": "Tiago 1:22",
+    "theme": "Obediência",
+    "reflection": "Não basta ouvir a Palavra de Deus, é preciso praticá-la. A obediência demonstra seu amor e confiança em Deus. Viva de acordo com Seus ensinamentos."
+  },
+  {
+    "day": 352,
+    "title": "Um Encontro Sagrado",
+    "verse": "Chegai-vos a Deus, e ele se chegará a vós. Alimpai as mãos, pecadores; e vós que sois de ânimo dobre, purificai o coração.",
+    "verseRef": "Tiago 4:8",
+    "theme": "Presença de Deus",
+    "reflection": "Aproxime-se de Deus em oração e Ele se aproximará de você. Purifique seu coração e busque a presença Dele em todos os momentos. Experimente a alegria da comunhão íntima."
+  },
+  {
+    "day": 353,
+    "title": "Libertos Pelo Amor",
+    "verse": "Se, pois, o Filho vos libertar, verdadeiramente sereis livres.",
+    "verseRef": "João 8:36",
+    "theme": "Salvação",
+    "reflection": "Jesus Cristo te liberta do pecado e da condenação. Receba essa liberdade e viva em novidade de vida. Abrace a salvação que Ele te oferece."
+  },
+  {
+    "day": 354,
+    "title": "Uma Oferta de Amor",
+    "verse": "Cantarei ao Senhor enquanto eu viver; cantarei louvores ao meu Deus enquanto eu tiver existência.",
+    "verseRef": "Salmos 104:33",
+    "theme": "Louvor",
+    "reflection": "Ofereça a Deus um louvor sincero e constante. Cante, ore e agradeça por Suas bênçãos. Deixe o louvor ser uma expressão do seu amor por Ele."
+  },
+  {
+    "day": 355,
+    "title": "Um Novo Amanhecer",
+    "verse": "E não vos conformeis com este mundo, mas transformai-vos pela renovação da vossa mente, para que experimenteis qual seja a boa, agradável e perfeita vontade de Deus.",
+    "verseRef": "Romanos 12:2",
+    "theme": "Renovação",
+    "reflection": "Renove sua mente com a Palavra de Deus e experimente a transformação que Ele pode realizar em sua vida. Não se conforme com o mundo, mas busque a vontade perfeita de Deus."
+  },
+  {
+    "day": 356,
+    "title": "A Pérola Preciosa",
+    "verse": "Adquire a sabedoria, adquire o entendimento; não te esqueças nem te desvies das palavras da minha boca.",
+    "verseRef": "Provérbios 4:5",
+    "theme": "Sabedoria",
+    "reflection": "Busque a sabedoria de Deus acima de todas as coisas. A sabedoria te guiará em todas as áreas da sua vida. Não se desvie dos ensinamentos da Palavra de Deus."
+  },
+  {
+    "day": 357,
+    "title": "Um Coração Compassivo",
+    "verse": "Sede uns para com os outros bondosos e compassivos, perdoando-vos uns aos outros, como também Deus, em Cristo, vos perdoou.",
+    "verseRef": "Efésios 4:32",
+    "theme": "Misericórdia",
+    "reflection": "Seja misericordioso e compassivo com os outros, assim como Deus é com você. Perdoe as ofensas e pratique a bondade. Reflita o amor de Cristo em suas atitudes."
+  },
+  {
+    "day": 358,
+    "title": "Um Espelho da Graça",
+    "verse": "Nada façais por contenda ou por vanglória, mas com humildade cada um considere os outros superiores a si mesmo.",
+    "verseRef": "Filipenses 2:3",
+    "theme": "Humildade",
+    "reflection": "A humildade agrada a Deus e fortalece os relacionamentos. Coloque os outros em primeiro lugar e sirva com amor. Reconheça que todos são importantes aos olhos de Deus."
+  },
+  {
+    "day": 359,
+    "title": "No Fogo da Provação",
+    "verse": "Sabendo que a provação da vossa fé produz a perseverança.",
+    "verseRef": "Tiago 1:3",
+    "theme": "Perseverança",
+    "reflection": "A perseverança é fundamental para alcançar a vitória. Não desista diante das provações, mas confie em Deus. Ele te fortalecerá para superar os desafios e alcançar seus objetivos."
+  },
+  {
+    "day": 360,
+    "title": "Um Banquete de Deleite",
+    "verse": "Regozijai-vos sempre.",
+    "verseRef": "1 Tessalonicenses 5:16",
+    "theme": "Alegria",
+    "reflection": "Alegre-se sempre no Senhor, independentemente das circunstâncias. A alegria do Senhor é a sua força. Permaneça em alegria, pois ela revela a presença de Deus em sua vida."
+  },
+  {
+    "day": 361,
+    "title": "Âncora da Alma: A Firme Confiança",
+    "verse": "Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.",
+    "verseRef": "Provérbios 3:5",
+    "theme": "Confiança",
+    "reflection": "Em momentos de incerteza, deposite sua confiança em Deus. Ele guiará seus passos com sabedoria. Abandone a autossuficiência e abrace a fé."
+  },
+  {
+    "day": 362,
+    "title": "Cântico da Alma: A Melodia da Gratidão",
+    "verse": "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.",
+    "verseRef": "1 Tessalonicenses 5:18",
+    "theme": "Gratidão",
+    "reflection": "Reconheça as bênçãos diárias, grandes ou pequenas. A gratidão transforma o coração e abre caminhos para a alegria. Cultive um espírito agradecido em todas as circunstâncias."
+  },
+  {
+    "day": 363,
+    "title": "Farol da Fé: A Luz da Esperança",
+    "verse": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+    "verseRef": "Hebreus 11:1",
+    "theme": "Esperança",
+    "reflection": "Mantenha viva a esperança, mesmo diante dos desafios. A fé é a base da esperança, que nos impulsiona a seguir em frente. Creia que o melhor está por vir, segundo a promessa de Deus."
+  },
+  {
+    "day": 364,
+    "title": "Vínculo Eterno: A Essência do Amor",
+    "verse": "O amor é paciente, o amor é bondoso. Não inveja, não se vangloria, não se orgulha.",
+    "verseRef": "1 Coríntios 13:4",
+    "theme": "Amor",
+    "reflection": "Pratique o amor genuíno em todas as suas ações. Seja paciente, bondoso e humilde no trato com o próximo. Deixe o amor de Cristo transbordar em sua vida."
+  },
+  {
+    "day": 365,
+    "title": "Aliança Inabalável: A Rocha da Fé",
+    "verse": "Porque todo o que é nascido de Deus vence o mundo; e esta é a vitória que vence o mundo: a nossa fé.",
+    "verseRef": "1 João 5:4",
+    "theme": "Fé",
+    "reflection": "A fé em Deus é a chave para a vitória sobre os desafios do mundo. Fortaleça sua fé através da oração e do estudo da Palavra. Creia no poder transformador de Deus em sua vida."
+  }
+]
