@@ -193,8 +193,8 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
         </div>
 
         {/* ── FILLER: coroa de espinhos (só desktop, preenche espaço livre) ── */}
-        <div className="hidden lg:flex items-center justify-center flex-1 max-h-32 pointer-events-none select-none mt-2">
-          <CrownOfThorns className="w-full max-w-[160px] h-auto text-amber-900/[0.13]" />
+        <div className="flex items-center justify-center flex-1 max-h-32 pointer-events-none select-none mt-2">
+          <CrownOfThorns className="w-full max-w-[180px] h-auto text-amber-900/[0.28]" />
         </div>
 
         <div className="divine-divider mt-4 mb-3" />
