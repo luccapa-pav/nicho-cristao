@@ -29,6 +29,7 @@ interface PrayerListProps {
   prayers: Prayer[];
   onAddPrayer: (title: string, description?: string, isPublic?: boolean) => void;
   onMarkAnswered: (id: string, testimony?: string) => void;
+  onPrayedFor?: (id: string) => void;
   autoOpenForm?: boolean;
   onFormOpened?: () => void;
   groupPrayers?: GroupPrayer[];
@@ -43,7 +44,7 @@ function monthLabel(dateStr: string) {
 }
 
 export function PrayerList({
-  prayers, onAddPrayer, onMarkAnswered, autoOpenForm, onFormOpened,
+  prayers, onAddPrayer, onMarkAnswered, onPrayedFor, autoOpenForm, onFormOpened,
   groupPrayers = [], isLoading, isPremium,
 }: PrayerListProps) {
   const [showForm, setShowForm] = useState(false);
@@ -87,6 +88,12 @@ export function PrayerList({
     setTestimonyText("");
   };
 
+  const handlePrayed = async (id: string) => {
+    navigator.vibrate?.([20]);
+    onPrayedFor?.(id);
+    await fetch(`/api/prayers/${id}/prayed`, { method: "POST" });
+  };
+
   const handleExport = async () => {
     const answered = prayers.filter((p) => p.status === "ANSWERED").length;
     const total = prayers.length;
@@ -110,14 +117,14 @@ export function PrayerList({
       {/* ── Header ── */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gold/10 flex items-center justify-center border border-gold/20 shrink-0">
-            <Heart className="w-3.5 h-3.5 text-gold-dark" />
+          <div className="w-9 h-9 rounded-xl bg-gold/10 flex items-center justify-center border border-gold/20 shrink-0">
+            <Heart className="w-5 h-5 text-gold-dark" />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-gold-dark leading-none">
-              Diário de Oração
+            <p className="text-sm font-bold text-gold-dark leading-none">
+              ✦ Pedidos diante de Deus
             </p>
-            <p className="text-[0.7rem] text-slate-500 mt-0.5 leading-none">
+            <p className="text-xs text-slate-400 mt-0.5 leading-none">
               {answeredCount} respondidas · {pendingCount} pendentes
             </p>
           </div>
@@ -155,12 +162,15 @@ export function PrayerList({
             onSubmit={handleSubmit}
             className="flex flex-col gap-2.5 overflow-hidden"
           >
+            <p className="text-xs text-slate-400 italic text-center">
+              Escreva seu pedido — Deus escuta cada palavra
+            </p>
             <input
               type="text"
               placeholder="Título do pedido..."
               value={title}
               onChange={(e) => setTitle(e.target.value.slice(0, 120))}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-amber-100 bg-white text-sm text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold"
+              className="w-full px-4 py-3 rounded-xl border border-divine-200 bg-divine-50/30 text-base text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold focus:bg-white transition-colors"
               autoFocus
             />
             <textarea
@@ -168,7 +178,7 @@ export function PrayerList({
               value={description}
               onChange={(e) => setDescription(e.target.value.slice(0, 600))}
               rows={2}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-amber-100 bg-white text-sm text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-divine-200 bg-divine-50/30 text-base text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:bg-white transition-colors resize-none"
             />
             <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer select-none">
               <input
@@ -179,7 +189,7 @@ export function PrayerList({
               />
               Compartilhar com minha célula
             </label>
-            <button type="submit" className="btn-divine py-2.5 text-sm">
+            <button type="submit" className="btn-divine py-3 text-base w-full">
               Adicionar pedido 🙏
             </button>
           </motion.form>
@@ -192,21 +202,31 @@ export function PrayerList({
           <button
             key={f}
             onClick={() => setTab(f)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+            className={`flex items-center gap-1 px-3 py-2 rounded-full text-sm font-semibold transition-all ${
               tab === f
                 ? "bg-gold text-white shadow-sm"
-                : "bg-divine-50 text-slate-500 hover:bg-divine-100"
+                : "bg-divine-50 text-slate-600 border border-divine-200 hover:bg-divine-100"
             }`}
           >
-            {f === "ALL" ? "Todos" : f === "PENDING" ? "Pendentes" : "Respondidos"}
+            {f === "ALL" ? "Todos" : f === "PENDING" ? "Aguardando" : "Respondidos"}
+            {f === "PENDING" && pendingCount > 0 && (
+              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                tab === "PENDING" ? "bg-white/25 text-white" : "bg-amber-100 text-amber-700"
+              }`}>{pendingCount}</span>
+            )}
+            {f === "ANSWERED" && answeredCount > 0 && (
+              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                tab === "ANSWERED" ? "bg-white/25 text-white" : "bg-gold/15 text-gold-dark"
+              }`}>{answeredCount}</span>
+            )}
           </button>
         ))}
         <button
           onClick={() => setTab("CELULA")}
-          className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+          className={`flex items-center gap-1 px-3 py-2 rounded-full text-sm font-semibold transition-all ${
             tab === "CELULA"
               ? "bg-gold text-white shadow-sm"
-              : "bg-divine-50 text-slate-500 hover:bg-divine-100"
+              : "bg-divine-50 text-slate-600 border border-divine-200 hover:bg-divine-100"
           }`}
         >
           <Users className="w-3 h-3" />
@@ -222,7 +242,7 @@ export function PrayerList({
       </div>
 
       {/* ── Lista ── */}
-      <div className="flex flex-col gap-2 flex-1 overflow-y-auto custom-scroll pr-0.5 max-h-[26rem]">
+      <div className="flex flex-col gap-2 flex-1 overflow-y-auto custom-scroll pr-0.5 max-h-[32rem]">
         <AnimatePresence initial={false}>
           {isLoading ? (
             [0, 1, 2].map((i) => (
@@ -240,12 +260,15 @@ export function PrayerList({
                 <div className="w-12 h-12 rounded-full bg-divine-50 flex items-center justify-center">
                   <Users className="w-5 h-5 text-divine-300" />
                 </div>
-                <p className="text-sm font-semibold text-slate-600">Orações da sua célula</p>
+                <p className="text-sm font-semibold text-slate-700">Ore pelos seus irmãos</p>
+                <p className="text-xs text-slate-500 max-w-[210px] leading-relaxed text-center italic">
+                  &ldquo;Orai uns pelos outros para que sareis.&rdquo; — Tg 5:16
+                </p>
                 <p className="text-xs text-slate-400 max-w-[200px] leading-relaxed text-center">
-                  Com o Premium, veja e ore pelos pedidos dos membros da sua célula.
+                  Com o Premium, interceda pelos pedidos da sua célula em tempo real.
                 </p>
                 <Link href="/perfil">
-                  <button className="btn-divine py-2 px-5 text-xs">✦ Ver com Premium</button>
+                  <button className="btn-divine py-2.5 px-5 text-xs">✦ Quero interceder pela minha célula</button>
                 </Link>
               </div>
             ) : (
@@ -278,14 +301,20 @@ export function PrayerList({
               ))
             )
           ) : filtered.length === 0 ? (
-            <div className="text-center py-8 flex flex-col items-center gap-2">
-              <div className="w-10 h-10 rounded-full bg-divine-50 flex items-center justify-center">
-                <Heart className="w-4 h-4 text-divine-300" />
+            <div className="text-center py-10 flex flex-col items-center gap-3">
+              <div className="w-16 h-16 rounded-full bg-divine-50 border border-divine-200 flex items-center justify-center shadow-[0_0_18px_rgba(212,175,55,0.12)]">
+                <Heart className="w-7 h-7 text-gold/60" />
               </div>
-              <p className="text-sm font-semibold text-slate-600">Traga seus pedidos ao Senhor</p>
-              <p className="text-xs text-slate-500 max-w-[180px] leading-relaxed text-center italic">
+              <p className="text-base font-semibold text-slate-700">Traga seus pedidos ao Senhor</p>
+              <p className="text-sm text-slate-500 max-w-[220px] leading-relaxed text-center italic">
                 &ldquo;Apresentai os vossos pedidos a Deus em toda oração&rdquo; — Fp 4:6
               </p>
+              <button
+                onClick={() => setShowForm(true)}
+                className="btn-divine py-2.5 px-6 text-sm mt-1"
+              >
+                + Adicionar primeiro pedido
+              </button>
             </div>
           ) : isPremium ? (
             grouped.map(({ month, items }) => (
@@ -304,6 +333,7 @@ export function PrayerList({
                     onTestimonyChange={setTestimonyText}
                     onConfirmAnswer={confirmAnswer}
                     onCancelTestimony={() => setAwaitingTestimony(null)}
+                    onPrayed={handlePrayed}
                   />
                 ))}
               </div>
@@ -320,6 +350,7 @@ export function PrayerList({
                 onTestimonyChange={setTestimonyText}
                 onConfirmAnswer={confirmAnswer}
                 onCancelTestimony={() => setAwaitingTestimony(null)}
+                onPrayed={handlePrayed}
               />
             ))
           )}
@@ -331,7 +362,7 @@ export function PrayerList({
 
 function PrayerItem({
   prayer, index, awaitingTestimony, testimonyText,
-  onSetAwaiting, onTestimonyChange, onConfirmAnswer, onCancelTestimony,
+  onSetAwaiting, onTestimonyChange, onConfirmAnswer, onCancelTestimony, onPrayed,
 }: {
   prayer: Prayer;
   index: number;
@@ -341,6 +372,7 @@ function PrayerItem({
   onTestimonyChange: (v: string) => void;
   onConfirmAnswer: (id: string) => void;
   onCancelTestimony: () => void;
+  onPrayed: (id: string) => void;
 }) {
   return (
     <motion.div
@@ -350,28 +382,33 @@ function PrayerItem({
       transition={{ delay: index * 0.04 }}
       className={`flex flex-col p-3 rounded-xl border transition-all ${
         prayer.status === "ANSWERED"
-          ? "border-gold/30 bg-divine-50/60 shadow-[0_0_12px_rgba(212,175,55,0.10)]"
-          : "border-divine-100 bg-amber-50/20"
+          ? "border-gold/40 bg-gradient-to-r from-divine-50 to-divine-100/60 shadow-[0_2px_12px_rgba(212,175,55,0.18)]"
+          : "border-divine-200 bg-white border-l-[3px] border-l-amber-300"
       }`}
     >
       <div className="flex items-start gap-2.5">
         <button
           type="button"
           onClick={() => { if (prayer.status === "PENDING") onSetAwaiting(prayer.id); }}
-          className="shrink-0 mt-0.5 flex items-center justify-center w-7 h-7 rounded-lg transition-transform hover:scale-110"
+          className="shrink-0 mt-0.5 flex items-center justify-center w-8 h-8 rounded-lg transition-all hover:scale-110 hover:bg-divine-100 active:scale-95 group"
           aria-label={prayer.status === "PENDING" ? "Marcar como respondido" : "Pedido respondido"}
         >
           {prayer.status === "ANSWERED"
             ? <CheckCircle2 className="w-5 h-5 text-gold" />
-            : <Clock className="w-4 h-4 text-slate-400" />}
+            : <Clock className="w-4 h-4 text-divine-400 group-hover:text-gold-dark transition-colors" />}
         </button>
 
         <div className="min-w-0 flex-1">
-          <p className={`text-sm font-medium leading-snug ${
-            prayer.status === "ANSWERED" ? "line-through text-slate-400" : "text-slate-700"
+          <p className={`leading-snug ${
+            prayer.status === "ANSWERED" ? "text-gold-dark font-semibold" : "text-base font-semibold text-slate-700"
           }`}>
             {prayer.title}
           </p>
+          {prayer.status === "ANSWERED" && (
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-gold-dark bg-gold/10 border border-gold/20 rounded-full px-2 py-0.5 mt-1">
+              ✦ Respondido por Deus
+            </span>
+          )}
           {prayer.description && (
             <p className="text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
               {prayer.description}
@@ -383,9 +420,18 @@ function PrayerItem({
               <p className="text-xs text-slate-600 italic mt-0.5">{prayer.testimony}</p>
             </div>
           )}
-          <div className="flex items-center gap-1.5 mt-1">
+          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
             <span className="text-[10px] text-slate-400">{prayer.createdAt}</span>
-            {prayer.prayedCount > 0 && (
+            {prayer.status === "PENDING" && (
+              <button
+                onClick={() => onPrayed(prayer.id)}
+                className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-50 border border-rose-100 text-[10px] font-semibold text-rose-400 hover:bg-rose-100 transition-colors active:scale-95"
+                aria-label="Orei por este pedido"
+              >
+                🙏 {prayer.prayedCount > 0 ? `Orei (${prayer.prayedCount})` : "Orei por isso"}
+              </button>
+            )}
+            {prayer.status === "ANSWERED" && prayer.prayedCount > 0 && (
               <span className="text-[10px] text-rose-400">🙏 {prayer.prayedCount}</span>
             )}
           </div>

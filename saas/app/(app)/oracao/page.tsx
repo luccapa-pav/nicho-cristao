@@ -19,9 +19,20 @@ interface Prayer {
   createdAt: string;
 }
 
+interface GroupPrayer {
+  id: string;
+  title: string;
+  description?: string;
+  status: string;
+  prayedCount: number;
+  createdAt: string;
+  author: string;
+}
+
 export default function OracaoPage() {
   const { isPremium } = usePlan();
   const [prayers, setPrayers] = useState<Prayer[]>([]);
+  const [groupPrayers, setGroupPrayers] = useState<GroupPrayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [timerOpen, setTimerOpen] = useState(false);
   const [autoOpenForm, setAutoOpenForm] = useState(false);
@@ -75,13 +86,13 @@ export default function OracaoPage() {
 
   const fetchPrayers = useCallback(async () => {
     try {
-      const res = await fetch("/api/prayers");
-      if (res.ok) {
-        const data = await res.json();
-        setPrayers(data);
-      } else {
-        setError(true);
-      }
+      const [res, groupRes] = await Promise.all([
+        fetch("/api/prayers"),
+        fetch("/api/prayers/group"),
+      ]);
+      if (res.ok) setPrayers(await res.json());
+      else setError(true);
+      if (groupRes.ok) setGroupPrayers(await groupRes.json());
     } catch {
       setError(true);
     } finally {
@@ -117,6 +128,12 @@ export default function OracaoPage() {
         prev.map((p) => (p.id === id ? { ...p, status: "ANSWERED" as const, testimony: updated.testimony } : p))
       );
     }
+  };
+
+  const handlePrayedFor = (id: string) => {
+    setPrayers((prev) =>
+      prev.map((p) => p.id === id ? { ...p, prayedCount: p.prayedCount + 1 } : p)
+    );
   };
 
   const answered = prayers.filter((p) => p.status === "ANSWERED").length;
@@ -203,7 +220,7 @@ export default function OracaoPage() {
           <div className="flex flex-col sm:flex-row items-center gap-5">
             <Timer className="w-10 h-10 sm:w-12 sm:h-12 text-gold opacity-80 flex-shrink-0" />
             <div className="flex-1 text-center sm:text-left">
-              <p className="font-serif text-xl sm:text-2xl text-slate-700 font-semibold">Pronto para orar?</p>
+              <p className="font-serif text-xl sm:text-2xl text-slate-800 font-semibold">Pronto para orar?</p>
               <p className="text-sm sm:text-base text-slate-500 mt-1">
                 {isPremium
                   ? "Todos os modos: Adoração, Intercessão, Lectio Divina"
@@ -238,10 +255,10 @@ export default function OracaoPage() {
             </div>
             <button
               onClick={toggleReminder}
-              className={`relative w-12 h-7 rounded-full transition-colors ${reminderEnabled ? "bg-gold" : "bg-slate-200"}`}
+              className={`relative w-14 h-8 rounded-full transition-colors ${reminderEnabled ? "bg-gold" : "bg-slate-200"}`}
               aria-label={reminderEnabled ? "Desativar lembrete" : "Ativar lembrete"}
             >
-              <span className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-all ${reminderEnabled ? "left-6" : "left-1"}`} />
+              <span className={`absolute top-1 w-6 h-6 rounded-full bg-white shadow transition-all ${reminderEnabled ? "left-7" : "left-1"}`} />
             </button>
           </div>
           {reminderEnabled && (
@@ -351,9 +368,6 @@ export default function OracaoPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <p className="text-sm font-semibold uppercase tracking-widest text-gold/70 text-center mb-3">
-            ✦ Pedidos diante de Deus ✦
-          </p>
           {error ? (
             <div className="divine-card p-8 text-center text-slate-400">
               <p className="text-lg">Não foi possível carregar os pedidos.</p>
@@ -369,10 +383,12 @@ export default function OracaoPage() {
               prayers={prayers}
               onAddPrayer={handleAddPrayer}
               onMarkAnswered={handleMarkAnswered}
+              onPrayedFor={handlePrayedFor}
               autoOpenForm={autoOpenForm}
               onFormOpened={() => setAutoOpenForm(false)}
               isLoading={loading}
               isPremium={isPremium}
+              groupPrayers={groupPrayers}
             />
           )}
         </motion.div>
@@ -389,7 +405,8 @@ export default function OracaoPage() {
               <p className="text-xs font-semibold uppercase tracking-widest text-gold-dark">
                 ✦ Recursos Premium
               </p>
-              <p className="text-lg font-serif text-slate-700 mt-1">Aprofunde sua vida de oração</p>
+              <p className="text-lg font-serif text-slate-700 mt-1">Ore como os discípulos pediram</p>
+              <p className="text-xs text-slate-400 italic mt-1">&ldquo;Senhor, ensina-nos a orar&rdquo; — Lc 11:1</p>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -459,7 +476,7 @@ export default function OracaoPage() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setAutoOpenForm(true)}
-        className="fixed right-5 bottom-20 sm:bottom-24 md:bottom-10 z-40 w-16 h-16 rounded-full btn-divine flex items-center justify-center"
+        className="fixed right-5 bottom-24 sm:bottom-28 md:bottom-10 z-40 w-16 h-16 rounded-full btn-divine flex items-center justify-center"
         style={{ boxShadow: "0 4px 20px rgba(212,175,55,0.45), 0 2px 8px rgba(0,0,0,0.12)" }}
         aria-label="Adicionar pedido de oração"
       >
