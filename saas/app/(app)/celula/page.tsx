@@ -73,6 +73,8 @@ export default function CelulaPage() {
   const [isPrivate, setIsPrivate] = useState(false);
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState("");
+  const [joiningId, setJoiningId] = useState<string | null>(null);
+  const [joinError, setJoinError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/dashboard")
@@ -110,6 +112,19 @@ export default function CelulaPage() {
     const data = await res.json();
     setCreating(false);
     if (!res.ok) { setCreateError(data.error ?? "Erro ao criar fraternidade"); return; }
+    window.location.reload();
+  }
+
+  async function handleJoinPublic(groupId: string) {
+    setJoiningId(groupId);
+    setJoinError(null);
+    const res = await fetch("/api/groups/join-public", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ groupId }),
+    });
+    const data = await res.json();
+    if (!res.ok) { setJoiningId(null); setJoinError(data.error ?? "Erro ao entrar no grupo"); return; }
     window.location.reload();
   }
 
@@ -294,7 +309,7 @@ export default function CelulaPage() {
           Encontre sua fraternidade
         </h1>
         <p className="text-base sm:text-lg text-slate-500 mt-2 max-w-md mx-auto">
-          Caminhe junto com outros irmãos na fé
+          Entre numa pública ou crie a sua
         </p>
         <p className="text-xs italic text-slate-400 mt-3">
           &ldquo;O ferro aguça o ferro, e um homem aguça o rosto do outro.&rdquo; — Pv 27:17
@@ -404,15 +419,24 @@ export default function CelulaPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="flex flex-col gap-4"
+          className="divine-card p-5 sm:p-6 md:p-8 flex flex-col gap-4"
         >
           <div className="text-center">
+            <div className="w-10 h-10 rounded-xl bg-divine-50 border border-divine-200 flex items-center justify-center mx-auto mb-3">
+              <Users className="w-5 h-5 text-gold-dark" />
+            </div>
             <h2 className="font-serif text-2xl font-bold text-slate-800">Fraternidades abertas</h2>
-            <p className="text-sm text-slate-500 mt-1">Peça o link de convite ao líder</p>
+            <p className="text-sm text-slate-500 mt-1">Entre diretamente ou peça convite</p>
           </div>
 
+          {joinError && (
+            <div className="p-3 rounded-xl bg-red-50 border border-red-200">
+              <p className="text-sm text-red-600 font-medium text-center">{joinError}</p>
+            </div>
+          )}
+
           {publicGroups.length === 0 ? (
-            <div className="divine-card p-10 flex flex-col items-center gap-4 text-center">
+            <div className="flex-1 flex flex-col items-center justify-center gap-4 py-10 text-center">
               <div className="w-14 h-14 rounded-2xl bg-divine-50 border-2 border-dashed border-divine-200 flex items-center justify-center">
                 <Users className="w-7 h-7 text-divine-300" />
               </div>
@@ -422,40 +446,54 @@ export default function CelulaPage() {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 flex-1">
               {publicGroups.map((g) => (
-                <div key={g.id} className="divine-card p-4 sm:p-5 flex items-center gap-4 hover:border-gold/30 transition-all">
-                  <div className="w-11 h-11 rounded-2xl bg-divine-50 border border-divine-200 flex items-center justify-center flex-shrink-0">
-                    <Users className="w-5 h-5 text-gold-dark" />
+                <div key={g.id} className="flex items-center gap-3 p-3.5 rounded-xl border border-divine-100 bg-divine-50/40 hover:border-gold/30 hover:bg-divine-50 transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-divine-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <Users className="w-4.5 h-4.5 text-gold-dark" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-serif text-base font-bold text-slate-800 truncate">{g.name}</p>
+                    <p className="font-serif text-sm font-bold text-slate-800 truncate">{g.name}</p>
                     {g.description && (
-                      <p className="text-sm text-slate-500 truncate">{g.description}</p>
+                      <p className="text-xs text-slate-500 truncate">{g.description}</p>
                     )}
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <div className="h-1.5 flex-1 max-w-[80px] rounded-full bg-divine-100 overflow-hidden">
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <div className="h-1 flex-1 max-w-[60px] rounded-full bg-divine-200 overflow-hidden">
                         <div
                           className="h-full rounded-full bg-gradient-to-r from-gold to-gold-dark"
                           style={{ width: `${(g.memberCount / g.maxMembers) * 100}%` }}
                         />
                       </div>
-                      <p className="text-xs text-slate-400">
-                        {g.memberCount}/{g.maxMembers} membros
+                      <p className="text-[10px] text-slate-400">
+                        {g.memberCount}/{g.maxMembers}
                         {g.isFull && <span className="ml-1 text-amber-500 font-medium">· Cheia</span>}
                       </p>
                     </div>
                   </div>
-                  {!g.isFull && (
-                    <div className="flex-shrink-0 flex items-center gap-1 text-xs text-gold-dark font-semibold bg-divine-50 border border-divine-200 px-2.5 py-1.5 rounded-lg">
-                      <Link2 className="w-3.5 h-3.5" />
-                      Convite
-                    </div>
+                  {g.isFull ? (
+                    <span className="flex-shrink-0 text-[10px] text-slate-400 font-medium">Cheia</span>
+                  ) : (
+                    <button
+                      onClick={() => handleJoinPublic(g.id)}
+                      disabled={joiningId === g.id}
+                      className="flex-shrink-0 flex items-center gap-1 text-xs text-white font-semibold bg-gold hover:bg-gold-dark px-3 py-1.5 rounded-lg transition-colors disabled:opacity-60"
+                    >
+                      {joiningId === g.id
+                        ? <Loader2 className="w-3 h-3 animate-spin" />
+                        : <Plus className="w-3 h-3" />
+                      }
+                      Entrar
+                    </button>
                   )}
                 </div>
               ))}
             </div>
           )}
+
+          <p className="text-center text-xs text-slate-400 pt-1">
+            Grupos privados só aceitam membros por convite{" "}
+            <span className="text-gold-dark font-medium">(🔒)</span>
+          </p>
         </motion.div>
 
       </div>
