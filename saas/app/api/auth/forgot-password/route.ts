@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendPasswordResetEmail } from "@/lib/email";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json();
   if (!email) return NextResponse.json({ error: "Email obrigatório" }, { status: 400 });
+
+  const { limited } = await checkRateLimit(`forgot:${email.toLowerCase().trim()}`, 3, 15);
+  if (limited) {
+    return NextResponse.json({ error: "Muitas tentativas. Aguarde 15 minutos." }, { status: 429 });
+  }
 
   const user = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } });
 

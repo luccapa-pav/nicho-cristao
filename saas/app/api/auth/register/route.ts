@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit } from "@/lib/rateLimit";
+import { sendVerificationEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0] ?? "unknown";
+    const { limited } = await checkRateLimit(`register:${ip}`, 5, 15);
+    if (limited) {
+      return NextResponse.json({ error: "Muitas tentativas. Aguarde 15 minutos." }, { status: 429 });
+    }
+
     const { name, email, password } = await req.json();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,6 +40,19 @@ export async function POST(req: NextRequest) {
         streak: { create: {} },
       },
     });
+
+    // Send verification email (non-blocking — don't fail registration if email fails)
+    try {
+      const token = await prisma.emailVerificationToken.create({
+        data: {
+          userId: user.id,
+          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        },
+      });
+      await sendVerificationEmail(user.email, user.name, token.token);
+    } catch (emailErr) {
+      console.error("Failed to send verification email:", emailErr);
+    }
 
     return NextResponse.json({ id: user.id, name: user.name, email: user.email }, { status: 201 });
   } catch (e) {

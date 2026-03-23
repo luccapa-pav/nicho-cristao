@@ -49,7 +49,7 @@ interface Member {
 }
 
 interface DashboardData {
-  user: { name: string; plan: string } | null;
+  user: { name: string; plan: string; emailVerified?: string | null } | null;
   streak: { currentStreak: number; longestStreak: number };
   devotional: {
     id: string;
@@ -77,6 +77,40 @@ const FALLBACK_DEVOTIONAL = {
   completedToday: false,
 };
 
+function EmailVerificationBanner() {
+  const [sending, setSending] = useState(false);
+  const [sent, setSent]       = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  if (dismissed) return null;
+
+  async function resend() {
+    setSending(true);
+    try {
+      await fetch("/api/auth/resend-verification", { method: "POST" });
+      setSent(true);
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex items-center gap-3 text-sm">
+      <span className="text-amber-600 font-medium flex-1">
+        Confirme seu email para garantir acesso à sua conta.
+      </span>
+      {sent ? (
+        <span className="text-green-600 text-xs font-medium">Email enviado!</span>
+      ) : (
+        <button onClick={resend} disabled={sending} className="text-gold-dark font-semibold hover:underline text-xs disabled:opacity-50">
+          {sending ? "Enviando..." : "Reenviar email"}
+        </button>
+      )}
+      <button onClick={() => setDismissed(true)} className="text-amber-400 hover:text-amber-600 text-xs ml-1">✕</button>
+    </div>
+  );
+}
+
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: (i: number) => ({
@@ -103,7 +137,7 @@ export default function DashboardPage() {
   const [sosOpen, setSosOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [prayerFormOpen, setPrayerFormOpen] = useState(false);
-  const [inviteToken, setInviteToken] = useState("abc123xyz");
+  const [inviteToken, setInviteToken] = useState("");
   const [completedToday, setCompletedToday] = useState(false);
   const [streak, setStreak] = useState(0);
   const [fetchError, setFetchError] = useState(false);
@@ -240,8 +274,14 @@ export default function DashboardPage() {
 
   if (data === null) return <DashboardSkeleton />;
 
+  const emailUnverified = data.user && !data.user.emailVerified;
+
   return (
     <>
+      {/* Email verification banner */}
+      {emailUnverified && (
+        <EmailVerificationBanner />
+      )}
       {/* Sticky mini header — desktop only, aparece ao rolar o greeting */}
       <AnimatePresence>
         {!headerVisible && (
@@ -401,10 +441,10 @@ export default function DashboardPage() {
               </div>
 
               <a
-                href="/perfil"
+                href="/assinar"
                 className="flex-shrink-0 btn-divine px-6 py-3 text-sm whitespace-nowrap"
               >
-                ✦ Quero o Premium
+                ✦ Aprofundar minha fé — Mt 6:33
               </a>
             </motion.div>
           )}

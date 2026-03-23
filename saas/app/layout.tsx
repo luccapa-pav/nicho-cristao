@@ -5,6 +5,7 @@ import { SessionProvider } from "@/components/providers/SessionProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { FontSizeProvider } from "@/components/providers/FontSizeProvider";
 import { SwRegistrar } from "@/components/providers/SwRegistrar";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const inter = Inter({
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <SessionProvider>{children}</SessionProvider>
           </FontSizeProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );

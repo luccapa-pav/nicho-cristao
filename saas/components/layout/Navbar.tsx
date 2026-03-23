@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, Users, BookOpen, Heart, Bell, Menu, X, LogOut, UserCircle, Moon, Sun, BookMarked } from "lucide-react";
+import { Home, Users, BookOpen, Heart, Bell, Menu, X, LogOut, UserCircle, Moon, Sun, BookMarked, ScrollText } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -14,12 +14,13 @@ import { NotificationDropdown } from "@/components/ui/NotificationDropdown";
 import { OnboardingModal } from "@/components/ui/OnboardingModal";
 
 const NAV_ITEMS = [
-  { href: "/dashboard",  icon: Home,        label: "Início" },
-  { href: "/fraternidade",     icon: Users,       label: "Fraternidade" },
-  { href: "/oracao",     icon: Heart,       label: "Oração" },
-  { href: "/diario",     icon: BookMarked,  label: "Diário" },
-  { href: "/devocional", icon: BookOpen,    label: "Devocional" },
-  { href: "/perfil",     icon: UserCircle,  label: "Perfil" },
+  { href: "/dashboard",      icon: Home,        label: "Início" },
+  { href: "/fraternidade",   icon: Users,       label: "Fraternidade" },
+  { href: "/oracao",         icon: Heart,       label: "Oração" },
+  { href: "/diario",         icon: BookMarked,  label: "Diário" },
+  { href: "/devocional",     icon: BookOpen,    label: "Devocional" },
+  { href: "/plano-leitura",  icon: ScrollText,  label: "Plano de Leitura" },
+  { href: "/perfil",         icon: UserCircle,  label: "Perfil" },
 ];
 
 export function Navbar() {
