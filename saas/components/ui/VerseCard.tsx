@@ -22,7 +22,9 @@ function getFavs(): FavVerse[] {
 }
 
 export function VerseCard({ verse, reference, theme }: VerseCardProps) {
-  const [favorited, setFavorited] = useState(() => getFavs().some((f) => f.reference === reference && f.verse === verse));
+  const [favorited, setFavorited] = useState(() =>
+    getFavs().some((f) => f.reference === reference && f.verse === verse)
+  );
   const [showFavs, setShowFavs] = useState(false);
 
   const toggleFav = useCallback(() => {
@@ -41,43 +43,41 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
   return (
     <>
       <motion.div
-        className="divine-card p-8 relative overflow-hidden h-full"
+        className="divine-card p-6 relative overflow-hidden h-full flex flex-col"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        {/* Brilho decorativo de fundo */}
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse at 80% 20%, rgba(212,175,55,0.08) 0%, transparent 60%)" }}
+          style={{ background: "radial-gradient(ellipse at 10% 10%, rgba(212,175,55,0.07) 0%, transparent 55%)" }}
         />
-
-        {/* Cruz decorativa sutil */}
-        <div className="absolute top-4 right-4 opacity-[0.04] select-none pointer-events-none">
-          <span className="text-7xl font-serif text-gold">✝</span>
+        <div className="absolute bottom-3 right-3 opacity-[0.035] select-none pointer-events-none">
+          <span className="text-6xl font-serif text-gold">✝</span>
         </div>
 
         {/* Header */}
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-full bg-divine-100 flex items-center justify-center">
-            <BookOpen className="w-4 h-4 text-gold-dark" />
+        <div className="flex items-center justify-between mb-5 relative">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-gold/10 flex items-center justify-center border border-gold/20">
+              <BookOpen className="w-3.5 h-3.5 text-gold-dark" />
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-gold-dark/70 leading-none">
+                Versículo do Dia
+              </p>
+              {theme && (
+                <span className="text-[0.6rem] font-semibold uppercase tracking-wider text-slate-400 leading-none">
+                  {theme}
+                </span>
+              )}
+            </div>
           </div>
-          <div className="flex flex-col gap-1">
-            <p className="text-sm font-semibold uppercase tracking-widest text-gold-dark">
-              Versículo do Dia
-            </p>
-            {theme && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-divine-100 text-gold-dark text-xs font-bold uppercase tracking-widest">
-                {theme}
-              </span>
-            )}
-          </div>
-          {/* Favoritar */}
-          <div className="ml-auto flex items-center gap-1.5">
+          <div className="flex items-center gap-1 relative">
             {getFavs().length > 0 && (
               <button
                 onClick={() => setShowFavs(true)}
-                className="text-xs text-slate-400 hover:text-gold-dark transition-colors"
+                className="text-[0.65rem] text-slate-300 hover:text-gold-dark transition-colors leading-none px-1"
                 aria-label="Ver favoritos"
               >
                 Meus favoritos
@@ -86,16 +86,16 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
             <button
               onClick={toggleFav}
               aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
-              className="p-1 transition-all hover:scale-110"
+              className="p-1.5 rounded-lg hover:bg-divine-100 transition-all hover:scale-110 active:scale-95"
             >
-              <Star className={`w-4 h-4 transition-all ${favorited ? "fill-gold text-gold" : "text-slate-300 hover:text-gold"}`} />
+              <Star className={`w-4 h-4 transition-all ${favorited ? "fill-gold text-gold" : "text-slate-200 hover:text-gold"}`} />
             </button>
           </div>
         </div>
 
         {/* Versículo */}
         <motion.blockquote
-          className="verse-highlight text-2xl leading-loose text-slate-700 font-serif mb-4"
+          className="relative flex-1 verse-highlight text-xl leading-relaxed text-slate-700 font-serif mb-5"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
@@ -103,10 +103,12 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
           {'\u201C'}{verse}{'\u201D'}
         </motion.blockquote>
 
-        {/* Referência e ação */}
-        <div className="flex items-center justify-between">
+        <div className="divine-divider mb-4" />
+
+        {/* Footer */}
+        <div className="flex items-center justify-between relative">
           <motion.span
-            className="text-lg font-semibold text-gold-dark"
+            className="text-sm font-semibold text-gold-dark tracking-wide"
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.6, duration: 0.4 }}
@@ -114,7 +116,7 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
             — {reference}
           </motion.span>
           <button
-            className="btn-ghost-divine py-1.5 px-3 text-xs gap-1"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-gold-dark transition-colors py-1 px-2 rounded-lg hover:bg-divine-50 active:scale-95"
             aria-label="Compartilhar versículo"
             onClick={() => {
               if (navigator.share) {
