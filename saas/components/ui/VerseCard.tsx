@@ -7,16 +7,40 @@ import { FavoritesModal } from "./FavoritesModal";
 
 function CrownOfThorns({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
-      <path d="M10 50 Q20 20 35 30 Q45 10 60 15 Q75 10 85 30 Q100 20 110 50" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <path d="M35 30 L30 14 M35 30 L38 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M60 15 L56 2 M60 15 L64 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M85 30 L82 13 M85 30 L89 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M20 42 L14 30 M20 42 L17 28" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M100 42 L106 30 M100 42 L103 28" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M47 22 L44 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-      <path d="M73 22 L76 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-      <path d="M10 50 Q60 56 110 50" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
+    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+      {/* Anel externo da coroa */}
+      <ellipse cx="100" cy="100" rx="68" ry="28" stroke="currentColor" strokeWidth="5" strokeLinecap="round"/>
+      {/* Anel interno — textura de cipó entrelaçado */}
+      <ellipse cx="100" cy="100" rx="56" ry="20" stroke="currentColor" strokeWidth="2" strokeOpacity="0.35" strokeDasharray="8 5"/>
+      {/* Nós da madeira */}
+      <circle cx="100" cy="72" r="3" fill="currentColor" fillOpacity="0.3"/>
+      <circle cx="152" cy="88" r="2.5" fill="currentColor" fillOpacity="0.3"/>
+      <circle cx="48" cy="88" r="2.5" fill="currentColor" fillOpacity="0.3"/>
+      <circle cx="148" cy="112" r="2.5" fill="currentColor" fillOpacity="0.3"/>
+      <circle cx="52" cy="112" r="2.5" fill="currentColor" fillOpacity="0.3"/>
+      <circle cx="100" cy="128" r="3" fill="currentColor" fillOpacity="0.3"/>
+
+      {/* Espinhos — topo */}
+      <path d="M100 72 L96 48 L100 68 L104 48 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M130 76 L124 52 L128 73 L133 53 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M70 76 L67 52 L72 73 L76 53 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M155 85 L150 62 L153 83 L158 63 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M45 85 L42 62 L47 83 L50 63 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M170 96 L168 73 L170 94 L174 74 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M30 96 L28 73 L30 94 L34 74 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+
+      {/* Espinhos — base */}
+      <path d="M100 128 L96 152 L100 132 L104 152 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M130 124 L128 148 L132 127 L136 148 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M70 124 L66 148 L70 127 L74 148 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M155 115 L154 138 L157 118 L162 138 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M45 115 L42 138 L46 118 L50 138 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M170 104 L172 127 L171 106 L176 126 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M30 104 L28 127 L30 107 L34 127 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+
+      {/* Fibras entrelaçadas — textura do galho */}
+      <path d="M32 88 Q66 80 100 80 Q134 80 168 88" stroke="currentColor" strokeWidth="1" strokeOpacity="0.25" fill="none"/>
+      <path d="M32 112 Q66 120 100 120 Q134 120 168 112" stroke="currentColor" strokeWidth="1" strokeOpacity="0.25" fill="none"/>
     </svg>
   );
 }
@@ -128,8 +152,8 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
         </div>
 
         {/* ── FILLER: coroa de espinhos (só desktop, preenche espaço livre) ── */}
-        <div className="hidden lg:flex items-end justify-center flex-1 max-h-24 pointer-events-none select-none mt-2">
-          <CrownOfThorns className="w-full max-w-[140px] h-auto text-amber-800/10" />
+        <div className="hidden lg:flex items-center justify-center flex-1 max-h-32 pointer-events-none select-none mt-2">
+          <CrownOfThorns className="w-full max-w-[160px] h-auto text-amber-900/[0.13]" />
         </div>
 
         <div className="divine-divider mt-4 mb-3" />
