@@ -108,6 +108,21 @@
   h1, h2, h3 {
     font-family: var(--font-playfair), Georgia, serif;
   }
+
+  /* ── Gradiente top→bottom: mais escuro/quente no topo, clareia ao descer ── */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(212, 175, 55, 0.05) 0%,
+      rgba(212, 175, 55, 0.02) 35%,
+      transparent 65%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
 }
 
 /* ── Componentes utilitários ───────────────────────────────── */
@@ -115,19 +130,24 @@
 
   /* Card flutuante com brilho dourado */
   .divine-card {
-    @apply bg-white rounded-2xl border border-amber-100/60 transition-all duration-300;
+    @apply bg-white rounded-2xl border border-amber-300 transition-all duration-300;
     box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(212,175,55,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
   }
 
   .divine-card:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 16px 40px rgba(212,175,55,0.10);
-    @apply -translate-y-0.5;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 24px 56px rgba(212,175,55,0.18), 0 4px 12px rgba(212,175,55,0.12);
+    @apply -translate-y-1;
+  }
+
+  .divine-card:active {
+    @apply scale-[0.99];
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05), 0 8px 20px rgba(212,175,55,0.08);
   }
 
   /* Botão primário dourado */
   .btn-divine {
     @apply inline-flex items-center justify-center gap-2
-           bg-gold
+           bg-gold min-h-[44px]
            text-white font-semibold px-6 py-3 rounded-xl
            transition-all duration-200
            hover:scale-[1.02] active:scale-[0.98];
@@ -137,7 +157,7 @@
   .btn-ghost-divine {
     @apply inline-flex items-center justify-center gap-2
            border border-divine-300 text-gold-dark font-medium
-           px-5 py-2.5 rounded-2xl bg-white/60 backdrop-blur-sm
+           px-5 py-2.5 rounded-2xl bg-white/60 backdrop-blur-sm min-h-[44px]
            transition-all duration-200
            hover:bg-divine-50 hover:border-gold hover:shadow-card;
   }
@@ -178,6 +198,60 @@
     @apply bg-divine-300 rounded-full;
   }
 }
+
+/* ── Modo letra grande ─────────────────────────────────────── */
+html.font-large { font-size: 115%; }
+
+/* ── Tema escuro ────────────────────────────────────────────── */
+.dark body {
+  background-color: #17130e;
+  color: #e8dcc8;
+}
+.dark body::before {
+  opacity: 0.04;
+}
+.dark body::after {
+  background: linear-gradient(
+    180deg,
+    rgba(212, 175, 55, 0.07) 0%,
+    rgba(212, 175, 55, 0.03) 35%,
+    transparent 65%
+  );
+}
+.dark .divine-card {
+  background-color: #1f1a14;
+  border-color: rgba(212,175,55,0.18);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 8px 24px rgba(212,175,55,0.04), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.dark .divine-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4), 0 24px 56px rgba(212,175,55,0.12), 0 4px 12px rgba(212,175,55,0.08);
+}
+.dark aside {
+  background-color: #17130e !important;
+  border-color: rgba(212,175,55,0.12) !important;
+}
+.dark header, .dark nav.md\:hidden {
+  background-color: rgba(23,19,14,0.95) !important;
+  border-color: rgba(212,175,55,0.12) !important;
+}
+.dark .text-slate-900 { color: #e8dcc8 !important; }
+.dark .text-slate-800 { color: #ddd0b5 !important; }
+.dark .text-slate-700 { color: #d4c9b0 !important; }
+.dark .text-slate-600 { color: #b8aa90 !important; }
+.dark .text-slate-500 { color: #9a8c72 !important; }
+.dark .text-slate-400 { color: #7d7060 !important; }
+.dark .bg-white { background-color: #1f1a14 !important; }
+.dark .bg-divine-50, .dark .bg-amber-50\/30 { background-color: rgba(212,175,55,0.06) !important; }
+.dark .bg-divine-100 { background-color: rgba(212,175,55,0.12) !important; }
+.dark .border-divine-100 { border-color: rgba(212,175,55,0.12) !important; }
+.dark .border-divine-200 { border-color: rgba(212,175,55,0.16) !important; }
+.dark .border-amber-100 { border-color: rgba(212,175,55,0.16) !important; }
+.dark input, .dark textarea {
+  background-color: #2a2218 !important;
+  border-color: rgba(212,175,55,0.2) !important;
+  color: #e8dcc8 !important;
+}
+.dark input::placeholder, .dark textarea::placeholder { color: #5c5040 !important; }
 
 /* ── Animações de entrada sequencial ───────────────────────── */
 .animate-delay-100 { animation-delay: 100ms; }

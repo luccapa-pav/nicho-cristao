@@ -68,7 +68,7 @@ export function CellGroup({ name, progress, members, onInvite, onPray }: CellGro
   const nextMilestone = [25, 50, 75, 100].find((m) => m > progress) ?? 100;
 
   return (
-    <div className="divine-card p-8 flex flex-col gap-4">
+    <div className="divine-card p-8 flex flex-col gap-4 h-full">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -104,7 +104,8 @@ export function CellGroup({ name, progress, members, onInvite, onPray }: CellGro
               <motion.button
                 onClick={() => handlePray(member.id)}
                 disabled={prayedFor.has(member.id)}
-                className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center shadow-sm transition-all relative before:absolute before:inset-[-8px] before:content-[''] ${
+                aria-label={`Orar por ${member.name}`}
+                className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center shadow-sm transition-all before:absolute before:-inset-2 before:content-[''] ${
                   prayedFor.has(member.id)
                     ? "bg-gold scale-90"
                     : "bg-white border border-divine-200 hover:border-gold"

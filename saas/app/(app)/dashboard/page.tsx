@@ -305,15 +305,13 @@ export default function DashboardPage() {
               </h2>
               <div className="w-8 h-px bg-gold/40 mt-1" />
             </div>
+            {/* Versículo em destaque */}
+            <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={1} className="mb-6">
+              <VerseCard verse={devotional.verse} reference={devotional.verseRef} theme={devotional.theme} />
+            </motion.div>
+
+            {/* Áudio + Streak lado a lado */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={1} className="lg:col-span-1 h-full">
-                <StreakCounter
-                  days={streak}
-                  longestStreak={data?.streak?.longestStreak ?? 0}
-                  onComplete={handleCompleteDevotional}
-                  completedToday={completedToday}
-                />
-              </motion.div>
               <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={2} className="lg:col-span-2 h-full">
                 <AudioPlayer
                   title={devotional.title}
@@ -322,18 +320,22 @@ export default function DashboardPage() {
                   date={new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
                 />
               </motion.div>
+              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={3} className="lg:col-span-1 h-full">
+                <StreakCounter
+                  days={streak}
+                  longestStreak={data?.streak?.longestStreak ?? 0}
+                  onComplete={handleCompleteDevotional}
+                  completedToday={completedToday}
+                />
+              </motion.div>
             </div>
 
-            <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} custom={3} className="mt-4">
+            <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} custom={4} className="mt-4">
               <DevotionalHistory />
             </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={4} className="lg:col-span-1 h-full">
-                <VerseCard verse={devotional.verse} reference={devotional.verseRef} theme={devotional.theme} />
-              </motion.div>
-              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={5} className="lg:col-span-2 h-full">
-                {data.group ? (
+            <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={5} className="mt-6">
+              {data.group ? (
                   <CellGroup
                     name={data.group.name}
                     progress={data.group.progress}
@@ -364,8 +366,7 @@ export default function DashboardPage() {
                     </a>
                   </div>
                 )}
-              </motion.div>
-            </div>
+            </motion.div>
           </div>
 
           <div className="divine-divider" />

@@ -2,6 +2,9 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Inter, Playfair_Display } from "next/font/google";
 import { SessionProvider } from "@/components/providers/SessionProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { FontSizeProvider } from "@/components/providers/FontSizeProvider";
+import { SwRegistrar } from "@/components/providers/SwRegistrar";
 import "./globals.css";
 
 const inter = Inter({
@@ -39,7 +42,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR" className={`${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen antialiased">
-        <SessionProvider>{children}</SessionProvider>
+        <ThemeProvider>
+          <FontSizeProvider>
+            <SwRegistrar />
+            <SessionProvider>{children}</SessionProvider>
+          </FontSizeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

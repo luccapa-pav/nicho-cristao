@@ -15,9 +15,10 @@ const SOS_VERSES = [
 interface SOSModalProps {
   open: boolean;
   onClose: () => void;
+  onRequestPrayer?: () => void;
 }
 
-export function SOSModal({ open, onClose }: SOSModalProps) {
+export function SOSModal({ open, onClose, onRequestPrayer }: SOSModalProps) {
   const [verse] = useState(() => SOS_VERSES[Math.floor(Math.random() * SOS_VERSES.length)]);
   const [breathePhase, setBreathePhase] = useState<"inhale" | "hold" | "exhale" | null>(null);
   const [breatheCount, setBreatheCount] = useState(0);
@@ -91,7 +92,12 @@ export function SOSModal({ open, onClose }: SOSModalProps) {
             exit={{ opacity: 0, y: 60, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
           >
-            <div className="divine-card p-6 flex flex-col gap-5 relative overflow-hidden">
+            <div
+              className="divine-card p-6 flex flex-col gap-5 relative overflow-hidden"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="sos-modal-title"
+            >
               {/* Brilho de fundo */}
               <div
                 className="absolute inset-0 pointer-events-none"
@@ -102,10 +108,11 @@ export function SOSModal({ open, onClose }: SOSModalProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Shield className="w-5 h-5 text-gold" />
-                  <h2 className="font-serif text-lg font-bold text-slate-800">SOS Bíblico</h2>
+                  <h2 id="sos-modal-title" className="font-serif text-lg font-bold text-slate-800">SOS Bíblico</h2>
                 </div>
                 <button
                   onClick={onClose}
+                  aria-label="Fechar"
                   className="w-8 h-8 rounded-full bg-divine-50 flex items-center justify-center text-slate-400 hover:bg-divine-100 transition-colors"
                 >
                   <X className="w-4 h-4" />
@@ -166,14 +173,23 @@ export function SOSModal({ open, onClose }: SOSModalProps) {
 
               {/* Ações rápidas */}
               <div className="grid grid-cols-2 gap-2">
-                <button className="btn-ghost-divine text-xs py-2 justify-center">
+                <button
+                  onClick={() => { onClose(); onRequestPrayer?.(); }}
+                  className="btn-ghost-divine text-xs py-2 justify-center"
+                >
                   <MessageCircle className="w-3.5 h-3.5" />
-                  Pedir oração à célula
+                  Pedir oração
                 </button>
-                <button className="btn-divine text-xs py-2">
+                <a
+                  href="https://www.bible.com/pt/bible/211/PSA.23.NTLH"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={onClose}
+                  className="btn-divine text-xs py-2 flex items-center justify-center gap-1.5 no-underline"
+                >
                   <BookOpen className="w-3.5 h-3.5" />
                   Ler salmos
-                </button>
+                </a>
               </div>
             </div>
           </motion.div>

@@ -1,4 +1,5 @@
 import { PrismaClient, Plan, GroupRole, PrayerStatus, ReactionType } from "@prisma/client";
+import readingPlansData from "./data/reading-plans.json";
 
 const prisma = new PrismaClient();
 
@@ -143,6 +144,29 @@ async function main() {
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     },
   });
+
+  // ── Planos de Leitura ─────────────────────────────────────
+  for (const plan of readingPlansData) {
+    const readingPlan = await prisma.readingPlan.upsert({
+      where: { slug: plan.slug },
+      update: { name: plan.name, daysTotal: plan.daysTotal, isPremium: plan.isPremium },
+      create: { slug: plan.slug, name: plan.name, daysTotal: plan.daysTotal, isPremium: plan.isPremium },
+    });
+
+    // Insert entries in batches of 100
+    const entries = plan.entries.map((e) => ({
+      planId: readingPlan.id,
+      day: e.day,
+      reference: e.reference,
+      title: e.title ?? null,
+    }));
+    for (let i = 0; i < entries.length; i += 100) {
+      await prisma.readingEntry.createMany({
+        data: entries.slice(i, i + 100),
+        skipDuplicates: true,
+      });
+    }
+  }
 
   console.log("✅ Seed concluído com sucesso!");
   console.log(`   Usuários: ${users.length}`);

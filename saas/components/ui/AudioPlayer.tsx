@@ -18,6 +18,7 @@ function formatTime(s: number) {
 }
 
 export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProps) {
+  const hasAudio = Boolean(audioUrl);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState(0.8);
@@ -51,7 +52,7 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
   }, [duration]);
 
   return (
-    <div className="audio-player gap-3 h-full">
+    <div className="audio-player !p-6 gap-3 h-full">
 
       {/* Header — centralizado */}
       <div className="flex flex-col items-center text-center gap-2">
@@ -72,13 +73,13 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
 
         {/* Textos */}
         <div className="flex flex-col gap-0.5">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-dark">
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-gold-dark">
             Cápsula de Áudio
           </p>
           <p className="text-lg font-serif font-semibold text-slate-800 leading-tight">
             {title}
           </p>
-          <p className="text-[0.625rem] leading-none text-slate-400/80 tracking-wide">
+          <p className="text-xs leading-none text-slate-500 tracking-wide">
             {date}
           </p>
         </div>
@@ -99,7 +100,7 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
           </motion.div>
         </div>
         {/* Timestamps */}
-        <div className="flex justify-between text-[0.625rem] leading-none text-slate-400 tabular-nums font-medium tracking-wide">
+        <div className="flex justify-between text-xs leading-none text-slate-500 tabular-nums font-medium tracking-wide">
           <span>{formatTime(currentTime)}</span>
           <span>{formatTime(duration)}</span>
         </div>
@@ -109,17 +110,20 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
       <div className="flex items-center justify-center gap-6">
         <button
           onClick={() => skip(-15)}
-          className="text-slate-400 hover:text-gold transition-colors p-1"
+          className="text-slate-500 hover:text-gold transition-colors p-1"
+          aria-label="Voltar 15 segundos"
           title="-15s"
         >
-          <SkipBack className="w-4 h-4" />
+          <SkipBack className="w-5 h-5" />
         </button>
 
         <motion.button
           onClick={togglePlay}
-          className="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-gold-dark text-white flex items-center justify-center shadow-divine"
-          whileTap={{ scale: 0.9 }}
-          whileHover={{ scale: 1.05 }}
+          disabled={!hasAudio}
+          className="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-gold-dark text-white flex items-center justify-center shadow-divine disabled:opacity-40 disabled:cursor-not-allowed"
+          whileTap={hasAudio ? { scale: 0.9 } : {}}
+          whileHover={hasAudio ? { scale: 1.05 } : {}}
+          aria-label={playing ? "Pausar" : "Reproduzir"}
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -136,10 +140,11 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
 
         <button
           onClick={() => skip(15)}
-          className="text-slate-400 hover:text-gold transition-colors p-1"
+          className="text-slate-500 hover:text-gold transition-colors p-1"
+          aria-label="Avançar 15 segundos"
           title="+15s"
         >
-          <SkipForward className="w-4 h-4" />
+          <SkipForward className="w-5 h-5" />
         </button>
       </div>
 
@@ -149,8 +154,8 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
           <button
             key={rate}
             onClick={() => { setPlaybackRate(rate); if (audioRef.current) audioRef.current.playbackRate = rate; }}
-            className={`text-[10px] font-bold px-2 py-0.5 rounded-full transition-all ${
-              playbackRate === rate ? "bg-gold text-white" : "text-slate-400 hover:text-gold-dark"
+            className={`text-xs font-bold px-2.5 py-1 rounded-full transition-all ${
+              playbackRate === rate ? "bg-gold text-white" : "text-slate-500 hover:text-gold-dark"
             }`}
           >
             {rate}x
@@ -160,7 +165,7 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
 
       {/* Volume */}
       <div className="flex items-center gap-2 px-1">
-        <Volume2 className="w-3.5 h-3.5 text-slate-300 flex-shrink-0" />
+        <Volume2 className="w-4 h-4 text-slate-500 flex-shrink-0" />
         <div
           className="relative flex-1 h-1.5 rounded-full bg-divine-100 cursor-pointer group"
           onClick={(e) => {
@@ -175,15 +180,21 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
         </div>
       </div>
 
-      <audio
-        ref={audioRef}
-        src={audioUrl}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-        onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
-        onEnded={() => setPlaying(false)}
-        preload="metadata"
-      />
+      {audioUrl ? (
+        <audio
+          ref={audioRef}
+          src={audioUrl}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
+          onEnded={() => setPlaying(false)}
+          preload="metadata"
+        />
+      ) : (
+        <p className="text-xs text-center text-slate-500">
+          Áudio disponível em breve
+        </p>
+      )}
     </div>
   );
 }

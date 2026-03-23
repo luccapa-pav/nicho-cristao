@@ -51,7 +51,12 @@ export function InviteModal({ open, onClose, groupName, inviteToken }: InviteMod
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", stiffness: 350, damping: 28 }}
           >
-            <div className="divine-card p-6 flex flex-col gap-5 relative overflow-hidden">
+            <div
+              className="divine-card p-6 flex flex-col gap-5 relative overflow-hidden"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="invite-modal-title"
+            >
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.12) 0%, transparent 60%)" }}
@@ -60,9 +65,9 @@ export function InviteModal({ open, onClose, groupName, inviteToken }: InviteMod
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-gold" />
-                  <h2 className="font-serif text-base font-bold text-slate-800">Convidar para a Célula</h2>
+                  <h2 id="invite-modal-title" className="font-serif text-base font-bold text-slate-800">Convidar para a Célula</h2>
                 </div>
-                <button onClick={onClose} className="w-7 h-7 rounded-full bg-divine-50 flex items-center justify-center text-slate-400 hover:bg-divine-100">
+                <button onClick={onClose} aria-label="Fechar" className="w-7 h-7 rounded-full bg-divine-50 flex items-center justify-center text-slate-400 hover:bg-divine-100">
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>

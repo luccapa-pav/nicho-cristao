@@ -23,6 +23,10 @@ model User {
   passwordHash  String?
   avatarUrl     String?
   bio           String?
+  church        String?
+  city          String?
+  verse         String?
+  ministry      String?
   plan          Plan     @default(FREE)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -35,6 +39,8 @@ model User {
   reactions     Reaction[]
   devotionalLogs DevotionalLog[]
   sentInvites   GroupInvite[]  @relation("InviteSender")
+  fcmTokens     FcmToken[]
+  readingProgress ReadingProgress[]
 
   @@map("users")
 }
@@ -103,6 +109,7 @@ model Group {
   description String?
   maxMembers  Int      @default(12)
   progress    Float    @default(0)  // 0-100 progresso coletivo
+  isPrivate   Boolean  @default(false)
   coverUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -210,4 +217,56 @@ model Reaction {
 enum ReactionType {
   AMEN        // Amém
   GLORY       // Glória a Deus
+}
+
+// ─────────────────────────────────────────────
+// FCM TOKENS (Push Notifications — Premium)
+// ─────────────────────────────────────────────
+model FcmToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("fcm_tokens")
+}
+
+// ─────────────────────────────────────────────
+// PLANOS DE LEITURA BÍBLICA (Premium)
+// ─────────────────────────────────────────────
+model ReadingPlan {
+  id        String            @id @default(cuid())
+  name      String
+  slug      String            @unique
+  daysTotal Int
+  isPremium Boolean           @default(true)
+  entries   ReadingEntry[]
+  progress  ReadingProgress[]
+
+  @@map("reading_plans")
+}
+
+model ReadingEntry {
+  id        String      @id @default(cuid())
+  planId    String
+  day       Int
+  reference String
+  title     String?
+  plan      ReadingPlan @relation(fields: [planId], references: [id])
+
+  @@map("reading_entries")
+}
+
+model ReadingProgress {
+  id         String      @id @default(cuid())
+  userId     String
+  planId     String
+  currentDay Int         @default(0)
+  startedAt  DateTime    @default(now())
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan       ReadingPlan @relation(fields: [planId], references: [id])
+
+  @@unique([userId, planId])
+  @@map("reading_progress")
 }
