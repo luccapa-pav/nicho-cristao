@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Flame, CheckCircle2 } from "lucide-react";
+import { Flame, CheckCircle2, Share2 } from "lucide-react";
+import confetti from "canvas-confetti";
 
 interface StreakCounterProps {
   days: number;
@@ -31,16 +32,16 @@ export function StreakCounter({ days, longestStreak, completedToday, onComplete 
   const progress = Math.min((days / next) * 100, 100);
 
   return (
-    <div className="divine-card p-8 flex flex-col items-center text-center gap-4 h-full">
+    <div className="divine-card p-6 flex flex-col items-center text-center gap-4 h-full">
 
       {/* Label + toggle */}
       <div className="flex items-center justify-between w-full">
-        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-dark">
+        <span className="text-sm font-semibold uppercase tracking-[0.14em] text-gold-dark">
           Ofensiva
         </span>
         <button
           onClick={() => setShowRecord((v) => !v)}
-          className="text-[0.6875rem] font-medium tracking-wide text-slate-400 hover:text-gold-dark transition-colors"
+          className="text-xs font-medium tracking-wide text-slate-500 hover:text-gold-dark transition-colors"
         >
           {showRecord ? "← voltar" : "recorde"}
         </button>
@@ -87,7 +88,7 @@ export function StreakCounter({ days, longestStreak, completedToday, onComplete 
             >
               {showRecord ? longestStreak : displayed}
             </span>
-            <span className="ml-2 text-sm font-medium text-slate-400 self-end pb-2">
+            <span className="ml-2 text-sm font-medium text-slate-600 self-end pb-2">
               {(showRecord ? longestStreak : days) === 1 ? "dia" : "dias"}
             </span>
           </div>
@@ -95,7 +96,7 @@ export function StreakCounter({ days, longestStreak, completedToday, onComplete 
       </AnimatePresence>
 
       {/* Subtítulo meta */}
-      <p className="text-[0.6875rem] leading-snug text-slate-400">
+      <p className="text-xs leading-snug text-slate-600">
         {showRecord
           ? "Sua melhor sequência de todos os tempos"
           : `Próxima marca: ${next} dias`}
@@ -104,7 +105,7 @@ export function StreakCounter({ days, longestStreak, completedToday, onComplete 
       {/* Labels de progresso de dias */}
       {!showRecord && (
         <div className="w-full">
-          <div className="flex justify-between text-[0.625rem] leading-none text-slate-300 tabular-nums">
+          <div className="flex justify-between text-xs leading-none text-slate-500 tabular-nums">
             <span>{days} dias</span>
             <span>{next} dias</span>
           </div>
@@ -122,20 +123,43 @@ export function StreakCounter({ days, longestStreak, completedToday, onComplete 
           />
         ))}
       </div>
-      <div className="flex justify-between w-full text-[0.5625rem] leading-none tabular-nums font-medium px-0.5">
+      <div className="flex justify-between w-full text-xs leading-none tabular-nums font-medium px-0.5">
         {milestones.map((m) => (
-          <span key={m} className={days >= m ? "text-gold font-bold" : "text-slate-300/70"}>
+          <span key={m} className={days >= m ? "text-gold font-bold" : "text-slate-400"}>
             {days >= m ? "✓" : `${m}d`}
           </span>
         ))}
       </div>
 
+      {/* Share button */}
+      <button
+        onClick={() => {
+          const text = `Estou no dia ${days} da minha ofensiva! 🔥 "Corramos com perseverança a corrida que nos é proposta" — Hb 12:1`;
+          if (navigator.share) {
+            navigator.share({ title: "Luz Divina", text, url: window.location.origin }).catch(() => {});
+          } else {
+            navigator.clipboard.writeText(text).catch(() => {});
+          }
+        }}
+        aria-label="Compartilhar ofensiva"
+        className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-gold-dark transition-colors py-1"
+      >
+        <Share2 className="w-3.5 h-3.5" />
+        Compartilhar
+      </button>
+
       {/* Botão CTA */}
       <motion.button
-        onClick={onComplete}
+        onClick={() => {
+          if (!completedToday) {
+            navigator.vibrate?.(60);
+            confetti({ particleCount: 80, spread: 70, colors: ["#D4AF37", "#F0D060", "#ffffff"], origin: { y: 0.6 } });
+            onComplete();
+          }
+        }}
         disabled={completedToday}
         whileTap={completedToday ? {} : { scale: 0.96 }}
-        className={`mt-auto w-full py-2.5 rounded-2xl text-sm font-semibold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 ${
+        className={`mt-auto w-full py-4 rounded-2xl text-base font-semibold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 ${
           completedToday
             ? "bg-gradient-to-r from-emerald-50 to-divine-50 border border-emerald-200/60 text-emerald-700 cursor-default"
             : "btn-divine"
@@ -143,7 +167,7 @@ export function StreakCounter({ days, longestStreak, completedToday, onComplete 
       >
         {completedToday ? (
           <>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <CheckCircle2 className="w-5 h-5 text-emerald-500" />
             Devocional concluído
           </>
         ) : (

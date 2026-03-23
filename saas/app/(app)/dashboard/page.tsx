@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { motion } from "framer-motion";
-import { Bell, Settings } from "lucide-react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Timer, Users } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 import { StreakCounter } from "@/components/ui/StreakCounter";
 import { VerseCard } from "@/components/ui/VerseCard";
@@ -12,37 +13,10 @@ import { PrayerList } from "@/components/ui/PrayerList";
 import { GratitudeFeed } from "@/components/ui/GratitudeFeed";
 import { SOSModal } from "@/components/ui/SOSModal";
 import { InviteModal } from "@/components/ui/InviteModal";
-
-// ─────────────────────────────────────────────────────────────
-// DADOS MOCK — substituir por fetch de API/server components
-// ─────────────────────────────────────────────────────────────
-const MOCK_USER = {
-  name: "Maria Silva",
-  plan: "PREMIUM" as const,
-};
-
-const MOCK_STREAK = { current: 42, longest: 67 };
-
-const MOCK_DEVOTIONAL = {
-  title: "Andando pela Fé",
-  verse: "Porque andamos por fé e não por vista.",
-  verseRef: "2 Coríntios 5:7",
-  theme: "Confiança",
-  audioUrl: "",
-  duration: 345,
-  date: "Domingo, 22 de Março de 2026",
-};
-
-const MOCK_MEMBERS = [
-  { id: "1", name: "João Pedro",  streakDays: 42, isOnline: true },
-  { id: "2", name: "Ana Lima",    streakDays: 30, isOnline: true },
-  { id: "3", name: "Carlos Melo", streakDays: 15, isOnline: false },
-  { id: "4", name: "Beatriz S.",  streakDays: 7,  isOnline: true },
-  { id: "5", name: "Rafael T.",   streakDays: 21, isOnline: false },
-  { id: "6", name: "Fernanda C.", streakDays: 56, isOnline: true },
-  { id: "7", name: "Lucas O.",    streakDays: 3,  isOnline: false },
-  { id: "8", name: "Tatiana N.",  streakDays: 11, isOnline: true },
-];
+import { DashboardSkeleton } from "@/components/ui/DashboardSkeleton";
+import { NotificationPrompt } from "@/components/ui/NotificationPrompt";
+import { PrayerTimer } from "@/components/ui/PrayerTimer";
+import { DevotionalHistory } from "@/components/ui/DevotionalHistory";
 
 type PrayerStatus = "PENDING" | "ANSWERED";
 
@@ -55,32 +29,51 @@ interface Prayer {
   createdAt: string;
 }
 
-const INITIAL_PRAYERS: Prayer[] = [
-  { id: "p1", title: "Saúde do meu pai",     status: "PENDING",  prayedCount: 4,  description: "Precisa de cirurgia na próxima semana.", createdAt: "há 2 dias" },
-  { id: "p2", title: "Novo emprego",          status: "PENDING",  prayedCount: 8,  createdAt: "há 5 dias" },
-  { id: "p3", title: "Aprovação na faculdade",status: "ANSWERED", prayedCount: 12, createdAt: "há 10 dias" },
-];
+interface Post {
+  id: string;
+  author: string;
+  content: string;
+  reactions: { AMEN: number; GLORY: number };
+  userReacted: "AMEN" | "GLORY" | null;
+  createdAt: string;
+}
 
-const INITIAL_POSTS = [
-  {
-    id: "g1",
-    author: "João Pedro",
-    content: "Glória a Deus! Consegui o emprego que tanto orei. Em 3 meses de orações, Deus respondeu perfeitamente!",
-    reactions: { AMEN: 12, GLORY: 7 },
-    userReacted: null as "AMEN" | "GLORY" | null,
-    createdAt: "há 1 hora",
-  },
-  {
-    id: "g2",
-    author: "Ana Lima",
-    content: "Minha mãe recebeu alta hoje do hospital. Foi uma batalha de 2 semanas. Obrigada pelas orações da célula!",
-    reactions: { AMEN: 23, GLORY: 15 },
-    userReacted: "AMEN" as "AMEN",
-    createdAt: "há 3 horas",
-  },
-];
+interface Member {
+  id: string;
+  name: string;
+  avatarUrl?: string;
+  streakDays: number;
+  isOnline: boolean;
+}
 
-// ─────────────────────────────────────────────────────────────
+interface DashboardData {
+  user: { name: string; plan: string } | null;
+  streak: { currentStreak: number; longestStreak: number };
+  devotional: {
+    id: string;
+    title: string;
+    verse: string;
+    verseRef: string;
+    audioUrl: string;
+    duration: number;
+    theme: string;
+    completedToday: boolean;
+  } | null;
+  group: { name: string; progress: number; members: Member[] } | null;
+  prayers: Prayer[];
+  posts: Post[];
+}
+
+const FALLBACK_DEVOTIONAL = {
+  id: "",
+  title: "Andando pela Fé",
+  verse: "Porque andamos por fé e não por vista.",
+  verseRef: "2 Coríntios 5:7",
+  audioUrl: "",
+  duration: 0,
+  theme: "Confiança",
+  completedToday: false,
+};
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -91,163 +84,328 @@ const fadeInUp = {
   }),
 };
 
-export default function DashboardPage() {
-  const [prayers, setPrayers]       = useState<Prayer[]>(INITIAL_PRAYERS);
-  const [posts, setPosts]           = useState(INITIAL_POSTS);
-  const [sosOpen, setSosOpen]       = useState(false);
-  const [inviteOpen, setInviteOpen] = useState(false);
-  const [streak, setStreak]         = useState(MOCK_STREAK.current);
-  const [completedToday, setCompletedToday] = useState(false);
+function relativeTime(iso: string) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "agora";
+  if (mins < 60) return `há ${mins} min`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `há ${hrs}h`;
+  return `há ${Math.floor(hrs / 24)} dias`;
+}
 
-  const handleCompleteDevotional = useCallback(() => {
+export default function DashboardPage() {
+  const { data: session } = useSession();
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [sosOpen, setSosOpen] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [prayerFormOpen, setPrayerFormOpen] = useState(false);
+  const [inviteToken, setInviteToken] = useState("abc123xyz");
+  const [completedToday, setCompletedToday] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [fetchError, setFetchError] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const [showNotifPrompt, setShowNotifPrompt] = useState(false);
+  const [timerOpen, setTimerOpen] = useState(false);
+  const [groupPrayers, setGroupPrayers] = useState<{ id: string; title: string; description?: string; status: string; prayedCount: number; createdAt: string; author: string }[]>([]);
+
+  useEffect(() => {
+    // Phase 1: quick data (streak + devotional)
+    fetch("/api/dashboard?quick=1")
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
+      .then((d: Partial<DashboardData>) => {
+        setStreak(d.streak?.currentStreak ?? 0);
+        setCompletedToday(d.devotional?.completedToday ?? false);
+        // Phase 2: full data
+        return fetch("/api/dashboard");
+      })
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
+      .then((d: DashboardData) => {
+        setData(d);
+        setStreak(d.streak?.currentStreak ?? 0);
+        setCompletedToday(d.devotional?.completedToday ?? false);
+        if (!localStorage.getItem("notif")) setShowNotifPrompt(true);
+      })
+      .catch(() => setFetchError(true));
+
+    // Group prayers
+    fetch("/api/prayers/group")
+      .then((r) => r.ok ? r.json() : [])
+      .then((d) => setGroupPrayers(d))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeaderVisible(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleCompleteDevotional = useCallback(async () => {
     if (completedToday) return;
     setCompletedToday(true);
     setStreak((s) => s + 1);
+    await fetch("/api/streak/complete", { method: "POST" });
+    await fetch("/api/devotional/today", { method: "POST" });
+    if (Notification.permission === "granted") {
+      new Notification("Parabéns! Ofensiva mantida 🔥", {
+        body: "Mais um dia de crescimento espiritual. Continue assim!",
+      });
+    }
   }, [completedToday]);
 
+  const handleAddPrayer = useCallback(async (title: string, description?: string, isPublic?: boolean) => {
+    const res = await fetch("/api/prayers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, description, isPublic }),
+    });
+    if (!res.ok) return;
+    const prayer = await res.json();
+    setData((prev) => prev ? { ...prev, prayers: [{ ...prayer, createdAt: relativeTime(prayer.createdAt) }, ...prev.prayers] } : prev);
+  }, []);
+
+  const handleMarkAnswered = useCallback(async (id: string) => {
+    await fetch(`/api/prayers/${id}/answered`, { method: "PATCH" });
+    setData((prev) => prev ? {
+      ...prev,
+      prayers: prev.prayers.map((p): Prayer => p.id === id ? { ...p, status: "ANSWERED" } : p),
+    } : prev);
+  }, []);
+
+  const handleReact = useCallback(async (postId: string, type: "AMEN" | "GLORY") => {
+    const res = await fetch(`/api/gratitude/${postId}/react`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type }),
+    });
+    if (!res.ok) return;
+    const { userReacted } = await res.json();
+    setData((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        posts: prev.posts.map((p) => {
+          if (p.id !== postId) return p;
+          const prev_reaction = p.userReacted;
+          const reactions = { ...p.reactions };
+          if (prev_reaction) reactions[prev_reaction] = Math.max(0, reactions[prev_reaction] - 1);
+          if (userReacted) reactions[userReacted as "AMEN" | "GLORY"] += 1;
+          return { ...p, reactions, userReacted };
+        }),
+      };
+    });
+  }, []);
+
+  const handlePost = useCallback(async (content: string) => {
+    const res = await fetch("/api/gratitude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content }),
+    });
+    if (!res.ok) return;
+    const post = await res.json();
+    setData((prev) => prev ? { ...prev, posts: [post, ...prev.posts] } : prev);
+  }, []);
+
   const greetingHour = new Date().getHours();
-  const greeting =
-    greetingHour < 12 ? "Bom dia" : greetingHour < 18 ? "Boa tarde" : "Boa noite";
+  const greeting = greetingHour < 12 ? "Bom dia" : greetingHour < 18 ? "Boa tarde" : "Boa noite";
+  const userName = data?.user?.name ?? session?.user?.name ?? "Amigo";
+  const devotional = data?.devotional ?? FALLBACK_DEVOTIONAL;
 
-  const handleAddPrayer = useCallback((title: string, description?: string) => {
-    setPrayers((prev) => [
-      { id: `p${Date.now()}`, title, description, status: "PENDING" as PrayerStatus, prayedCount: 0, createdAt: "agora" },
-      ...prev,
-    ]);
-  }, []);
+  const prayers = (data?.prayers ?? []).map((p) => ({
+    ...p,
+    createdAt: typeof p.createdAt === "string" && p.createdAt.includes("T")
+      ? relativeTime(p.createdAt) : p.createdAt,
+  }));
 
-  const handleMarkAnswered = useCallback((id: string) => {
-    setPrayers((prev) =>
-      prev.map((p): Prayer => p.id === id ? { ...p, status: "ANSWERED" } : p)
-    );
-  }, []);
+  const posts = (data?.posts ?? []).map((p) => ({
+    ...p,
+    createdAt: typeof p.createdAt === "string" && p.createdAt.includes("T")
+      ? relativeTime(p.createdAt) : p.createdAt,
+  }));
 
-  const handleReact = useCallback((_postId: string, _type: "AMEN" | "GLORY") => {
-    // TODO: API call
-  }, []);
+  if (fetchError) return (
+    <div className="flex flex-col items-center justify-center min-h-screen gap-4 text-center px-4">
+      <p className="text-4xl">🙏</p>
+      <p className="font-serif text-xl text-slate-700">Não foi possível carregar</p>
+      <p className="text-sm text-slate-400">Verifique sua conexão e tente novamente.</p>
+      <button onClick={() => { setFetchError(false); setData(null); window.location.reload(); }} className="btn-divine py-4 px-8 text-base">
+        Tentar novamente
+      </button>
+    </div>
+  );
 
-  const handlePost = useCallback((content: string) => {
-    setPosts((prev) => [
-      {
-        id: `g${Date.now()}`,
-        author: MOCK_USER.name,
-        content,
-        reactions: { AMEN: 0, GLORY: 0 },
-        userReacted: null,
-        createdAt: "agora",
-      },
-      ...prev,
-    ]);
-  }, []);
+  if (data === null) return <DashboardSkeleton />;
 
   return (
     <>
-      {/* Brilho dourado superior */}
+      {/* Sticky mini header — desktop only, aparece ao rolar o greeting */}
+      <AnimatePresence>
+        {!headerVisible && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="hidden md:flex fixed top-0 z-50 items-center justify-between px-8 h-12 border-b border-amber-100/60 backdrop-blur-md"
+            style={{ left: "256px", right: 0, backgroundColor: "rgba(255,254,249,0.92)" }}
+          >
+            <span className="font-serif text-sm font-semibold text-slate-700">
+              {greeting},{" "}
+              <span className="text-gold-dark">{userName.split(" ")[0]}</span>
+            </span>
+            <span className="text-xs text-slate-400 tracking-[0.06em]">
+              {new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div
         className="pointer-events-none fixed top-0 left-0 right-0 h-48 z-0"
         style={{ background: "radial-gradient(ellipse at 50% -20%, rgba(212,175,55,0.10) 0%, transparent 70%)" }}
       />
 
-      <div className="min-h-screen relative z-10">
-        <div className="max-w-5xl mx-auto px-8 md:px-16 py-14 md:py-20 space-y-20 md:space-y-28">
+      <div className="min-h-full relative z-10">
+        <div className="w-full px-6 md:px-16 py-8 md:py-12 space-y-10 md:space-y-14">
 
-          {/* ── Header editorial ────────────────────────── */}
-          <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={0}
+          {/* Header */}
+          <motion.div ref={headerRef} variants={fadeInUp} initial="hidden" animate="visible" custom={0}
             className="relative flex flex-col items-center text-center"
           >
-            {/* Ações — canto direito absoluto */}
-            <div className="absolute right-0 top-0 flex items-center gap-2">
-              <button className="w-9 h-9 rounded-full bg-white border border-divine-200 flex items-center justify-center text-slate-400 hover:border-gold hover:text-gold transition-all shadow-sm">
-                <Bell className="w-4 h-4" />
-              </button>
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center text-white font-bold text-sm shadow-divine">
-                {MOCK_USER.name[0]}
-              </div>
-            </div>
-
-            {/* Data */}
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gold-dark mb-4">
               {new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}
             </p>
 
-            {/* Saudação */}
             <h1 className="font-serif text-4xl md:text-6xl font-bold text-slate-900 leading-[1.1] tracking-tight">
-              {greeting},<br />
-              <span className="text-gold-dark">{MOCK_USER.name.split(" ")[0]}.</span>
+              {greeting},<br className="md:hidden" />
+              {" "}<span className="text-gold-dark">{userName.split(" ")[0]}.</span>
             </h1>
 
-            {/* Subtítulo */}
             <p className="text-sm text-slate-400 mt-4 tracking-[0.06em] font-light max-w-xs">
               Que este seja mais um dia de glória para o Senhor.
             </p>
           </motion.div>
 
-          {/* ── Divisor ──────────────────────────────────── */}
           <div className="divine-divider" />
 
-          {/* ── SEÇÃO 01 ─────────────────────────────────── */}
+          {/* Seção 01 */}
           <div>
-            <div className="flex flex-col items-center text-center mb-10 gap-1">
+            <div className="flex flex-col items-center text-center mb-6 gap-1">
               <span className="text-[0.625rem] font-bold uppercase tracking-[0.35em] text-gold-dark/50">01</span>
-              <h2 className="font-serif text-2xl md:text-3xl font-semibold text-slate-800 tracking-tight">
+              <h2 className="font-serif text-3xl md:text-4xl font-semibold text-slate-800 tracking-tight">
                 Devocional do Dia
               </h2>
               <div className="w-8 h-px bg-gold/40 mt-1" />
             </div>
-            {/* Linha 1 — Ofensiva + Cápsula de Áudio */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-              <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={1} className="lg:col-span-1 h-full">
-                <StreakCounter days={streak} longestStreak={MOCK_STREAK.longest} onComplete={handleCompleteDevotional} completedToday={completedToday} />
+              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={1} className="lg:col-span-1 h-full">
+                <StreakCounter
+                  days={streak}
+                  longestStreak={data?.streak?.longestStreak ?? 0}
+                  onComplete={handleCompleteDevotional}
+                  completedToday={completedToday}
+                />
               </motion.div>
-              <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={2} className="lg:col-span-2 h-full">
-                <AudioPlayer title={MOCK_DEVOTIONAL.title} duration={MOCK_DEVOTIONAL.duration} audioUrl={MOCK_DEVOTIONAL.audioUrl} date={MOCK_DEVOTIONAL.date} />
+              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={2} className="lg:col-span-2 h-full">
+                <AudioPlayer
+                  title={devotional.title}
+                  duration={devotional.duration}
+                  audioUrl={devotional.audioUrl}
+                  date={new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+                />
               </motion.div>
             </div>
 
-            {/* Linha 2 — Versículo + Célula */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={3} className="lg:col-span-1">
-                <VerseCard verse={MOCK_DEVOTIONAL.verse} reference={MOCK_DEVOTIONAL.verseRef} theme={MOCK_DEVOTIONAL.theme} />
+            <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} custom={3} className="mt-4">
+              <DevotionalHistory />
+            </motion.div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={4} className="lg:col-span-1 h-full">
+                <VerseCard verse={devotional.verse} reference={devotional.verseRef} theme={devotional.theme} />
               </motion.div>
-              <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={4} className="lg:col-span-2">
-                <CellGroup name="Célula Filhos da Luz" progress={68} members={MOCK_MEMBERS} onInvite={() => setInviteOpen(true)} onPray={() => {}} />
+              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={5} className="lg:col-span-2 h-full">
+                {data.group ? (
+                  <CellGroup
+                    name={data.group.name}
+                    progress={data.group.progress}
+                    members={data.group.members}
+                    onInvite={async () => {
+                      const res = await fetch("/api/groups/invite", { method: "POST" });
+                      if (res.ok) {
+                        const { token } = await res.json();
+                        setInviteToken(token);
+                      }
+                      setInviteOpen(true);
+                    }}
+                    onPray={() => {}}
+                  />
+                ) : (
+                  <div className="divine-card p-8 flex flex-col items-center gap-5 text-center h-full justify-center min-h-[260px]">
+                    <div className="w-16 h-16 rounded-2xl bg-divine-50 border-2 border-dashed border-divine-300 flex items-center justify-center">
+                      <Users className="w-8 h-8 text-divine-400" />
+                    </div>
+                    <div>
+                      <p className="font-serif text-xl font-bold text-slate-800">Você ainda não tem uma célula</p>
+                      <p className="text-sm text-slate-500 mt-1 max-w-xs mx-auto">
+                        Entre em uma célula pelo link de convite de um líder, ou crie a sua para caminhar junto com outros irmãos.
+                      </p>
+                    </div>
+                    <a href="/celula" className="btn-divine py-3 text-sm px-8">
+                      Criar minha célula
+                    </a>
+                  </div>
+                )}
               </motion.div>
             </div>
           </div>
 
-          {/* ── Divisor ─────────────────────────────────── */}
           <div className="divine-divider" />
 
-          {/* ── SEÇÃO 02 ─────────────────────────────────── */}
+          {/* Seção 02 */}
           <div>
-            <div className="flex flex-col items-center text-center mb-10 gap-1">
+            <div className="flex flex-col items-center text-center mb-6 gap-1">
               <span className="text-[0.625rem] font-bold uppercase tracking-[0.35em] text-gold-dark/50">02</span>
-              <h2 className="font-serif text-2xl md:text-3xl font-semibold text-slate-800 tracking-tight">
+              <h2 className="font-serif text-3xl md:text-4xl font-semibold text-slate-800 tracking-tight">
                 Oração & Comunidade
               </h2>
               <div className="w-8 h-px bg-gold/40 mt-1" />
+              <button
+                onClick={() => setTimerOpen(true)}
+                className="mt-3 flex items-center gap-2 px-6 py-3 rounded-full bg-divine-50 border border-amber-100 text-base font-semibold text-gold-dark hover:bg-divine-100 transition-colors"
+              >
+                <Timer className="w-4 h-4" />
+                Iniciar Oração
+              </button>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={4}>
-                <PrayerList prayers={prayers} onAddPrayer={handleAddPrayer} onMarkAnswered={handleMarkAnswered} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={5} className="h-full">
+                <PrayerList prayers={prayers} onAddPrayer={handleAddPrayer} onMarkAnswered={handleMarkAnswered} autoOpenForm={prayerFormOpen} onFormOpened={() => setPrayerFormOpen(false)} groupPrayers={groupPrayers} />
               </motion.div>
-              <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={5}>
+              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={6} className="h-full">
                 <GratitudeFeed posts={posts} onReact={handleReact} onPost={handlePost} />
               </motion.div>
             </div>
           </div>
 
-          <div className="h-20" />
+          <div className="h-6" />
         </div>
       </div>
 
-      {/* ── FAB SOS ─────────────────────────────────────── */}
       <motion.button
         onClick={() => setSosOpen(true)}
         className="fixed bottom-20 md:bottom-8 right-4 md:right-8 z-20
-                   w-14 h-14 rounded-full shadow-divine-lg
+                   w-16 h-16 rounded-full shadow-divine-lg
                    bg-gradient-to-br from-gold to-gold-dark text-white
-                   flex items-center justify-center text-xl
+                   flex items-center justify-center text-2xl
                    hover:shadow-glow transition-shadow"
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.92 }}
@@ -256,18 +414,24 @@ export default function DashboardPage() {
           boxShadow: ["0 0 0px rgba(212,175,55,0.3)", "0 0 20px rgba(212,175,55,0.6)", "0 0 0px rgba(212,175,55,0.3)"],
         }}
         transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        aria-label="SOS Bíblico"
         title="SOS Bíblico"
       >
         🆘
       </motion.button>
 
-      {/* ── Modais ─────────────────────────────────────── */}
-      <SOSModal open={sosOpen} onClose={() => setSosOpen(false)} />
+      {showNotifPrompt && (
+        <div className="fixed bottom-24 md:bottom-10 left-4 right-4 md:left-72 md:right-8 z-40 max-w-sm">
+          <NotificationPrompt onDismiss={() => setShowNotifPrompt(false)} />
+        </div>
+      )}
+      <SOSModal open={sosOpen} onClose={() => setSosOpen(false)} onRequestPrayer={() => setPrayerFormOpen(true)} />
+      <PrayerTimer open={timerOpen} onClose={() => setTimerOpen(false)} />
       <InviteModal
         open={inviteOpen}
         onClose={() => setInviteOpen(false)}
-        groupName="Célula Filhos da Luz"
-        inviteToken="abc123xyz"
+        groupName={data.group?.name ?? "Minha Célula"}
+        inviteToken={inviteToken}
       />
     </>
   );
