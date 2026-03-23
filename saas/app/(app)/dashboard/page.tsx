@@ -263,7 +263,7 @@ export default function DashboardPage() {
       />
 
       <div className="min-h-full relative z-10">
-        <div className="w-full px-6 md:px-16 py-8 md:py-12 space-y-10 md:space-y-14">
+        <div className="w-full px-6 md:px-16 py-6 md:py-6 space-y-8 md:space-y-8">
 
           {/* Header */}
           <motion.div ref={headerRef} variants={fadeInUp} initial="hidden" animate="visible" custom={0}
@@ -273,23 +273,21 @@ export default function DashboardPage() {
               {new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}
             </p>
 
-            <h1 className="font-serif text-4xl md:text-6xl font-bold text-slate-900 leading-[1.1] tracking-tight">
+            <h1 className="font-serif text-3xl md:text-4xl font-bold text-slate-900 leading-[1.1] tracking-tight">
               {greeting},<br className="md:hidden" />
               {" "}<span className="text-gold-dark">{userName.split(" ")[0]}.</span>
             </h1>
 
-            <p className="text-sm text-slate-400 mt-4 tracking-[0.06em] font-light max-w-xs">
+            <p className="text-sm text-slate-400 mt-2 tracking-[0.06em] font-light max-w-xs">
               Que este seja mais um dia de glória para o Senhor.
             </p>
           </motion.div>
 
-          <div className="divine-divider" />
-
           {/* Seção 01 */}
           <div>
-            <div className="flex flex-col items-center text-center mb-6 gap-1">
+            <div className="flex flex-col items-center text-center mb-4 gap-0.5">
               <span className="text-[0.625rem] font-bold uppercase tracking-[0.35em] text-gold-dark/50">01</span>
-              <h2 className="font-serif text-3xl md:text-4xl font-semibold text-slate-800 tracking-tight">
+              <h2 className="font-serif text-2xl md:text-3xl font-semibold text-slate-800 tracking-tight">
                 Devocional do Dia
               </h2>
               <div className="w-8 h-px bg-gold/40 mt-1" />
