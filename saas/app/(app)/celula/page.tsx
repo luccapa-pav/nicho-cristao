@@ -328,6 +328,9 @@ export default function CelulaPage() {
           className="divine-card p-5 sm:p-6 md:p-8 flex flex-col gap-6"
         >
           <div>
+            <div className="w-10 h-10 rounded-xl bg-divine-50 border border-divine-200 flex items-center justify-center mx-auto mb-3">
+              <Plus className="w-5 h-5 text-gold-dark" />
+            </div>
             <h2 className="font-serif text-2xl font-bold text-slate-800 text-center">Criar uma fraternidade</h2>
             <p className="text-sm text-slate-500 text-center mt-1">Você será o líder do grupo</p>
           </div>
