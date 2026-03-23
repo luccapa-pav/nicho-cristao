@@ -442,6 +442,9 @@ export default function CelulaPage() {
             <p className="text-sm text-slate-500 mt-1">Entre diretamente ou acesse pelo link do grupo</p>
           </div>
 
+          {/* Entrar por link */}
+          <EnterByLink />
+
           {joinError && (
             <div className="p-3 rounded-xl bg-red-50 border border-red-200">
               <p className="text-sm text-red-600 font-medium text-center">{joinError}</p>
@@ -523,6 +526,61 @@ export default function CelulaPage() {
         </motion.div>
 
       </div>
+    </div>
+  );
+}
+
+// ── Entrar por link ─────────────────────────────────────────────────
+function EnterByLink() {
+  const [open, setOpen] = useState(false);
+  const [url, setUrl] = useState("");
+
+  function handleOpen() {
+    if (!url.trim()) return;
+    window.open(url.trim(), "_blank", "noopener,noreferrer");
+    setUrl("");
+    setOpen(false);
+  }
+
+  return (
+    <div className="rounded-xl border border-divine-200 bg-divine-50/60 p-3">
+      {!open ? (
+        <button
+          onClick={() => setOpen(true)}
+          className="w-full flex items-center justify-center gap-2 text-sm text-gold-dark font-semibold hover:text-gold transition-colors py-1"
+        >
+          <Link2 className="w-4 h-4" />
+          Tenho o link de uma fraternidade
+        </button>
+      ) : (
+        <div className="flex flex-col gap-2">
+          <p className="text-xs text-slate-500 font-medium">Cole o link do grupo (WhatsApp, Telegram…)</p>
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://chat.whatsapp.com/..."
+              autoFocus
+              className="flex-1 px-3 py-2 rounded-xl border-2 border-divine-200 bg-white text-sm text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold transition-colors"
+              onKeyDown={(e) => e.key === "Enter" && handleOpen()}
+            />
+            <button
+              onClick={handleOpen}
+              disabled={!url.trim()}
+              className="px-3 py-2 rounded-xl bg-gold text-white text-sm font-semibold hover:bg-gold-dark disabled:opacity-50 transition-colors"
+            >
+              Abrir
+            </button>
+            <button
+              onClick={() => { setOpen(false); setUrl(""); }}
+              className="px-2 py-2 rounded-xl border border-divine-200 text-slate-400 hover:bg-divine-100 transition-colors"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
