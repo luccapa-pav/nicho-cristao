@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
 export const MAX_MEMBERS_BASE = 12;
-export const MAX_MEMBERS_CAP = 48;   // ajuste conforme necessário
+export const MAX_MEMBERS_CAP = 40;
 export const PREMIUM_BONUS = 4;      // cada membro Premium adiciona 4 vagas
 
 /**

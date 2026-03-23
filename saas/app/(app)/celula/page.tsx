@@ -444,7 +444,7 @@ export default function CelulaPage() {
               <Users className="w-5 h-5 text-gold-dark" />
             </div>
             <h2 className="font-serif text-2xl font-bold text-slate-800">Fraternidades abertas</h2>
-            <p className="text-sm text-slate-500 mt-1">Entre diretamente ou peça convite</p>
+            <p className="text-sm text-slate-500 mt-1">Entre diretamente ou acesse pelo link do grupo</p>
           </div>
 
           {joinError && (
@@ -490,7 +490,7 @@ export default function CelulaPage() {
                   </div>
                   <div className="flex-shrink-0 flex flex-col items-end gap-1.5">
                     {g.isFull ? (
-                      <span className="text-[10px] text-slate-400 font-medium">Cheia</span>
+                      <span className="text-[10px] text-slate-400 font-medium px-2">Cheia</span>
                     ) : (
                       <button
                         onClick={() => handleJoinPublic(g.id)}
@@ -509,10 +509,10 @@ export default function CelulaPage() {
                         href={g.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-[10px] text-gold-dark hover:underline"
+                        className="flex items-center gap-1 text-xs text-gold-dark font-semibold border border-gold/40 bg-divine-50 hover:bg-divine-100 px-3 py-1.5 rounded-lg transition-colors"
                       >
-                        <Link2 className="w-2.5 h-2.5" />
-                        Abrir link
+                        <Link2 className="w-3 h-3" />
+                        Link do grupo
                       </a>
                     )}
                   </div>
