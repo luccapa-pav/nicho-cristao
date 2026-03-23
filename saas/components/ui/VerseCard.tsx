@@ -3,8 +3,23 @@
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, Share2, Star } from "lucide-react";
-import Image from "next/image";
 import { FavoritesModal } from "./FavoritesModal";
+
+function CrownOfThorns({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+      <path d="M10 50 Q20 20 35 30 Q45 10 60 15 Q75 10 85 30 Q100 20 110 50" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+      <path d="M35 30 L30 14 M35 30 L38 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M60 15 L56 2 M60 15 L64 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M85 30 L82 13 M85 30 L89 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M20 42 L14 30 M20 42 L17 28" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M100 42 L106 30 M100 42 L103 28" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M47 22 L44 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <path d="M73 22 L76 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <path d="M10 50 Q60 56 110 50" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
+    </svg>
+  );
+}
 
 interface VerseCardProps {
   verse: string;
@@ -62,11 +77,11 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
               <BookOpen className="w-3.5 h-3.5 text-gold-dark" />
             </div>
             <div className="flex flex-col gap-0.5 min-w-0">
-              <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-gold-dark/70 leading-none">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-gold-dark leading-none">
                 Versículo do Dia
               </p>
               {theme && (
-                <span className="text-[0.6rem] font-semibold uppercase tracking-wider text-slate-400 leading-none truncate">
+                <span className="text-[0.7rem] font-semibold text-slate-500 leading-none truncate mt-0.5">
                   {theme}
                 </span>
               )}
@@ -113,16 +128,8 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
         </div>
 
         {/* ── FILLER: coroa de espinhos (só desktop, preenche espaço livre) ── */}
-        <div className="hidden lg:flex items-end justify-center flex-1 max-h-28 pointer-events-none select-none mt-2">
-          <Image
-            src="/cross-crown.svg"
-            alt=""
-            aria-hidden="true"
-            width={96}
-            height={124}
-            className="w-auto h-full max-h-28 opacity-[0.09] object-contain"
-            priority={false}
-          />
+        <div className="hidden lg:flex items-end justify-center flex-1 max-h-24 pointer-events-none select-none mt-2">
+          <CrownOfThorns className="w-full max-w-[140px] h-auto text-amber-800/10" />
         </div>
 
         <div className="divine-divider mt-4 mb-3" />
