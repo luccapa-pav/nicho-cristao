@@ -1,10 +1,9 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const FROM = "Luz Divina <noreply@luzdivina.app>";
 
 export async function sendPasswordResetEmail(to: string, name: string, token: string) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const resetUrl = `${process.env.NEXTAUTH_URL}/redefinir-senha/${token}`;
 
   await resend.emails.send({
