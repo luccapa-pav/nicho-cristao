@@ -19,13 +19,13 @@ export async function POST(req: NextRequest) {
   if (invite.status !== "PENDING") return NextResponse.json({ error: "Este convite já foi usado" }, { status: 400 });
   if (invite.expiresAt < new Date()) return NextResponse.json({ error: "Este convite expirou" }, { status: 400 });
   if (invite.group._count.members >= invite.group.maxMembers) {
-    return NextResponse.json({ error: "A célula já está cheia (máx. 12 membros)" }, { status: 400 });
+    return NextResponse.json({ error: "A fraternidade já está cheia (máx. 12 membros)" }, { status: 400 });
   }
 
   const alreadyMember = await prisma.groupMember.findUnique({
     where: { groupId_userId: { groupId: invite.groupId, userId: session.user.id } },
   });
-  if (alreadyMember) return NextResponse.json({ error: "Você já faz parte desta célula" }, { status: 400 });
+  if (alreadyMember) return NextResponse.json({ error: "Você já faz parte desta fraternidade" }, { status: 400 });
 
   await prisma.$transaction([
     prisma.groupMember.create({
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       await createNotification({
         userId: leader.userId,
         type: "GROUP_JOIN",
-        title: "Novo membro na célula! ✝️",
+        title: "Novo membro na fraternidade! ✝️",
         body: `${newMember?.name ?? "Alguém"} entrou no grupo`,
         link: "/celula",
       });

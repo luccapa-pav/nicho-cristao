@@ -47,7 +47,7 @@ export default function EntrarPage() {
     });
     const data = await res.json();
     setJoining(false);
-    if (!res.ok) { setJoinError(data.error ?? "Erro ao entrar na célula"); return; }
+    if (!res.ok) { setJoinError(data.error ?? "Erro ao entrar na fraternidade"); return; }
     setJoined(true);
     setTimeout(() => router.push("/celula"), 2500);
   }
@@ -66,7 +66,7 @@ export default function EntrarPage() {
             <span className="text-white text-2xl">✝</span>
           </div>
           <h1 className="font-serif text-2xl font-bold text-slate-800">Luz Divina</h1>
-          <p className="text-sm text-slate-400 mt-1">Convite para célula</p>
+          <p className="text-sm text-slate-400 mt-1">Convite para fraternidade</p>
         </div>
 
         <div className="divine-card p-6 flex flex-col gap-5">
@@ -95,7 +95,7 @@ export default function EntrarPage() {
           {invite && joined && (
             <div className="flex flex-col items-center gap-3 py-4 text-center">
               <CheckCircle2 className="w-12 h-12 text-gold" />
-              <p className="font-serif text-xl font-bold text-slate-800">Bem-vindo à célula!</p>
+              <p className="font-serif text-xl font-bold text-slate-800">Bem-vindo à fraternidade!</p>
               <p className="text-sm text-slate-500">
                 Você entrou em <strong>{invite.groupName}</strong>. Redirecionando...
               </p>
@@ -163,7 +163,7 @@ export default function EntrarPage() {
                     {joining ? (
                       <><Loader2 className="w-5 h-5 animate-spin" /> Entrando...</>
                     ) : (
-                      <><Users className="w-5 h-5" /> Entrar na célula</>
+                      <><Users className="w-5 h-5" /> Entrar na fraternidade</>
                     )}
                   </button>
                   <p className="text-xs text-center text-slate-400">

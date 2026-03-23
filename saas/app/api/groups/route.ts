@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     where: { userId: session.user.id },
   });
   if (existing) {
-    return NextResponse.json({ error: "Você já faz parte de uma célula" }, { status: 400 });
+    return NextResponse.json({ error: "Você já faz parte de uma fraternidade" }, { status: 400 });
   }
 
   const { name, description, isPrivate } = await req.json();

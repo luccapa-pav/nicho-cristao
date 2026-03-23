@@ -12,7 +12,7 @@ export async function POST() {
     select: { groupId: true },
   });
 
-  if (!membership) return NextResponse.json({ error: "Você não está em nenhuma célula" }, { status: 404 });
+  if (!membership) return NextResponse.json({ error: "Você não está em nenhuma fraternidade" }, { status: 404 });
 
   const { groupId } = membership;
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);

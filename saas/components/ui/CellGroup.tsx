@@ -76,7 +76,7 @@ export function CellGroup({ name, progress, members, onInvite, onPray }: CellGro
             <Users className="w-4 h-4 text-gold-dark" />
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-gold-dark">Célula</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-gold-dark">Fraternidade</p>
             <p className="font-serif text-sm font-medium text-slate-700">{name}</p>
           </div>
         </div>
@@ -171,7 +171,7 @@ export function CellGroup({ name, progress, members, onInvite, onPray }: CellGro
       {/* Botão convidar */}
       <button onClick={onInvite} className="btn-ghost-divine w-full text-sm">
         <Link2 className="w-3.5 h-3.5" />
-        Convidar para a célula
+        Convidar para a fraternidade
       </button>
 
       {/* Legenda */}

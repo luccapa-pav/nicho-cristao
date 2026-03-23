@@ -9,7 +9,7 @@ const FEATURE_BENEFITS: Record<string, string[]> = {
   "Versículo do Coração": [
     "Memorize versículos passo a passo",
     "Progresso salvo no seu perfil",
-    "Compartilhe com sua célula",
+    "Compartilhe com sua fraternidade",
   ],
   "Diário Espiritual": [
     "Reflita e registre cada momento com Deus",
@@ -23,7 +23,7 @@ const FEATURE_BENEFITS: Record<string, string[]> = {
   ],
   "Conquistas Premium": [
     "Desbloqueie medalhas espirituais",
-    "Mostre sua jornada para a célula",
+    "Mostre sua jornada para a fraternidade",
     "Conquistas exclusivas a cada marco",
   ],
   "Música ambiente": [

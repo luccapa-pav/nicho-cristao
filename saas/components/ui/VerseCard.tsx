@@ -46,7 +46,7 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
   return (
     <>
       <motion.div
-        className="divine-card p-5 relative overflow-hidden h-full flex flex-col"
+        className="divine-card p-4 relative overflow-hidden h-full flex flex-col"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -58,22 +58,26 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
         />
 
         {/* ── HEADER ── */}
-        <div className="flex items-center justify-between mb-4 relative z-10">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-gold/10 flex items-center justify-center border border-gold/20 shrink-0">
+        <div className="flex items-center justify-between mb-3 relative z-10">
+          {/* espaçador para balancear os botões à direita */}
+          <div className="flex items-center gap-1 opacity-0 pointer-events-none" aria-hidden="true">
+            <div className="min-h-[32px] min-w-[32px]" />
+          </div>
+
+          <div className="flex flex-col items-center gap-0.5">
+            <div className="flex items-center gap-2">
               <BookOpen className="w-3.5 h-3.5 text-gold-dark" />
-            </div>
-            <div className="flex flex-col gap-0.5 min-w-0">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-gold-dark leading-none">
                 Versículo do Dia
               </p>
-              {theme && (
-                <span className="text-[0.7rem] font-semibold text-slate-500 leading-none truncate mt-0.5">
-                  {theme}
-                </span>
-              )}
             </div>
+            {theme && (
+              <span className="text-[0.7rem] font-semibold text-slate-500 leading-none mt-0.5">
+                {theme}
+              </span>
+            )}
           </div>
+
           <div className="flex items-center gap-1 shrink-0">
             {getFavs().length > 0 && (
               <button
@@ -81,7 +85,7 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
                 className="text-[0.65rem] font-medium text-slate-400 hover:text-gold-dark transition-colors px-2 py-1.5 rounded-lg hover:bg-divine-50 min-h-[32px] flex items-center"
                 aria-label="Ver favoritos"
               >
-                Meus favoritos
+                ★
               </button>
             )}
             <button
@@ -94,52 +98,45 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
           </div>
         </div>
 
-        <div className="divine-divider mb-4" />
+        <div className="divine-divider mb-3" />
 
         {/* ── CORPO — Zona de Leitura ── */}
         <div className="relative flex flex-col z-10">
-          <span className="block font-serif text-5xl leading-none text-gold/20 select-none mb-1 -ml-1" aria-hidden="true">
+          <span className="block font-serif text-4xl leading-none text-gold/20 select-none mb-1 -ml-1" aria-hidden="true">
             &ldquo;
           </span>
           <motion.blockquote
-            className="verse-highlight text-xl leading-relaxed text-slate-700 font-serif px-1"
+            className="verse-highlight text-lg leading-relaxed text-slate-700 font-serif px-1"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
           >
             {verse}
           </motion.blockquote>
-          <span className="block font-serif text-5xl leading-none text-gold/20 select-none self-end mt-1 -mr-1" aria-hidden="true">
+          <span className="block font-serif text-4xl leading-none text-gold/20 select-none self-end mt-1 -mr-1" aria-hidden="true">
             &rdquo;
           </span>
         </div>
 
-        {/* ── FILLER: coroa de espinhos (só desktop, preenche espaço livre) ── */}
-        <div className="flex items-center justify-center flex-1 max-h-32 pointer-events-none select-none mt-2">
-          <Image src="/cross-crown.svg" alt="" width={140} height={140} className="opacity-20" aria-hidden="true" />
+        <div className="flex items-center justify-center flex-1 max-h-16 pointer-events-none select-none mt-1">
+          <Image src="/cross-crown.svg" alt="" width={80} height={80} className="opacity-15" aria-hidden="true" />
         </div>
 
-        <div className="divine-divider mt-4 mb-3" />
+        <div className="divine-divider mt-2 mb-2" />
 
         {/* ── FOOTER ── */}
         <div className="flex items-center justify-between relative z-10">
           <motion.span
-            className="text-sm font-semibold text-gold-dark tracking-wide"
+            className="text-sm font-semibold text-gold-dark tracking-wide whitespace-nowrap"
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.6, duration: 0.4 }}
           >
             — {reference}
           </motion.span>
-          <div className="flex items-center gap-1">
-            <Link href={`/versiculo?verse=${encodeURIComponent(verse)}&ref=${encodeURIComponent(reference)}`}>
-              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-gold-dark transition-colors py-1.5 px-2 rounded-lg hover:bg-divine-50 cursor-pointer">
-                <Brain className="w-3 h-3" />
-                Memorizar
-              </span>
-            </Link>
+          <div className="flex flex-col items-end gap-0.5">
             <button
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-gold-dark transition-colors py-1.5 px-2 rounded-lg hover:bg-divine-50 active:scale-95 min-h-[32px]"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-gold-dark transition-colors py-1 px-2 rounded-lg hover:bg-divine-50 active:scale-95"
               aria-label="Compartilhar versículo"
               onClick={() => {
                 if (navigator.share) {
@@ -152,6 +149,12 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
               <Share2 className="w-3 h-3" />
               Compartilhar
             </button>
+            <Link href={`/versiculo?verse=${encodeURIComponent(verse)}&ref=${encodeURIComponent(reference)}`}>
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-gold-dark transition-colors py-1 px-2 rounded-lg hover:bg-divine-50 cursor-pointer">
+                <Brain className="w-3 h-3" />
+                Memorizar
+              </span>
+            </Link>
           </div>
         </div>
       </motion.div>

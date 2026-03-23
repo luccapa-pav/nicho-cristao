@@ -19,7 +19,7 @@ export const BADGE_DEFS: BadgeDef[] = [
   { id: "streak_365",     label: "Um Ano de Glória", description: "365 dias seguidos de devocional",     icon: "👑", isPremium: false },
   { id: "first_prayer",   label: "Primeiro Pedido",  description: "Registrou sua primeira oração",       icon: "🙏", isPremium: false },
   { id: "first_answered", label: "Primeira Vitória", description: "Primeira oração respondida por Deus", icon: "✅", isPremium: false },
-  { id: "cell_member",    label: "Membro de Célula", description: "Faz parte de uma célula",             icon: "👥", isPremium: false },
+  { id: "cell_member",    label: "Membro de Fraternidade", description: "Faz parte de uma fraternidade",             icon: "👥", isPremium: false },
   { id: "discipulo_fiel", label: "Discípulo Fiel",   description: "100 dias completados no total",       icon: "📖", isPremium: true },
   { id: "orador",         label: "Orador",           description: "50 orações registradas",              icon: "📿", isPremium: true },
   { id: "evangelista",    label: "Evangelista",      description: "10 posts com reações no feed",        icon: "📣", isPremium: true },

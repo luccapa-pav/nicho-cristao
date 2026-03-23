@@ -206,7 +206,7 @@ export function PrayerList({
                 onChange={(e) => setIsPublic(e.target.checked)}
                 className="w-4 h-4 accent-amber-500 rounded"
               />
-              Compartilhar com minha célula
+              Compartilhar com minha fraternidade
             </label>
             {submitError && (
               <p className="text-xs text-red-500 text-center">Erro ao salvar. Verifique sua conexão e tente novamente.</p>
@@ -287,10 +287,10 @@ export function PrayerList({
                   &ldquo;Orai uns pelos outros para que sareis.&rdquo; — Tg 5:16
                 </p>
                 <p className="text-xs text-slate-400 max-w-[200px] leading-relaxed text-center">
-                  Com o Premium, interceda pelos pedidos da sua célula em tempo real.
+                  Com o Premium, interceda pelos pedidos da sua fraternidade em tempo real.
                 </p>
                 <Link href="/perfil">
-                  <button className="btn-divine py-2.5 px-5 text-xs">✦ Quero interceder pela minha célula</button>
+                  <button className="btn-divine py-2.5 px-5 text-xs">✦ Quero interceder pela minha fraternidade</button>
                 </Link>
               </div>
             ) : (

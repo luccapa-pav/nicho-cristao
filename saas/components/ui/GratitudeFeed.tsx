@@ -133,25 +133,24 @@ export function GratitudeFeed({ posts, onReact, onPost, autoOpenForm, onFormOpen
 
       {/* ── Header ── */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gold/10 flex items-center justify-center border border-gold/20 shrink-0">
+        <div className="w-16" />
+        <div className="flex flex-col items-center text-center">
+          <div className="flex items-center gap-2 mb-0.5">
             <Trophy className="w-3.5 h-3.5 text-gold-dark" />
-          </div>
-          <div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-gold-dark leading-none">
               Feed de Gratidão
             </p>
-            <p className="text-[0.7rem] text-slate-500 mt-0.5 leading-none">
-              Compartilhe suas vitórias
-            </p>
           </div>
+          <p className="text-[0.7rem] text-slate-500 leading-none">
+            Compartilhe suas vitórias
+          </p>
         </div>
         <button
           onClick={() => setShowForm((v) => !v)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-divine-50 border border-divine-200 text-gold-dark text-xs font-semibold hover:bg-divine-100 transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-divine-50 border border-divine-200 text-gold-dark text-xs font-semibold hover:bg-divine-100 transition-colors w-16 justify-center"
         >
           {showForm ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
-          {showForm ? "Cancelar" : "Compartilhar"}
+          {showForm ? "Fechar" : "Novo"}
         </button>
       </div>
 

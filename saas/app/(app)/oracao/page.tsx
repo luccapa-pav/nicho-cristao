@@ -495,7 +495,7 @@ export default function OracaoPage() {
                 {[
                   { text: "Modos guiados", sub: "Adoração, Intercessão, Lectio" },
                   { text: "Timer ilimitado", sub: "Sem restrição de tempo" },
-                  { text: "Orações da célula", sub: "Ore com seu grupo" },
+                  { text: "Orações da fraternidade", sub: "Ore com sua fraternidade" },
                   { text: "Lembrete personalizado", sub: "Mensagem sua cada dia" },
                   { text: "Relatório de fé", sub: "Veja sua jornada no mês" },
                   { text: "Testemunho completo", sub: "Registre como Deus agiu" },

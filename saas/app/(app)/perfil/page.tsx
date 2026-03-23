@@ -274,9 +274,12 @@ export default function PerfilPage() {
             </div>
             {profile.plan === "FREE" && (
               <>
-                <p className="text-sm text-slate-500">Desbloqueie todos os recursos premium.</p>
+                <p className="text-sm text-slate-500 leading-relaxed">
+                  Sua jornada com Deus merece mais profundidade.<br />
+                  <span className="italic text-slate-400 text-xs">&ldquo;Buscai primeiro o Reino de Deus&rdquo; — Mt 6:33</span>
+                </p>
                 <button className="btn-divine w-full py-3 text-sm">
-                  Fazer upgrade
+                  ✦ Investir na minha fé
                 </button>
               </>
             )}

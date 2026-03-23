@@ -10,7 +10,7 @@ const FEATURES = [
   {
     icon: "🙏",
     title: "Diário de Oração",
-    desc: "Registre pedidos, marque as graças recebidas e ore com sua célula.",
+    desc: "Registre pedidos, marque as graças recebidas e ore com sua fraternidade.",
     href: "/oracao",
   },
   {
@@ -27,7 +27,7 @@ const FEATURES = [
   },
   {
     icon: "👥",
-    title: "Célula & Comunidade",
+    title: "Fraternidade",
     desc: "Ore e cresça junto com seu grupo. Partilhe gratidão no feed.",
     href: "/celula",
   },

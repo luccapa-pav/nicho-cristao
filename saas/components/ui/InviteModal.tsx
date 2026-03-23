@@ -65,7 +65,7 @@ export function InviteModal({ open, onClose, groupName, inviteToken }: InviteMod
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-gold" />
-                  <h2 id="invite-modal-title" className="font-serif text-base font-bold text-slate-800">Convidar para a Célula</h2>
+                  <h2 id="invite-modal-title" className="font-serif text-base font-bold text-slate-800">Convidar para a Fraternidade</h2>
                 </div>
                 <button onClick={onClose} aria-label="Fechar" className="w-7 h-7 rounded-full bg-divine-50 flex items-center justify-center text-slate-400 hover:bg-divine-100">
                   <X className="w-3.5 h-3.5" />

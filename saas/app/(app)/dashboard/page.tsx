@@ -153,23 +153,26 @@ export default function DashboardPage() {
     }
   }, [completedToday]);
 
-  const handleAddPrayer = useCallback(async (title: string, description?: string, isPublic?: boolean) => {
+  const handleAddPrayer = useCallback(async (title: string, description?: string, isPublic?: boolean): Promise<boolean> => {
     const res = await fetch("/api/prayers", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, description, isPublic }),
     });
-    if (!res.ok) return;
+    if (!res.ok) return false;
     const prayer = await res.json();
     setData((prev) => prev ? { ...prev, prayers: [{ ...prayer, createdAt: relativeTime(prayer.createdAt) }, ...prev.prayers] } : prev);
+    return true;
   }, []);
 
-  const handleMarkAnswered = useCallback(async (id: string) => {
-    await fetch(`/api/prayers/${id}/answered`, { method: "PATCH" });
+  const handleMarkAnswered = useCallback(async (id: string): Promise<boolean> => {
+    const res = await fetch(`/api/prayers/${id}/answered`, { method: "PATCH" });
+    if (!res.ok) return false;
     setData((prev) => prev ? {
       ...prev,
       prayers: prev.prayers.map((p): Prayer => p.id === id ? { ...p, status: "ANSWERED" } : p),
     } : prev);
+    return true;
   }, []);
 
   const handleReact = useCallback(async (postId: string, type: "AMEN" | "GLORY") => {
@@ -359,13 +362,13 @@ export default function DashboardPage() {
                       <Users className="w-8 h-8 text-divine-400" />
                     </div>
                     <div>
-                      <p className="font-serif text-xl font-bold text-slate-800">Você ainda não tem uma célula</p>
+                      <p className="font-serif text-xl font-bold text-slate-800">Você ainda não tem uma fraternidade</p>
                       <p className="text-sm text-slate-500 mt-1 max-w-xs mx-auto">
-                        Entre em uma célula pelo link de convite de um líder, ou crie a sua para caminhar junto com outros irmãos.
+                        Entre em uma fraternidade pelo link de convite de um líder, ou crie a sua para caminhar junto com outros irmãos.
                       </p>
                     </div>
                     <a href="/celula" className="btn-divine py-3 text-sm px-8">
-                      Criar minha célula
+                      Criar minha fraternidade
                     </a>
                   </div>
                 )}
@@ -461,7 +464,7 @@ export default function DashboardPage() {
       <InviteModal
         open={inviteOpen}
         onClose={() => setInviteOpen(false)}
-        groupName={data.group?.name ?? "Minha Célula"}
+        groupName={data.group?.name ?? "Minha Fraternidade"}
         inviteToken={inviteToken}
       />
     </>

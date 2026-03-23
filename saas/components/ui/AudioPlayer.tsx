@@ -59,66 +59,62 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
   }, [muted]);
 
   return (
-    <div className="divine-card p-6 h-full flex flex-col gap-0 relative overflow-hidden">
+    <div className="divine-card p-4 h-full flex flex-col gap-0 relative overflow-hidden">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 90% 10%, rgba(212,175,55,0.07) 0%, transparent 55%)" }}
       />
 
       {/* Zona 1 — Identidade */}
-      <div className="flex items-center gap-4 mb-5 relative">
-        <div className="relative flex-shrink-0">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-divine">
+      <div className="flex flex-col items-center text-center mb-3 relative gap-0.5">
+        <div className="flex items-center gap-1.5">
+          <div className="relative w-5 h-5 rounded-md bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-divine flex-shrink-0">
             <AnimatePresence>
               {playing && (
                 <motion.div
-                  className="absolute inset-0 rounded-xl border border-gold/40"
+                  className="absolute inset-0 rounded-md border border-gold/40"
                   initial={{ scale: 1, opacity: 0.7 }}
                   animate={{ scale: 1.5, opacity: 0 }}
                   transition={{ duration: 1.4, repeat: Infinity }}
                 />
               )}
             </AnimatePresence>
-            <span className="font-serif text-xl text-white select-none">✝</span>
+            <span className="font-serif text-xs text-white select-none">✝</span>
           </div>
-        </div>
-
-        <div className="flex flex-col gap-0.5 min-w-0">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-gold-dark/70 leading-none">
             Cápsula de Áudio
           </p>
-          <p className="text-base font-serif font-semibold text-slate-800 leading-snug truncate">
-            {title}
-          </p>
-          <p className="text-xs text-slate-400 leading-none tracking-wide mt-0.5">
-            {date}
-          </p>
+          <AnimatePresence>
+            {playing && (
+              <motion.div
+                className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-gold/10 border border-gold/20"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.2 }}
+              >
+                {[0, 1, 2].map((i) => (
+                  <motion.span
+                    key={i}
+                    className="w-0.5 bg-gold-dark rounded-full"
+                    animate={{ height: ["3px", "9px", "5px", "8px", "3px"] }}
+                    transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
+                  />
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-
-        <AnimatePresence>
-          {playing && (
-            <motion.div
-              className="ml-auto flex-shrink-0 flex items-center gap-1 px-2 py-1 rounded-full bg-gold/10 border border-gold/20"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.2 }}
-            >
-              {[0, 1, 2].map((i) => (
-                <motion.span
-                  key={i}
-                  className="w-0.5 bg-gold-dark rounded-full"
-                  animate={{ height: ["4px", "12px", "6px", "10px", "4px"] }}
-                  transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
-                />
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <p className="text-base font-serif font-semibold text-slate-800 leading-snug">
+          {title}
+        </p>
+        <p className="text-xs text-slate-400 leading-none tracking-wide">
+          {date}
+        </p>
       </div>
 
       {/* Zona 2 — Controle Primário */}
-      <div className="flex-1 flex flex-col justify-center gap-4 relative">
+      <div className="flex flex-col gap-3 relative">
         <div className="space-y-1.5">
           <div
             className="h-1.5 w-full rounded-full bg-divine-100 cursor-pointer overflow-hidden group relative"
@@ -143,7 +139,7 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-8">
+        <div className="flex items-center justify-center gap-6">
           <button
             onClick={() => skip(-15)}
             className="group flex flex-col items-center gap-0.5 text-slate-300 hover:text-gold-dark transition-colors"
@@ -156,7 +152,7 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
           <motion.button
             onClick={togglePlay}
             disabled={!hasAudio}
-            className="w-14 h-14 rounded-full bg-gradient-to-br from-gold to-gold-dark text-white flex items-center justify-center shadow-divine disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-gold-dark text-white flex items-center justify-center shadow-divine disabled:opacity-40 disabled:cursor-not-allowed"
             whileTap={hasAudio ? { scale: 0.88 } : {}}
             whileHover={hasAudio ? { scale: 1.06 } : {}}
             aria-label={playing ? "Pausar" : "Reproduzir"}
@@ -185,7 +181,7 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
         </div>
       </div>
 
-      <div className="divine-divider my-4" />
+      <div className="divine-divider my-2" />
 
       {/* Zona 3 — Controles Secundários */}
       <div className="flex items-center gap-4 relative">

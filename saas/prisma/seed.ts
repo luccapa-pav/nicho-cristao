@@ -119,7 +119,7 @@ async function main() {
     update: {},
     create: {
       id: "grupo-filhos-luz",
-      name: "Célula Filhos da Luz",
+      name: "Fraternidade Filhos da Luz",
       description: "Um grupo de discipulado e comunidade.",
       progress: 68,
     },
