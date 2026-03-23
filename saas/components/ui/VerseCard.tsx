@@ -7,40 +7,81 @@ import { FavoritesModal } from "./FavoritesModal";
 
 function CrownOfThorns({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
-      {/* Anel externo da coroa */}
-      <ellipse cx="100" cy="100" rx="68" ry="28" stroke="currentColor" strokeWidth="5" strokeLinecap="round"/>
-      {/* Anel interno — textura de cipó entrelaçado */}
-      <ellipse cx="100" cy="100" rx="56" ry="20" stroke="currentColor" strokeWidth="2" strokeOpacity="0.35" strokeDasharray="8 5"/>
-      {/* Nós da madeira */}
-      <circle cx="100" cy="72" r="3" fill="currentColor" fillOpacity="0.3"/>
-      <circle cx="152" cy="88" r="2.5" fill="currentColor" fillOpacity="0.3"/>
-      <circle cx="48" cy="88" r="2.5" fill="currentColor" fillOpacity="0.3"/>
-      <circle cx="148" cy="112" r="2.5" fill="currentColor" fillOpacity="0.3"/>
-      <circle cx="52" cy="112" r="2.5" fill="currentColor" fillOpacity="0.3"/>
-      <circle cx="100" cy="128" r="3" fill="currentColor" fillOpacity="0.3"/>
+    <svg viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+      {/* ── Galho inferior do anel ── */}
+      <path d="M30 118 Q75 148 150 150 Q225 148 270 118"
+        stroke="currentColor" strokeWidth="9" strokeLinecap="round" fill="none"/>
+      {/* ── Galho superior do anel ── */}
+      <path d="M30 102 Q75 72 150 70 Q225 72 270 102"
+        stroke="currentColor" strokeWidth="9" strokeLinecap="round" fill="none"/>
+      {/* ── Galho médio entrelaçado (textura) ── */}
+      <path d="M38 110 Q90 92 150 90 Q210 92 262 110 Q210 128 150 130 Q90 128 38 110Z"
+        stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" fill="none" strokeOpacity="0.45"/>
+      {/* ── Fibras de cipó cruzando ── */}
+      <path d="M55 88 Q80 105 105 95 Q130 85 155 100 Q180 115 210 98 Q235 86 255 100"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" strokeOpacity="0.3"/>
+      <path d="M50 122 Q80 108 115 118 Q145 128 175 115 Q205 102 250 118"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" strokeOpacity="0.3"/>
+      {/* ── Nós dos galhos ── */}
+      <ellipse cx="80" cy="78" rx="5" ry="3.5" fill="currentColor" fillOpacity="0.35"/>
+      <ellipse cx="150" cy="70" rx="6" ry="4" fill="currentColor" fillOpacity="0.35"/>
+      <ellipse cx="220" cy="78" rx="5" ry="3.5" fill="currentColor" fillOpacity="0.35"/>
+      <ellipse cx="260" cy="100" rx="4" ry="5" fill="currentColor" fillOpacity="0.35"/>
+      <ellipse cx="40" cy="100" rx="4" ry="5" fill="currentColor" fillOpacity="0.35"/>
+      <ellipse cx="80" cy="142" rx="5" ry="3.5" fill="currentColor" fillOpacity="0.35"/>
+      <ellipse cx="150" cy="150" rx="6" ry="4" fill="currentColor" fillOpacity="0.35"/>
+      <ellipse cx="220" cy="142" rx="5" ry="3.5" fill="currentColor" fillOpacity="0.35"/>
 
-      {/* Espinhos — topo */}
-      <path d="M100 72 L96 48 L100 68 L104 48 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-      <path d="M130 76 L124 52 L128 73 L133 53 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-      <path d="M70 76 L67 52 L72 73 L76 53 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-      <path d="M155 85 L150 62 L153 83 L158 63 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-      <path d="M45 85 L42 62 L47 83 L50 63 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-      <path d="M170 96 L168 73 L170 94 L174 74 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-      <path d="M30 96 L28 73 L30 94 L34 74 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      {/* ══ ESPINHOS — topo (apontando para cima/fora) ══ */}
+      {/* Centro topo */}
+      <path d="M147 70 L144 38 L150 68 L156 38 Z" fill="currentColor" fillOpacity="0.85"/>
+      {/* Topo direita 1 */}
+      <path d="M174 74 L174 42 L179 72 L184 43 Z" fill="currentColor" fillOpacity="0.85"/>
+      {/* Topo direita 2 */}
+      <path d="M200 82 L204 51 L207 80 L213 52 Z" fill="currentColor" fillOpacity="0.85"/>
+      {/* Topo direita 3 */}
+      <path d="M224 95 L232 65 L233 93 L240 66 Z" fill="currentColor" fillOpacity="0.85"/>
+      {/* Topo esquerda 1 */}
+      <path d="M126 74 L116 42 L121 72 L126 43 Z" fill="currentColor" fillOpacity="0.85"/>
+      {/* Topo esquerda 2 */}
+      <path d="M100 82 L87 51 L93 80 L96 52 Z" fill="currentColor" fillOpacity="0.85"/>
+      {/* Topo esquerda 3 */}
+      <path d="M76 95 L60 65 L67 93 L68 66 Z" fill="currentColor" fillOpacity="0.85"/>
 
-      {/* Espinhos — base */}
-      <path d="M100 128 L96 152 L100 132 L104 152 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-      <path d="M130 124 L128 148 L132 127 L136 148 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-      <path d="M70 124 L66 148 L70 127 L74 148 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-      <path d="M155 115 L154 138 L157 118 L162 138 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-      <path d="M45 115 L42 138 L46 118 L50 138 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-      <path d="M170 104 L172 127 L171 106 L176 126 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-      <path d="M30 104 L28 127 L30 107 L34 127 Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      {/* ══ ESPINHOS — lateral direita ══ */}
+      <path d="M263 96 L292 86 L266 100 L294 108 Z" fill="currentColor" fillOpacity="0.85"/>
+      <path d="M265 114 L296 110 L268 116 L297 124 Z" fill="currentColor" fillOpacity="0.85"/>
 
-      {/* Fibras entrelaçadas — textura do galho */}
-      <path d="M32 88 Q66 80 100 80 Q134 80 168 88" stroke="currentColor" strokeWidth="1" strokeOpacity="0.25" fill="none"/>
-      <path d="M32 112 Q66 120 100 120 Q134 120 168 112" stroke="currentColor" strokeWidth="1" strokeOpacity="0.25" fill="none"/>
+      {/* ══ ESPINHOS — lateral esquerda ══ */}
+      <path d="M37 96 L8 86 L34 100 L6 108 Z" fill="currentColor" fillOpacity="0.85"/>
+      <path d="M35 114 L4 110 L32 116 L3 124 Z" fill="currentColor" fillOpacity="0.85"/>
+
+      {/* ══ ESPINHOS — base (apontando para baixo) ══ */}
+      {/* Centro base */}
+      <path d="M147 150 L144 182 L150 152 L156 182 Z" fill="currentColor" fillOpacity="0.85"/>
+      {/* Base direita 1 */}
+      <path d="M174 146 L174 178 L179 148 L184 177 Z" fill="currentColor" fillOpacity="0.85"/>
+      {/* Base direita 2 */}
+      <path d="M200 138 L204 169 L207 140 L213 168 Z" fill="currentColor" fillOpacity="0.85"/>
+      {/* Base direita 3 */}
+      <path d="M224 125 L232 155 L233 127 L240 154 Z" fill="currentColor" fillOpacity="0.85"/>
+      {/* Base esquerda 1 */}
+      <path d="M126 146 L116 178 L121 148 L126 177 Z" fill="currentColor" fillOpacity="0.85"/>
+      {/* Base esquerda 2 */}
+      <path d="M100 138 L87 169 L93 140 L96 168 Z" fill="currentColor" fillOpacity="0.85"/>
+      {/* Base esquerda 3 */}
+      <path d="M76 125 L60 155 L67 127 L68 154 Z" fill="currentColor" fillOpacity="0.85"/>
+
+      {/* ── Espinhos menores intercalados (topo) ── */}
+      <path d="M162 71 L161 50 L165 70 L168 50 Z" fill="currentColor" fillOpacity="0.65"/>
+      <path d="M138 71 L134 50 L138 70 L141 51 Z" fill="currentColor" fillOpacity="0.65"/>
+      <path d="M188 78 L190 57 L193 77 L197 58 Z" fill="currentColor" fillOpacity="0.65"/>
+      <path d="M112 78 L103 58 L107 77 L110 58 Z" fill="currentColor" fillOpacity="0.65"/>
+      {/* ── Espinhos menores intercalados (base) ── */}
+      <path d="M162 149 L161 170 L165 150 L168 170 Z" fill="currentColor" fillOpacity="0.65"/>
+      <path d="M138 149 L134 170 L138 150 L141 171 Z" fill="currentColor" fillOpacity="0.65"/>
+      <path d="M188 142 L190 163 L193 143 L197 162 Z" fill="currentColor" fillOpacity="0.65"/>
+      <path d="M112 142 L103 162 L107 143 L110 162 Z" fill="currentColor" fillOpacity="0.65"/>
     </svg>
   );
 }
