@@ -96,7 +96,9 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
     setFinished(true);
     playBell(audioCtxRef);
     navigator.vibrate?.([200, 100, 200]);
-    confetti({ particleCount: 60, spread: 60, colors: ["#D4AF37", "#F0D060", "#ffffff"], origin: { y: 0.5 } });
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      confetti({ particleCount: 60, spread: 60, colors: ["#D4AF37", "#F0D060", "#ffffff"], origin: { y: 0.5 } });
+    }
   }, []);
 
   useEffect(() => {
@@ -123,16 +125,17 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
   const strokeOffset = circumference * (1 - progress);
 
   const verseList = PRAYER_VERSES[mode];
-  const verseIndex = Math.floor(elapsed / 30) % verseList.length;
+  const [manualVerseOffset, setManualVerseOffset] = useState(0);
+  const verseIndex = (Math.floor(elapsed / 45) + manualVerseOffset) % verseList.length;
   const currentVerse = verseList[verseIndex];
 
-  // TTS — lê o versículo quando troca (a cada 30s)
+  // TTS — lê o versículo quando troca (a cada 45s)
   useEffect(() => {
     if (!ttsEnabled || !running || typeof window === "undefined") return;
     window.speechSynthesis.cancel();
     const utt = new SpeechSynthesisUtterance(`${currentVerse.verse}. ${currentVerse.ref}`);
     utt.lang = "pt-BR";
-    utt.rate = 0.85;
+    utt.rate = 0.72;
     utt.pitch = 1;
     window.speechSynthesis.speak(utt);
   }, [verseIndex, ttsEnabled, running]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -148,7 +151,7 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
     setFinished(false);
   };
 
-  const durationMinutes = [3, 5, 10, 15, 20, 30, 45, 60];
+  const durationMinutes = [5, 10, 15, 30, 60];
 
   return (
     <AnimatePresence>
@@ -192,29 +195,38 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
             {/* Banner modos bloqueados — FREE only */}
             {!isPremium && !meditacao && (
               <div className="rounded-xl border border-dashed border-gold/40 bg-divine-50/60 p-4 flex flex-col gap-3">
-                <p className="text-sm font-semibold text-gold-dark uppercase tracking-wide">
-                  ✦ Modos de oração guiada
-                </p>
+                <div>
+                  <p className="text-sm font-semibold text-gold-dark uppercase tracking-wide">
+                    ✦ Modos de oração guiada
+                  </p>
+                  <p className="text-xs text-slate-500 mt-1 italic">
+                    &ldquo;Senhor, ensina-nos a orar&rdquo; — Lc 11:1
+                  </p>
+                </div>
                 <div className="flex gap-2 flex-wrap opacity-50 pointer-events-none select-none">
-                  {["Adoração 🎶", "Intercessão 🙏", "Lectio Divina 📖"].map((m) => (
+                  {["Adoração", "Intercessão", "Lectio Divina"].map((m) => (
                     <span key={m} className="px-3 py-1.5 rounded-full text-sm bg-divine-100 text-slate-500">{m}</span>
                   ))}
                 </div>
+                <p className="text-xs text-slate-500 text-center leading-relaxed">
+                  Ore com profundidade. Deus merece sua atenção total.
+                </p>
                 <Link href="/perfil" className="btn-divine py-2.5 px-4 text-sm text-center" onClick={onClose}>
-                  ✦ Desbloquear com Premium
+                  ✦ Quero orar com mais profundidade
                 </Link>
               </div>
             )}
 
             {/* Mode selector — PREMIUM only */}
             {isPremium && !meditacao && (
-              <div className="flex gap-1.5 flex-wrap">
+              <div className="flex gap-2 flex-wrap">
                 {MODES.map((m) => (
                   <button
                     key={m}
                     onClick={() => setMode(m)}
                     disabled={running}
-                    className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
+                    aria-label={`Modo ${m}`}
+                    className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all ${
                       mode === m ? "bg-gold text-white shadow-sm" : "bg-divine-50 text-slate-500 hover:bg-divine-100"
                     }`}
                   >
@@ -226,13 +238,14 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
 
             {/* Duration selector — PREMIUM only */}
             {isPremium && !meditacao && (
-              <div className="flex gap-1.5 flex-wrap">
+              <div className="flex gap-2 flex-wrap">
                 {durationMinutes.map((min) => (
                   <button
                     key={min}
                     onClick={() => { setDuration(min * 60); handleReset(); }}
                     disabled={running}
-                    className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
+                    aria-label={`${min} minutos`}
+                    className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all ${
                       duration === min * 60 ? "bg-gold text-white shadow-sm" : "bg-divine-50 text-slate-500 hover:bg-divine-100"
                     }`}
                   >
@@ -352,10 +365,21 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
                 exit={{ opacity: 0, y: -8 }}
                 className={`w-full max-w-sm text-center leading-relaxed ${meditacao ? "border-0 bg-transparent px-4" : "verse-highlight text-base text-slate-600"}`}
               >
-                <p className={`italic ${meditacao ? "text-xl text-gold/80" : ""}`}>"{currentVerse.verse}"</p>
-                <p className={`font-semibold mt-2 not-italic ${meditacao ? "text-base text-gold/60" : "text-sm text-gold-dark"}`}>— {currentVerse.ref}</p>
+                <p className={`italic ${meditacao ? "text-xl text-gold" : ""}`}>"{currentVerse.verse}"</p>
+                <p className={`font-semibold mt-2 not-italic ${meditacao ? "text-base text-gold/80" : "text-sm text-gold-dark"}`}>— {currentVerse.ref}</p>
               </motion.div>
             </AnimatePresence>
+
+            {/* Botão pular versículo — só meditação */}
+            {meditacao && (
+              <button
+                onClick={() => setManualVerseOffset((v) => (v + 1) % verseList.length)}
+                className="text-gold/50 hover:text-gold/90 text-xs transition-colors mt-1"
+                aria-label="Próximo versículo"
+              >
+                próximo versículo →
+              </button>
+            )}
           </motion.div>
         </motion.div>
       )}

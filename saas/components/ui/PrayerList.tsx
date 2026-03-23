@@ -96,7 +96,7 @@ export function PrayerList({
   const handlePrayed = async (id: string) => {
     navigator.vibrate?.([20]);
     onPrayedFor?.(id);
-    await fetch(`/api/prayers/${id}/prayed`, { method: "POST" });
+    await fetch(`/api/prayers/${id}/prayed`, { method: "POST" }).catch(() => {});
   };
 
   const handleExport = async () => {
@@ -170,21 +170,31 @@ export function PrayerList({
             <p className="text-xs text-slate-400 italic text-center">
               Escreva seu pedido — Deus escuta cada palavra
             </p>
-            <input
-              type="text"
-              placeholder="Título do pedido..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value.slice(0, 120))}
-              className="w-full px-4 py-3 rounded-xl border border-divine-200 bg-divine-50/30 text-base text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold focus:bg-white transition-colors"
-              autoFocus
-            />
-            <textarea
-              placeholder="Detalhes (opcional)..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value.slice(0, 600))}
-              rows={2}
-              className="w-full px-4 py-3 rounded-xl border border-divine-200 bg-divine-50/30 text-base text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:bg-white transition-colors resize-none"
-            />
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Título do pedido..."
+                value={title}
+                onChange={(e) => setTitle(e.target.value.slice(0, 120))}
+                className="w-full px-4 py-3 rounded-xl border border-divine-200 bg-divine-50/30 text-base text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/60 focus:border-gold focus:bg-white transition-colors"
+                autoFocus
+              />
+              {title.length > 90 && (
+                <span className="absolute right-3 bottom-3 text-xs text-slate-400">{title.length}/120</span>
+              )}
+            </div>
+            <div className="relative">
+              <textarea
+                placeholder="Detalhes (opcional)..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value.slice(0, 600))}
+                rows={2}
+                className="w-full px-4 py-3 rounded-xl border border-divine-200 bg-divine-50/30 text-base text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/60 focus:bg-white transition-colors resize-none"
+              />
+              {description.length > 500 && (
+                <span className="absolute right-3 bottom-3 text-xs text-slate-400">{description.length}/600</span>
+              )}
+            </div>
             <label className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer select-none">
               <input
                 type="checkbox"
@@ -398,6 +408,7 @@ function PrayerItem({
   onDelete?: (id: string) => void;
 }) {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const handleDelete = async () => {
     await fetch(`/api/prayers/${prayer.id}`, { method: "DELETE" });
@@ -440,9 +451,19 @@ function PrayerItem({
             </span>
           )}
           {prayer.description && (
-            <p className="text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
-              {prayer.description}
-            </p>
+            <div>
+              <p className={`text-xs text-slate-500 mt-0.5 leading-relaxed ${expanded ? "" : "line-clamp-2"}`}>
+                {prayer.description}
+              </p>
+              {prayer.description.length > 80 && (
+                <button
+                  onClick={() => setExpanded(v => !v)}
+                  className="text-xs text-gold-dark/70 hover:text-gold-dark mt-0.5 transition-colors"
+                >
+                  {expanded ? "ver menos ▲" : "ver mais ▼"}
+                </button>
+              )}
+            </div>
           )}
           {prayer.testimony && (
             <div className="mt-1.5 pl-2.5 border-l-2 border-gold/30">

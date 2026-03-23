@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Timer, BookOpen, CheckCircle2, Clock, Plus, Bell, BellOff } from "lucide-react";
 import Link from "next/link";
 import { PrayerList } from "@/components/ui/PrayerList";
@@ -42,6 +42,8 @@ export default function OracaoPage() {
   const [reminderEnabled, setReminderEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState("08:00");
   const [reminderMsg, setReminderMsg] = useState("");
+  const [reminderToast, setReminderToast] = useState("");
+  const [reminderPermDenied, setReminderPermDenied] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("prayerReminder");
@@ -72,11 +74,27 @@ export default function OracaoPage() {
     return () => clearTimeout(t);
   }, [reminderEnabled, reminderTime, reminderMsg]);
 
+  const showToast = (msg: string) => {
+    setReminderToast(msg);
+    setTimeout(() => setReminderToast(""), 3000);
+  };
+
   const toggleReminder = async () => {
-    if (!reminderEnabled && "Notification" in window) {
-      await Notification.requestPermission();
+    if (!reminderEnabled) {
+      if ("Notification" in window) {
+        const result = await Notification.requestPermission();
+        if (result !== "granted") {
+          setReminderPermDenied(true);
+          return;
+        }
+      }
+      setReminderPermDenied(false);
+      setReminderEnabled(true);
+      showToast(`✓ Lembrete ativado para as ${reminderTime}`);
+    } else {
+      setReminderEnabled(false);
+      showToast("Lembrete desativado");
     }
-    setReminderEnabled(v => !v);
   };
 
   // Random verse on mount
@@ -243,6 +261,20 @@ export default function OracaoPage() {
         </motion.div>
 
         {/* ── Lembrete de Oração ── */}
+        {/* ── Toast de lembrete ── */}
+        <AnimatePresence>
+          {reminderToast && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-slate-800 text-white text-sm font-medium px-5 py-3 rounded-full shadow-lg"
+            >
+              {reminderToast}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -265,6 +297,11 @@ export default function OracaoPage() {
               <span className={`absolute top-1 w-6 h-6 rounded-full bg-white shadow transition-all ${reminderEnabled ? "left-7" : "left-1"}`} />
             </button>
           </div>
+          {reminderPermDenied && (
+            <p className="text-xs text-red-500 bg-red-50 rounded-xl px-3 py-2">
+              ⚠️ Notificações bloqueadas. Ative nas configurações do seu navegador para receber lembretes.
+            </p>
+          )}
           {reminderEnabled && (
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="flex flex-col gap-2">
               <input
@@ -315,7 +352,7 @@ export default function OracaoPage() {
                   label: "Respondidas",
                   value: answered,
                   icon: CheckCircle2,
-                  sub: answered > 0 ? "Glória a Deus!" : "ore e creia",
+                  sub: answered > 0 ? `${answeredPct}% do total` : "ore e creia",
                 },
               ].map(({ label, value, icon: Icon, sub }) => (
                 <div
