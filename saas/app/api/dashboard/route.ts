@@ -120,7 +120,7 @@ export async function GET(request: Request) {
   return NextResponse.json({
     user,
     streak: streak ?? { currentStreak: 0, longestStreak: 0 },
-    group: group ? { name: group.name, progress: group.progress, isPrivate: group.isPrivate, members, maxMembers } : null,
+    group: group ? { id: group.id, name: group.name, progress: group.progress, isPrivate: group.isPrivate, link: group.link ?? null, members, maxMembers } : null,
     devotional: devotional
       ? {
           id: devotional.id,

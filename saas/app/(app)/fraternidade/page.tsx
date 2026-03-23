@@ -21,6 +21,7 @@ interface GroupData {
   name: string;
   progress: number;
   isPrivate: boolean;
+  link: string | null;
   members: Member[];
   maxMembers?: number;
 }
@@ -73,7 +74,6 @@ export default function CelulaPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
-  const [link, setLink] = useState("");
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState("");
   const [joiningId, setJoiningId] = useState<string | null>(null);
@@ -110,7 +110,7 @@ export default function CelulaPage() {
     const res = await fetch("/api/groups", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, description, isPrivate, link }),
+      body: JSON.stringify({ name, description, isPrivate }),
     });
     const data = await res.json();
     setCreating(false);
@@ -274,12 +274,21 @@ export default function CelulaPage() {
           </a>
         </motion.div>
 
+        {/* Link do grupo */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+        >
+          <GroupLinkEditor groupId={group.id} initialLink={group.link} />
+        </motion.div>
+
         {/* Sair do grupo */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="mt-8 flex justify-center"
+          className="mt-2 flex justify-center"
         >
           <LeaveGroupButton />
         </motion.div>
@@ -364,20 +373,6 @@ export default function CelulaPage() {
                 placeholder="Fale um pouco sobre o grupo…"
                 className="w-full px-4 py-3 rounded-xl border-2 border-divine-200 bg-white text-base text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold transition-colors resize-none"
               />
-            </div>
-
-            <div>
-              <label className="text-sm font-semibold text-slate-700 mb-1.5 block">
-                Link do grupo <span className="text-slate-400 font-normal">(opcional)</span>
-              </label>
-              <input
-                type="url"
-                value={link}
-                onChange={(e) => setLink(e.target.value)}
-                placeholder="Ex: https://chat.whatsapp.com/..."
-                className="w-full px-4 py-3 rounded-xl border-2 border-divine-200 bg-white text-base text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold transition-colors"
-              />
-              <p className="text-[10px] text-slate-400 mt-0.5">WhatsApp, Telegram, Discord…</p>
             </div>
 
             {/* Toggle privacidade */}
@@ -528,6 +523,88 @@ export default function CelulaPage() {
         </motion.div>
 
       </div>
+    </div>
+  );
+}
+
+// ── Editor de link do grupo ─────────────────────────────────────────
+function GroupLinkEditor({ groupId, initialLink }: { groupId?: string; initialLink: string | null }) {
+  const [link, setLink] = useState(initialLink ?? "");
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    setSaving(true);
+    const res = await fetch("/api/groups/link", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ link }),
+    });
+    setSaving(false);
+    if (res.ok) { setEditing(false); setSaved(true); setTimeout(() => setSaved(false), 2500); }
+  }
+
+  return (
+    <div className="divine-card p-4 sm:p-5 flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Link2 className="w-4 h-4 text-gold-dark" />
+          <p className="text-sm font-semibold text-slate-700">Link do grupo</p>
+          <span className="text-[10px] text-slate-400">(WhatsApp, Telegram, Discord…)</span>
+        </div>
+        {!editing && (
+          <button
+            onClick={() => setEditing(true)}
+            className="text-xs text-gold-dark hover:underline font-medium"
+          >
+            {link ? "Editar" : "Adicionar"}
+          </button>
+        )}
+      </div>
+
+      {editing ? (
+        <form onSubmit={handleSave} className="flex gap-2">
+          <input
+            type="url"
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            placeholder="https://chat.whatsapp.com/..."
+            autoFocus
+            className="flex-1 px-3 py-2 rounded-xl border-2 border-divine-200 bg-white text-sm text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold transition-colors"
+          />
+          <button
+            type="submit"
+            disabled={saving}
+            className="px-3 py-2 rounded-xl bg-gold text-white text-sm font-semibold hover:bg-gold-dark disabled:opacity-60 transition-colors"
+          >
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "Salvar"}
+          </button>
+          <button
+            type="button"
+            onClick={() => { setEditing(false); setLink(initialLink ?? ""); }}
+            className="px-3 py-2 rounded-xl border border-divine-200 text-sm text-slate-500 hover:bg-divine-50 transition-colors"
+          >
+            Cancelar
+          </button>
+        </form>
+      ) : link ? (
+        <a
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-3 py-2 rounded-xl bg-divine-50 border border-divine-200 text-sm text-gold-dark font-medium hover:bg-divine-100 transition-colors w-fit"
+        >
+          <Link2 className="w-3.5 h-3.5" />
+          Abrir link do grupo
+          {saved && <span className="text-[10px] text-emerald-500 font-semibold ml-1">✓ Salvo</span>}
+        </a>
+      ) : (
+        <p className="text-xs text-slate-400 italic">
+          Nenhum link adicionado. Clique em &ldquo;Adicionar&rdquo; para compartilhar o link do grupo.
+        </p>
+      )}
     </div>
   );
 }
