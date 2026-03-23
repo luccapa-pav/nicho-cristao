@@ -3,5 +3,15 @@
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "crons": [
+    {
+      "path": "/api/cron/devotional",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/streak-risk",
+      "schedule": "0 23 * * *"
+    }
+  ]
 }
