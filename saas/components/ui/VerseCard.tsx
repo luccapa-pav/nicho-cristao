@@ -2,8 +2,9 @@
 
 import { useState, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { BookOpen, Share2, Star } from "lucide-react";
+import { BookOpen, Share2, Star, Brain } from "lucide-react";
 import { FavoritesModal } from "./FavoritesModal";
 
 
@@ -130,20 +131,28 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
           >
             — {reference}
           </motion.span>
-          <button
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-gold-dark transition-colors py-1.5 px-2 rounded-lg hover:bg-divine-50 active:scale-95 min-h-[32px]"
-            aria-label="Compartilhar versículo"
-            onClick={() => {
-              if (navigator.share) {
-                navigator.share({ text: `"${verse}" — ${reference}` }).catch(() => {});
-              } else {
-                navigator.clipboard.writeText(`"${verse}" — ${reference}`).catch(() => {});
-              }
-            }}
-          >
-            <Share2 className="w-3 h-3" />
-            Compartilhar
-          </button>
+          <div className="flex items-center gap-1">
+            <Link href={`/versiculo?verse=${encodeURIComponent(verse)}&ref=${encodeURIComponent(reference)}`}>
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-gold-dark transition-colors py-1.5 px-2 rounded-lg hover:bg-divine-50 cursor-pointer">
+                <Brain className="w-3 h-3" />
+                Memorizar
+              </span>
+            </Link>
+            <button
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-gold-dark transition-colors py-1.5 px-2 rounded-lg hover:bg-divine-50 active:scale-95 min-h-[32px]"
+              aria-label="Compartilhar versículo"
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({ text: `"${verse}" — ${reference}` }).catch(() => {});
+                } else {
+                  navigator.clipboard.writeText(`"${verse}" — ${reference}`).catch(() => {});
+                }
+              }}
+            >
+              <Share2 className="w-3 h-3" />
+              Compartilhar
+            </button>
+          </div>
         </div>
       </motion.div>
 

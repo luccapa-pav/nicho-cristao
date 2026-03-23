@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import { motion } from "framer-motion";
 import { Camera, Flame, CheckCircle2, BookOpen, MapPin, Loader2, Check } from "lucide-react";
 import { BadgeDisplay } from "@/components/ui/BadgeDisplay";
 import { StreakCalendar } from "@/components/ui/StreakCalendar";
+import { MonthlyReport } from "@/components/ui/MonthlyReport";
 import Image from "next/image";
 
 interface ProfileData {
@@ -61,6 +63,8 @@ export default function PerfilPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
+  const [reportOpen, setReportOpen] = useState(false);
+  const { premiumTheme, togglePremiumTheme } = useTheme();
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -110,6 +114,21 @@ export default function PerfilPage() {
     setTimeout(() => setSaved(false), 3000);
   }, [name, bio, church, city, verse, ministry, avatarBase64]);
 
+  const profileFields = [
+    { key: "name",      filled: typeof name !== "undefined" && name.trim().length > 0 },
+    { key: "bio",       filled: typeof bio !== "undefined" && bio.trim().length > 0 },
+    { key: "church",    filled: typeof church !== "undefined" && church.trim().length > 0 },
+    { key: "city",      filled: typeof city !== "undefined" && city.trim().length > 0 },
+    { key: "verse",     filled: typeof verse !== "undefined" && verse.trim().length > 0 },
+    { key: "ministry",  filled: typeof ministry !== "undefined" && ministry.trim().length > 0 },
+    { key: "avatarUrl", filled: !!avatarPreview },
+  ];
+  const completionPercent = Math.round(profileFields.filter((f) => f.filled).length / profileFields.length * 100);
+  const FIELD_LABELS: Record<string, string> = {
+    name: "nome", bio: "sobre mim", church: "igreja",
+    city: "cidade", verse: "versículo", ministry: "ministério", avatarUrl: "foto",
+  };
+
   if (!profile) return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-4">
       <Loader2 className="w-10 h-10 text-gold animate-spin" />
@@ -137,6 +156,31 @@ export default function PerfilPage() {
         </h1>
         <p className="text-lg text-slate-500 mt-2">Membro desde {memberSince}</p>
       </motion.div>
+
+      {/* ── Profile Completion Bar ── */}
+      <div className="divine-card p-5 mb-6">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-sm font-semibold text-slate-700">
+            Perfil {completionPercent}% completo
+          </p>
+          {completionPercent === 100 && (
+            <span className="text-xs font-bold text-gold-dark">✦ Perfil completo!</span>
+          )}
+        </div>
+        <div className="h-2.5 rounded-full bg-divine-100 overflow-hidden">
+          <motion.div
+            className="h-full rounded-full bg-gradient-to-r from-gold to-amber-400"
+            initial={{ width: 0 }}
+            animate={{ width: `${completionPercent}%` }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          />
+        </div>
+        {completionPercent < 100 && (
+          <p className="text-xs text-slate-400 mt-2">
+            Complete: {profileFields.filter((f) => !f.filled).map((f) => FIELD_LABELS[f.key]).join(", ")}
+          </p>
+        )}
+      </div>
 
       {/* ── Layout 2 colunas ── */}
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8 items-start">
@@ -235,6 +279,24 @@ export default function PerfilPage() {
                   Fazer upgrade
                 </button>
               </>
+            )}
+            <button
+              onClick={() => setReportOpen(true)}
+              className="w-full mt-2 py-2.5 rounded-xl border border-gold/30 text-gold-dark font-semibold text-sm hover:bg-divine-50 transition-colors"
+            >
+              📊 Ver Relatório do Mês
+            </button>
+            {profile?.plan && profile.plan !== "FREE" && (
+              <button
+                onClick={togglePremiumTheme}
+                className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-all border mt-2 ${
+                  premiumTheme
+                    ? "border-gold bg-gold/15 text-gold-dark"
+                    : "border-gold/30 text-gold-dark hover:bg-divine-50"
+                }`}
+              >
+                {premiumTheme ? "✦ Tema Dourado ativo — desativar" : "Ativar Tema Dourado ✦"}
+              </button>
             )}
           </motion.div>
 
@@ -388,6 +450,7 @@ export default function PerfilPage() {
       </motion.div>
 
       <div className="h-10" />
+      <MonthlyReport open={reportOpen} onClose={() => setReportOpen(false)} />
     </div>
   );
 }

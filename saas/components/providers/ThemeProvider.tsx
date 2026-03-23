@@ -8,15 +8,20 @@ type Theme = "light" | "dark";
 interface ThemeContextValue {
   theme: Theme;
   toggleTheme: () => void;
+  premiumTheme: boolean;
+  togglePremiumTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
   theme: "light",
   toggleTheme: () => {},
+  premiumTheme: false,
+  togglePremiumTheme: () => {},
 });
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
+  const [premiumTheme, setPremiumTheme] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("luz-theme") as Theme | null;
@@ -24,6 +29,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const initial = stored ?? preferred;
     setTheme(initial);
     document.documentElement.classList.toggle("dark", initial === "dark");
+  }, []);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("luz-theme-premium") === "1";
+    setPremiumTheme(stored);
+    document.documentElement.classList.toggle("theme-premium", stored);
   }, []);
 
   const toggleTheme = () => {
@@ -35,8 +46,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const togglePremiumTheme = () => {
+    setPremiumTheme((prev) => {
+      const next = !prev;
+      document.documentElement.classList.toggle("theme-premium", next);
+      localStorage.setItem("luz-theme-premium", next ? "1" : "0");
+      return next;
+    });
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, premiumTheme, togglePremiumTheme }}>
       {children}
     </ThemeContext.Provider>
   );

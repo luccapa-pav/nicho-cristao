@@ -2,15 +2,19 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Play, Pause, RotateCcw } from "lucide-react";
+import { X, Play, Pause, RotateCcw, Music } from "lucide-react";
+import Link from "next/link";
 import confetti from "canvas-confetti";
 import { usePlan } from "@/hooks/usePlan";
+import { PremiumGate } from "@/components/ui/PremiumGate";
 import { PRAYER_VERSES, PrayerMode } from "@/lib/prayerVerses";
 
 interface PrayerTimerProps {
   open: boolean;
   onClose: () => void;
 }
+
+const AMBIENT_MUSIC_URL = "https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73467.mp3";
 
 const MODES: PrayerMode[] = ["Livre", "Adoração", "Intercessão", "Lectio Divina"];
 const FREE_DURATION = 300; // 5 min
@@ -46,8 +50,21 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
   const [elapsed, setElapsed] = useState(0);
   const [running, setRunning] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [musicPlaying, setMusicPlaying] = useState(false);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Ambient audio setup
+  useEffect(() => {
+    ambientAudioRef.current = new Audio(AMBIENT_MUSIC_URL);
+    ambientAudioRef.current.loop = true;
+    ambientAudioRef.current.volume = 0.35;
+    return () => {
+      ambientAudioRef.current?.pause();
+      ambientAudioRef.current = null;
+    };
+  }, []);
 
   // Reset when closed
   useEffect(() => {
@@ -56,8 +73,18 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
       setRunning(false);
       setFinished(false);
       if (intervalRef.current) clearInterval(intervalRef.current);
+      ambientAudioRef.current?.pause();
+      setMusicPlaying(false);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (musicPlaying) {
+      ambientAudioRef.current?.play().catch(() => {});
+    } else {
+      ambientAudioRef.current?.pause();
+    }
+  }, [musicPlaying]);
 
   const handleFinish = useCallback(() => {
     setRunning(false);
@@ -125,14 +152,28 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
           >
             {/* Header */}
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-widest text-gold-dark">Tempo de Oração</p>
-                {!isPremium && <p className="text-xs text-slate-400 mt-0.5">5 min • Upgrade para mais modos</p>}
-              </div>
-              <button onClick={onClose} className="p-1 text-slate-300 hover:text-slate-600 transition-colors">
-                <X className="w-4 h-4" />
+              <p className="text-sm font-semibold uppercase tracking-widest text-gold-dark">Tempo de Oração</p>
+              <button onClick={onClose} className="p-3 text-slate-300 hover:text-slate-600 transition-colors rounded-full hover:bg-divine-50">
+                <X className="w-5 h-5" />
               </button>
             </div>
+
+            {/* Banner modos bloqueados — FREE only */}
+            {!isPremium && (
+              <div className="rounded-xl border border-dashed border-gold/40 bg-divine-50/60 p-4 flex flex-col gap-3">
+                <p className="text-sm font-semibold text-gold-dark uppercase tracking-wide">
+                  ✦ Modos de oração guiada
+                </p>
+                <div className="flex gap-2 flex-wrap opacity-50 pointer-events-none select-none">
+                  {["Adoração 🎶", "Intercessão 🙏", "Lectio Divina 📖"].map((m) => (
+                    <span key={m} className="px-3 py-1.5 rounded-full text-sm bg-divine-100 text-slate-500">{m}</span>
+                  ))}
+                </div>
+                <Link href="/perfil" className="btn-divine py-2.5 px-4 text-sm text-center" onClick={onClose}>
+                  ✦ Desbloquear com Premium
+                </Link>
+              </div>
+            )}
 
             {/* Mode selector — PREMIUM only */}
             {isPremium && (
@@ -170,14 +211,31 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
               </div>
             )}
 
+            {/* Ambient music toggle */}
+            <div className="flex justify-center">
+              <PremiumGate feature="Música ambiente de oração">
+                <button
+                  onClick={() => setMusicPlaying((v) => !v)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
+                    musicPlaying
+                      ? "border-gold bg-gold/10 text-gold-dark"
+                      : "border-gold/30 bg-divine-50 text-gold-dark hover:bg-divine-100"
+                  }`}
+                >
+                  {musicPlaying ? <Pause className="w-4 h-4" /> : <Music className="w-4 h-4" />}
+                  {musicPlaying ? "Pausar música" : "Música ambiente"}
+                </button>
+              </PremiumGate>
+            </div>
+
             {/* Timer circle */}
             <div className="flex flex-col items-center gap-4">
               <div className="relative w-32 h-32 flex items-center justify-center">
                 <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 120 120">
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(212,175,55,0.12)" strokeWidth="6" />
+                  <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(212,175,55,0.12)" strokeWidth="8" />
                   <circle
                     cx="60" cy="60" r="54" fill="none"
-                    stroke="url(#timer-gold)" strokeWidth="6"
+                    stroke="url(#timer-gold)" strokeWidth="8"
                     strokeLinecap="round"
                     strokeDasharray={circumference}
                     strokeDashoffset={strokeOffset}
@@ -195,10 +253,10 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
                     <span className="text-2xl">🙏</span>
                   ) : (
                     <>
-                      <span className="font-serif text-3xl font-bold text-gold tabular-nums leading-none">
+                      <span className="font-serif text-4xl font-bold text-gold tabular-nums leading-none">
                         {formatTime(remaining)}
                       </span>
-                      <span className="text-xs text-slate-400 mt-1">restante</span>
+                      <span className="text-sm text-slate-400 mt-1">restante</span>
                     </>
                   )}
                 </div>
@@ -209,23 +267,30 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleReset}
-                    className="w-10 h-10 rounded-full bg-divine-100 flex items-center justify-center text-slate-500 hover:bg-divine-200 transition-all"
+                    className="w-12 h-12 rounded-full bg-divine-100 flex items-center justify-center text-slate-500 hover:bg-divine-200 transition-all"
                     aria-label="Reiniciar"
                   >
-                    <RotateCcw className="w-4 h-4" />
+                    <RotateCcw className="w-5 h-5" />
                   </button>
                   <button
                     onClick={running ? () => setRunning(false) : handleStart}
-                    className="w-14 h-14 rounded-full btn-divine flex items-center justify-center shadow-divine"
+                    className="w-16 h-16 rounded-full btn-divine flex items-center justify-center shadow-divine"
                     aria-label={running ? "Pausar" : "Iniciar"}
                   >
-                    {running ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
+                    {running ? <Pause className="w-7 h-7" /> : <Play className="w-7 h-7 ml-0.5" />}
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col items-center gap-2">
-                  <p className="text-sm font-semibold text-emerald-700">Oração concluída! ✓</p>
-                  <button onClick={handleReset} className="btn-ghost-divine py-1.5 px-4 text-sm">
+                <div className="flex flex-col items-center gap-3 text-center">
+                  <motion.span
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 200 }}
+                    className="text-4xl"
+                  >🕊️</motion.span>
+                  <p className="font-serif text-xl text-gold-dark font-semibold">Amém ✦</p>
+                  <p className="text-sm text-slate-500">Oração concluída com louvor</p>
+                  <button onClick={handleReset} className="btn-ghost-divine py-2 px-6 text-sm mt-1">
                     Orar novamente
                   </button>
                 </div>
@@ -239,10 +304,10 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                className="verse-highlight text-sm text-slate-600 leading-relaxed"
+                className="verse-highlight text-base text-slate-600 leading-relaxed"
               >
                 <p className="italic">"{currentVerse.verse}"</p>
-                <p className="text-xs text-gold-dark font-semibold mt-1 not-italic">— {currentVerse.ref}</p>
+                <p className="text-sm text-gold-dark font-semibold mt-1 not-italic">— {currentVerse.ref}</p>
               </motion.div>
             </AnimatePresence>
           </motion.div>

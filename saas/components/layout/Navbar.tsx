@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, Users, BookOpen, Heart, Bell, Menu, X, LogOut, UserCircle, Moon, Sun } from "lucide-react";
+import { Home, Users, BookOpen, Heart, Bell, Menu, X, LogOut, UserCircle, Moon, Sun, BookMarked } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { href: "/dashboard",  icon: Home,        label: "Início" },
   { href: "/celula",     icon: Users,       label: "Célula" },
   { href: "/oracao",     icon: Heart,       label: "Oração" },
+  { href: "/diario",     icon: BookMarked,  label: "Diário" },
   { href: "/devocional", icon: BookOpen,    label: "Devocional" },
   { href: "/perfil",     icon: UserCircle,  label: "Perfil" },
 ];

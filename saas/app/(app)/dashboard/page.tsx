@@ -17,6 +17,7 @@ import { DashboardSkeleton } from "@/components/ui/DashboardSkeleton";
 import { NotificationPrompt } from "@/components/ui/NotificationPrompt";
 import { PrayerTimer } from "@/components/ui/PrayerTimer";
 import { DevotionalHistory } from "@/components/ui/DevotionalHistory";
+import { QuickActionsBar } from "@/components/ui/QuickActionsBar";
 
 type PrayerStatus = "PENDING" | "ANSWERED";
 
@@ -108,6 +109,7 @@ export default function DashboardPage() {
   const [headerVisible, setHeaderVisible] = useState(true);
   const [showNotifPrompt, setShowNotifPrompt] = useState(false);
   const [timerOpen, setTimerOpen] = useState(false);
+  const [gratitudeFormOpen, setGratitudeFormOpen] = useState(false);
   const [groupPrayers, setGroupPrayers] = useState<{ id: string; title: string; description?: string; status: string; prayedCount: number; createdAt: string; author: string }[]>([]);
 
   useEffect(() => {
@@ -283,6 +285,21 @@ export default function DashboardPage() {
             </p>
           </motion.div>
 
+          <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={0.5}>
+            <QuickActionsBar
+              onNovaMracao={() => setPrayerFormOpen(true)}
+              onGratidao={() => setGratitudeFormOpen(true)}
+              onCronometro={() => setTimerOpen(true)}
+              onCompartilharVersiculo={() => {
+                if (navigator.share) {
+                  navigator.share({ text: `"${devotional.verse}" — ${devotional.verseRef}` }).catch(() => {});
+                } else {
+                  navigator.clipboard.writeText(`"${devotional.verse}" — ${devotional.verseRef}`).catch(() => {});
+                }
+              }}
+            />
+          </motion.div>
+
           {/* Seção 01 */}
           <div>
             <div className="flex flex-col items-center text-center mb-4 gap-0.5">
@@ -378,7 +395,7 @@ export default function DashboardPage() {
                 <PrayerList prayers={prayers} onAddPrayer={handleAddPrayer} onMarkAnswered={handleMarkAnswered} autoOpenForm={prayerFormOpen} onFormOpened={() => setPrayerFormOpen(false)} groupPrayers={groupPrayers} />
               </motion.div>
               <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={6} className="h-full">
-                <GratitudeFeed posts={posts} onReact={handleReact} onPost={handlePost} />
+                <GratitudeFeed posts={posts} onReact={handleReact} onPost={handlePost} autoOpenForm={gratitudeFormOpen} onFormOpened={() => setGratitudeFormOpen(false)} />
               </motion.div>
             </div>
           </div>

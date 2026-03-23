@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, X, Trophy, Heart, Star } from "lucide-react";
@@ -19,6 +19,8 @@ interface GratitudeFeedProps {
   posts: GratitudePost[];
   onReact: (postId: string, type: "AMEN" | "GLORY") => void;
   onPost: (content: string) => void;
+  autoOpenForm?: boolean;
+  onFormOpened?: () => void;
 }
 
 function PostCard({ post, onReact }: { post: GratitudePost; onReact: (type: "AMEN" | "GLORY") => void }) {
@@ -107,9 +109,16 @@ function PostCard({ post, onReact }: { post: GratitudePost; onReact: (type: "AME
   );
 }
 
-export function GratitudeFeed({ posts, onReact, onPost }: GratitudeFeedProps) {
+export function GratitudeFeed({ posts, onReact, onPost, autoOpenForm, onFormOpened }: GratitudeFeedProps) {
   const [showForm, setShowForm] = useState(false);
   const [content, setContent] = useState("");
+
+  useEffect(() => {
+    if (autoOpenForm) {
+      setShowForm(true);
+      onFormOpened?.();
+    }
+  }, [autoOpenForm, onFormOpened]);
 
   const handlePost = (e: React.FormEvent) => {
     e.preventDefault();
@@ -184,9 +193,17 @@ export function GratitudeFeed({ posts, onReact, onPost }: GratitudeFeedProps) {
           ))}
         </AnimatePresence>
         {posts.length === 0 && (
-          <div className="text-center py-10 text-slate-300">
-            <p className="text-3xl mb-2">🕊️</p>
-            <p className="text-sm">Seja o primeiro a compartilhar uma vitória!</p>
+          <div className="divine-card p-8 flex flex-col items-center gap-4 text-center">
+            <div className="w-16 h-16 rounded-full bg-divine-50 border-2 border-dashed border-divine-300 flex items-center justify-center">
+              <span className="text-3xl">🙌</span>
+            </div>
+            <div>
+              <p className="font-serif text-lg font-semibold text-slate-700">Compartilhe sua primeira vitória</p>
+              <blockquote className="verse-highlight mt-3 text-sm italic text-slate-600 px-1">
+                "Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco."
+              </blockquote>
+              <p className="text-xs font-semibold text-gold-dark mt-1">— 1 Tessalonicenses 5:18</p>
+            </div>
           </div>
         )}
       </div>

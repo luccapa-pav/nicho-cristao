@@ -12,9 +12,17 @@ interface StreakCounterProps {
   onComplete: () => void;
 }
 
+const MILESTONE_VERSES: Record<number, { verse: string; ref: string }> = {
+  7:   { verse: "Bem-aventurado o homem que não anda segundo o conselho dos ímpios, nem para no caminho dos pecadores, nem se assenta na roda dos escarnecedores.", ref: "Salmos 1:1" },
+  30:  { verse: "Corramos com perseverança a corrida que nos é proposta.", ref: "Hebreus 12:1" },
+  100: { verse: "Aquele que perseverar até ao fim, esse será salvo.", ref: "Mateus 24:13" },
+  365: { verse: "A misericórdia do Senhor dura para sempre para com os que o temem, e a sua justiça para os filhos dos filhos.", ref: "Salmos 103:17" },
+};
+
 export function StreakCounter({ days, longestStreak, completedToday, onComplete }: StreakCounterProps) {
   const [displayed, setDisplayed] = useState(0);
   const [showRecord, setShowRecord] = useState(false);
+  const [celebrationMilestone, setCelebrationMilestone] = useState<number | null>(null);
 
   useEffect(() => {
     let start = 0;
@@ -27,11 +35,23 @@ export function StreakCounter({ days, longestStreak, completedToday, onComplete 
     return () => clearInterval(timer);
   }, [days]);
 
+  useEffect(() => {
+    const MILESTONES = [7, 30, 100, 365];
+    const hit = MILESTONES.find((m) => days === m);
+    if (!hit) return;
+    const key = `celebrated-milestone-${hit}`;
+    if (localStorage.getItem(key)) return;
+    localStorage.setItem(key, "1");
+    setCelebrationMilestone(hit);
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ["#D4AF37", "#F0D060", "#fff8e1", "#ffffff"] });
+  }, [days]);
+
   const milestones = [7, 30, 90, 180, 365];
   const next = milestones.find((m) => m > days) ?? 365;
   const progress = Math.min((days / next) * 100, 100);
 
   return (
+    <>
     <div className="divine-card p-6 flex flex-col items-center text-center gap-4 h-full">
 
       {/* Label + toggle */}
@@ -175,5 +195,58 @@ export function StreakCounter({ days, longestStreak, completedToday, onComplete 
         )}
       </motion.button>
     </div>
+
+    <AnimatePresence>
+      {celebrationMilestone !== null && (
+        <motion.div
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center px-6 text-center"
+          style={{ background: "linear-gradient(135deg, rgba(26,18,8,0.97) 0%, rgba(42,30,8,0.98) 100%)" }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            initial={{ scale: 0.7, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 200, damping: 18 }}
+            className="flex flex-col items-center gap-6 max-w-sm"
+          >
+            <div className="w-28 h-28 rounded-full bg-gradient-to-br from-gold to-amber-600 flex items-center justify-center shadow-divine-lg">
+              <span className="text-5xl">🔥</span>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-gold/70 mb-1">Ofensiva de</p>
+              <p className="font-serif text-7xl font-bold text-gold leading-none">{celebrationMilestone}</p>
+              <p className="font-serif text-2xl font-semibold text-amber-200 mt-1">dias!</p>
+            </div>
+            <div className="divine-card p-5 bg-white/5 border-gold/20">
+              <blockquote className="font-serif text-sm italic text-amber-100 leading-relaxed">
+                &ldquo;{MILESTONE_VERSES[celebrationMilestone]?.verse}&rdquo;
+              </blockquote>
+              <p className="text-xs font-semibold text-gold mt-2">— {MILESTONE_VERSES[celebrationMilestone]?.ref}</p>
+            </div>
+            <div className="flex flex-col gap-3 w-full">
+              <button
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({ text: `🔥 ${celebrationMilestone} dias de ofensiva no Luz Divina! "${MILESTONE_VERSES[celebrationMilestone]?.verse}" — ${MILESTONE_VERSES[celebrationMilestone]?.ref}` }).catch(() => {});
+                  }
+                }}
+                className="btn-divine py-3 text-sm"
+              >
+                Compartilhar conquista
+              </button>
+              <button
+                onClick={() => setCelebrationMilestone(null)}
+                className="text-sm text-amber-300/70 hover:text-amber-200 transition-colors py-2"
+              >
+                Fechar
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    </>
   );
 }
