@@ -80,7 +80,10 @@ export default function SignInPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Senha</label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Senha</label>
+              <Link href="/esqueci-senha" className="text-xs text-gold-dark hover:underline">Esqueci minha senha</Link>
+            </div>
             <div className="relative">
               <input
                 type={showPw ? "text" : "password"}

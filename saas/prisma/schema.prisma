@@ -44,6 +44,7 @@ model User {
   journalEntries   JournalEntry[]
   memorizedVerses  MemorizedVerse[]
   notifications    Notification[]
+  passwordResetTokens PasswordResetToken[]
 
   @@map("users")
 }
@@ -309,6 +310,21 @@ model MemorizedVerse {
 
   @@unique([userId, reference])
   @@map("memorized_verses")
+}
+
+// ─────────────────────────────────────────────
+// RESET DE SENHA
+// ─────────────────────────────────────────────
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique @default(cuid())
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@map("password_reset_tokens")
 }
 
 // ─────────────────────────────────────────────

@@ -112,6 +112,13 @@ export default function SignUpPage() {
             Entrar
           </Link>
         </p>
+
+        <p className="text-center text-xs text-slate-300 mt-3">
+          Ao criar sua conta, você concorda com os{" "}
+          <Link href="/termos" className="text-slate-400 hover:underline">Termos de Uso</Link>
+          {" "}e a{" "}
+          <Link href="/privacidade" className="text-slate-400 hover:underline">Política de Privacidade</Link>
+        </p>
       </motion.div>
     </div>
   );
