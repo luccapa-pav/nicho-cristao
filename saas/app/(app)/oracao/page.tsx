@@ -136,6 +136,10 @@ export default function OracaoPage() {
     );
   };
 
+  const handleDeletePrayer = (id: string) => {
+    setPrayers((prev) => prev.filter((p) => p.id !== id));
+  };
+
   const answered = prayers.filter((p) => p.status === "ANSWERED").length;
   const pending = prayers.filter((p) => p.status === "PENDING").length;
   const total = prayers.length;
@@ -384,6 +388,7 @@ export default function OracaoPage() {
               onAddPrayer={handleAddPrayer}
               onMarkAnswered={handleMarkAnswered}
               onPrayedFor={handlePrayedFor}
+              onDeletePrayer={handleDeletePrayer}
               autoOpenForm={autoOpenForm}
               onFormOpened={() => setAutoOpenForm(false)}
               isLoading={loading}

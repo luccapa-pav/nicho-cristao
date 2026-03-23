@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, Clock, Plus, X, Heart, Users, Share2 } from "lucide-react";
+import { CheckCircle2, Clock, Plus, X, Heart, Users, Share2, Trash2 } from "lucide-react";
 import Link from "next/link";
+import confetti from "canvas-confetti";
 
 interface Prayer {
   id: string;
@@ -30,6 +31,7 @@ interface PrayerListProps {
   onAddPrayer: (title: string, description?: string, isPublic?: boolean) => void;
   onMarkAnswered: (id: string, testimony?: string) => void;
   onPrayedFor?: (id: string) => void;
+  onDeletePrayer?: (id: string) => void;
   autoOpenForm?: boolean;
   onFormOpened?: () => void;
   groupPrayers?: GroupPrayer[];
@@ -40,11 +42,13 @@ interface PrayerListProps {
 type Tab = "ALL" | "PENDING" | "ANSWERED" | "CELULA";
 
 function monthLabel(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return "Sem data";
+  return d.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
 }
 
 export function PrayerList({
-  prayers, onAddPrayer, onMarkAnswered, onPrayedFor, autoOpenForm, onFormOpened,
+  prayers, onAddPrayer, onMarkAnswered, onPrayedFor, onDeletePrayer, autoOpenForm, onFormOpened,
   groupPrayers = [], isLoading, isPremium,
 }: PrayerListProps) {
   const [showForm, setShowForm] = useState(false);
@@ -82,10 +86,11 @@ export function PrayerList({
   };
 
   const confirmAnswer = (id: string) => {
-    navigator.vibrate?.([30, 30, 60]);
+    navigator.vibrate?.([30, 30, 60, 30, 120]);
     onMarkAnswered(id, testimonyText.trim() || undefined);
     setAwaitingTestimony(null);
     setTestimonyText("");
+    confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors: ["#D4AF37", "#F5E27A", "#FFFFFF", "#FFA500"] });
   };
 
   const handlePrayed = async (id: string) => {
@@ -180,7 +185,7 @@ export function PrayerList({
               rows={2}
               className="w-full px-4 py-3 rounded-xl border border-divine-200 bg-divine-50/30 text-base text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:bg-white transition-colors resize-none"
             />
-            <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer select-none">
+            <label className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={isPublic}
@@ -210,12 +215,12 @@ export function PrayerList({
           >
             {f === "ALL" ? "Todos" : f === "PENDING" ? "Aguardando" : "Respondidos"}
             {f === "PENDING" && pendingCount > 0 && (
-              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+              <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${
                 tab === "PENDING" ? "bg-white/25 text-white" : "bg-amber-100 text-amber-700"
               }`}>{pendingCount}</span>
             )}
             {f === "ANSWERED" && answeredCount > 0 && (
-              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+              <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${
                 tab === "ANSWERED" ? "bg-white/25 text-white" : "bg-gold/15 text-gold-dark"
               }`}>{answeredCount}</span>
             )}
@@ -232,7 +237,7 @@ export function PrayerList({
           <Users className="w-3 h-3" />
           Célula
           {groupPrayers.length > 0 && (
-            <span className={`text-[10px] font-bold px-1 py-0.5 rounded-full ${
+            <span className={`text-xs font-bold px-1 py-0.5 rounded-full ${
               tab === "CELULA" ? "bg-white/20" : "bg-gold/20 text-gold-dark"
             }`}>
               {groupPrayers.length}
@@ -301,21 +306,36 @@ export function PrayerList({
               ))
             )
           ) : filtered.length === 0 ? (
-            <div className="text-center py-10 flex flex-col items-center gap-3">
-              <div className="w-16 h-16 rounded-full bg-divine-50 border border-divine-200 flex items-center justify-center shadow-[0_0_18px_rgba(212,175,55,0.12)]">
-                <Heart className="w-7 h-7 text-gold/60" />
+            tab === "ANSWERED" ? (
+              <div className="text-center py-10 flex flex-col items-center gap-3">
+                <div className="w-16 h-16 rounded-full bg-divine-50 border border-gold/30 flex items-center justify-center shadow-[0_0_18px_rgba(212,175,55,0.18)]">
+                  <span className="text-3xl">✦</span>
+                </div>
+                <p className="text-base font-semibold text-slate-700">Nenhuma resposta ainda</p>
+                <p className="text-sm text-slate-500 max-w-[220px] leading-relaxed text-center italic">
+                  &ldquo;Pedi e vos será dado&rdquo; — Mt 7:7
+                </p>
+                <p className="text-xs text-slate-400 max-w-[200px] text-center">
+                  Quando Deus responder, marque o pedido como respondido e registre seu testemunho.
+                </p>
               </div>
-              <p className="text-base font-semibold text-slate-700">Traga seus pedidos ao Senhor</p>
-              <p className="text-sm text-slate-500 max-w-[220px] leading-relaxed text-center italic">
-                &ldquo;Apresentai os vossos pedidos a Deus em toda oração&rdquo; — Fp 4:6
-              </p>
-              <button
-                onClick={() => setShowForm(true)}
-                className="btn-divine py-2.5 px-6 text-sm mt-1"
-              >
-                + Adicionar primeiro pedido
-              </button>
-            </div>
+            ) : (
+              <div className="text-center py-10 flex flex-col items-center gap-3">
+                <div className="w-16 h-16 rounded-full bg-divine-50 border border-divine-200 flex items-center justify-center shadow-[0_0_18px_rgba(212,175,55,0.12)]">
+                  <Heart className="w-7 h-7 text-gold/60" />
+                </div>
+                <p className="text-base font-semibold text-slate-700">Traga seus pedidos ao Senhor</p>
+                <p className="text-sm text-slate-500 max-w-[220px] leading-relaxed text-center italic">
+                  &ldquo;Apresentai os vossos pedidos a Deus em toda oração&rdquo; — Fp 4:6
+                </p>
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="btn-divine py-2.5 px-6 text-sm mt-1"
+                >
+                  + Adicionar primeiro pedido
+                </button>
+              </div>
+            )
           ) : isPremium ? (
             grouped.map(({ month, items }) => (
               <div key={month}>
@@ -334,6 +354,7 @@ export function PrayerList({
                     onConfirmAnswer={confirmAnswer}
                     onCancelTestimony={() => setAwaitingTestimony(null)}
                     onPrayed={handlePrayed}
+                    onDelete={onDeletePrayer}
                   />
                 ))}
               </div>
@@ -351,6 +372,7 @@ export function PrayerList({
                 onConfirmAnswer={confirmAnswer}
                 onCancelTestimony={() => setAwaitingTestimony(null)}
                 onPrayed={handlePrayed}
+                onDelete={onDeletePrayer}
               />
             ))
           )}
@@ -362,7 +384,7 @@ export function PrayerList({
 
 function PrayerItem({
   prayer, index, awaitingTestimony, testimonyText,
-  onSetAwaiting, onTestimonyChange, onConfirmAnswer, onCancelTestimony, onPrayed,
+  onSetAwaiting, onTestimonyChange, onConfirmAnswer, onCancelTestimony, onPrayed, onDelete,
 }: {
   prayer: Prayer;
   index: number;
@@ -373,7 +395,15 @@ function PrayerItem({
   onConfirmAnswer: (id: string) => void;
   onCancelTestimony: () => void;
   onPrayed: (id: string) => void;
+  onDelete?: (id: string) => void;
 }) {
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+
+  const handleDelete = async () => {
+    await fetch(`/api/prayers/${prayer.id}`, { method: "DELETE" });
+    onDelete?.(prayer.id);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -8 }}
@@ -421,18 +451,44 @@ function PrayerItem({
             </div>
           )}
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            <span className="text-[10px] text-slate-400">{prayer.createdAt}</span>
+            <span className="text-xs text-slate-400">{prayer.createdAt}</span>
             {prayer.status === "PENDING" && (
               <button
                 onClick={() => onPrayed(prayer.id)}
-                className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-50 border border-rose-100 text-[10px] font-semibold text-rose-400 hover:bg-rose-100 transition-colors active:scale-95"
+                className="flex items-center gap-1 px-2 py-1 rounded-full bg-rose-50 border border-rose-100 text-xs font-semibold text-rose-400 hover:bg-rose-100 transition-colors active:scale-95"
                 aria-label="Orei por este pedido"
               >
                 🙏 {prayer.prayedCount > 0 ? `Orei (${prayer.prayedCount})` : "Orei por isso"}
               </button>
             )}
             {prayer.status === "ANSWERED" && prayer.prayedCount > 0 && (
-              <span className="text-[10px] text-rose-400">🙏 {prayer.prayedCount}</span>
+              <span className="text-xs text-rose-400">🙏 {prayer.prayedCount}</span>
+            )}
+            {onDelete && !confirmingDelete && (
+              <button
+                onClick={() => setConfirmingDelete(true)}
+                className="ml-auto p-1 rounded-lg text-slate-300 hover:text-red-400 hover:bg-red-50 transition-colors"
+                aria-label="Excluir pedido"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            )}
+            {confirmingDelete && (
+              <div className="ml-auto flex items-center gap-1.5">
+                <span className="text-xs text-slate-500">Excluir?</span>
+                <button
+                  onClick={handleDelete}
+                  className="px-2 py-0.5 rounded-lg bg-red-50 border border-red-200 text-xs font-semibold text-red-500 hover:bg-red-100 transition-colors"
+                >
+                  Sim
+                </button>
+                <button
+                  onClick={() => setConfirmingDelete(false)}
+                  className="px-2 py-0.5 rounded-lg border border-slate-200 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
+                >
+                  Não
+                </button>
+              </div>
             )}
           </div>
         </div>
