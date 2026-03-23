@@ -38,6 +38,6 @@ export async function POST(req: NextRequest) {
     const msg = e instanceof Error ? e.message : String(e);
     console.error(e);
     console.error(msg);
-    return NextResponse.json({ error: "Erro interno", detail: msg, stack: e instanceof Error ? e.stack?.slice(0, 500) : undefined }, { status: 500 });
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }
