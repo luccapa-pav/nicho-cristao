@@ -11,6 +11,7 @@ import { useTheme } from "@/components/providers/ThemeProvider";
 import { useFontSize } from "@/components/providers/FontSizeProvider";
 import { NotificationPrompt } from "@/components/ui/NotificationPrompt";
 import { NotificationDropdown } from "@/components/ui/NotificationDropdown";
+import { OnboardingModal } from "@/components/ui/OnboardingModal";
 
 const NAV_ITEMS = [
   { href: "/dashboard",  icon: Home,        label: "Início" },
@@ -72,6 +73,8 @@ export function Navbar() {
 
   return (
     <>
+      <OnboardingModal />
+
       {/* ── Desktop sidebar (md+) ───────────────────────── */}
       <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 border-r border-amber-100/60 p-6 gap-6" style={{ backgroundColor: "#FFFEF9" }}>
         {/* Logo */}
