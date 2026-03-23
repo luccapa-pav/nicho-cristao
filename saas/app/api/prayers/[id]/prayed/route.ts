@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(_req: NextRequest, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -11,13 +11,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!prayer || prayer.userId !== session.user.id)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const body = await req.json().catch(() => ({}));
-  const testimony = typeof body.testimony === "string" && body.testimony.trim() ? body.testimony.trim() : null;
-
   const updated = await prisma.prayer.update({
     where: { id: params.id },
-    data: { status: "ANSWERED", answeredAt: new Date(), ...(testimony ? { testimony } : {}) },
+    data: { prayedCount: { increment: 1 } },
   });
 
-  return NextResponse.json(updated);
+  return NextResponse.json({ prayedCount: updated.prayedCount });
 }

@@ -9,10 +9,6 @@ export async function POST(req: NextRequest) {
 
   const userId = session.user.id;
 
-  // Only PREMIUM users
-  const user = await prisma.user.findUnique({ where: { id: userId }, select: { plan: true } });
-  if (user?.plan === "FREE") return NextResponse.json({ error: "Premium required" }, { status: 403 });
-
   const { token } = await req.json();
   if (!token || typeof token !== "string") return NextResponse.json({ error: "Invalid token" }, { status: 400 });
 

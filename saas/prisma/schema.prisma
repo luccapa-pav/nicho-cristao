@@ -171,6 +171,7 @@ model Prayer {
   group       Group?        @relation(fields: [groupId], references: [id])
   title       String
   description String?
+  testimony   String?
   status      PrayerStatus  @default(PENDING)
   isPublic    Boolean       @default(false)
   prayedCount Int           @default(0)

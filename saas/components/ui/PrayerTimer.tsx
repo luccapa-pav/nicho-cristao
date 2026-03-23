@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Play, Pause, RotateCcw, Music } from "lucide-react";
+import { X, Play, Pause, RotateCcw, Music, Moon, Minimize2, Volume2, VolumeX } from "lucide-react";
 import Link from "next/link";
 import confetti from "canvas-confetti";
 import { usePlan } from "@/hooks/usePlan";
@@ -51,6 +51,8 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
   const [running, setRunning] = useState(false);
   const [finished, setFinished] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
+  const [meditacao, setMeditacao] = useState(false);
+  const [ttsEnabled, setTtsEnabled] = useState(false);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -75,6 +77,9 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
       if (intervalRef.current) clearInterval(intervalRef.current);
       ambientAudioRef.current?.pause();
       setMusicPlaying(false);
+      setMeditacao(false);
+      setTtsEnabled(false);
+      window.speechSynthesis?.cancel();
     }
   }, [open]);
 
@@ -121,6 +126,17 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
   const verseIndex = Math.floor(elapsed / 30) % verseList.length;
   const currentVerse = verseList[verseIndex];
 
+  // TTS — lê o versículo quando troca (a cada 30s)
+  useEffect(() => {
+    if (!ttsEnabled || !running || typeof window === "undefined") return;
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(`${currentVerse.verse}. ${currentVerse.ref}`);
+    utt.lang = "pt-BR";
+    utt.rate = 0.85;
+    utt.pitch = 1;
+    window.speechSynthesis.speak(utt);
+  }, [verseIndex, ttsEnabled, running]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleStart = () => {
     if (!audioCtxRef.current) audioCtxRef.current = new AudioContext();
     setRunning(true);
@@ -143,23 +159,38 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+          {!meditacao && <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />}
           <motion.div
-            className="relative divine-card w-full max-w-sm mx-4 mb-4 md:mb-0 p-6 flex flex-col gap-5"
+            className={`relative w-full mx-4 mb-4 md:mb-0 p-6 flex flex-col gap-5 transition-all duration-300 ${
+              meditacao
+                ? "max-w-none mx-0 mb-0 rounded-none min-h-screen bg-slate-950 justify-center items-center"
+                : "divine-card max-w-sm"
+            }`}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold uppercase tracking-widest text-gold-dark">Tempo de Oração</p>
-              <button onClick={onClose} className="p-3 text-slate-300 hover:text-slate-600 transition-colors rounded-full hover:bg-divine-50">
-                <X className="w-5 h-5" />
-              </button>
+            <div className="flex items-center justify-between w-full max-w-sm">
+              <p className={`text-sm font-semibold uppercase tracking-widest ${meditacao ? "text-gold/60" : "text-gold-dark"}`}>
+                {meditacao ? "✦ Meditação" : "Tempo de Oração"}
+              </p>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setMeditacao(v => !v)}
+                  className={`p-3 transition-colors rounded-full ${meditacao ? "text-gold/70 hover:text-gold" : "text-slate-300 hover:text-gold hover:bg-divine-50"}`}
+                  title={meditacao ? "Sair da meditação" : "Modo meditação"}
+                >
+                  {meditacao ? <Minimize2 className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                </button>
+                <button onClick={onClose} className={`p-3 transition-colors rounded-full ${meditacao ? "text-gold/40 hover:text-gold/80" : "text-slate-300 hover:text-slate-600 hover:bg-divine-50"}`}>
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             {/* Banner modos bloqueados — FREE only */}
-            {!isPremium && (
+            {!isPremium && !meditacao && (
               <div className="rounded-xl border border-dashed border-gold/40 bg-divine-50/60 p-4 flex flex-col gap-3">
                 <p className="text-sm font-semibold text-gold-dark uppercase tracking-wide">
                   ✦ Modos de oração guiada
@@ -176,7 +207,7 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
             )}
 
             {/* Mode selector — PREMIUM only */}
-            {isPremium && (
+            {isPremium && !meditacao && (
               <div className="flex gap-1.5 flex-wrap">
                 {MODES.map((m) => (
                   <button
@@ -194,7 +225,7 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
             )}
 
             {/* Duration selector — PREMIUM only */}
-            {isPremium && (
+            {isPremium && !meditacao && (
               <div className="flex gap-1.5 flex-wrap">
                 {durationMinutes.map((min) => (
                   <button
@@ -212,25 +243,40 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
             )}
 
             {/* Ambient music toggle */}
-            <div className="flex justify-center">
-              <PremiumGate feature="Música ambiente de oração">
-                <button
-                  onClick={() => setMusicPlaying((v) => !v)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
-                    musicPlaying
-                      ? "border-gold bg-gold/10 text-gold-dark"
-                      : "border-gold/30 bg-divine-50 text-gold-dark hover:bg-divine-100"
-                  }`}
-                >
-                  {musicPlaying ? <Pause className="w-4 h-4" /> : <Music className="w-4 h-4" />}
-                  {musicPlaying ? "Pausar música" : "Música ambiente"}
-                </button>
-              </PremiumGate>
-            </div>
+            {!meditacao && (
+              <div className="flex justify-center gap-2 flex-wrap">
+                <PremiumGate feature="Música ambiente de oração">
+                  <button
+                    onClick={() => setMusicPlaying((v) => !v)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
+                      musicPlaying
+                        ? "border-gold bg-gold/10 text-gold-dark"
+                        : "border-gold/30 bg-divine-50 text-gold-dark hover:bg-divine-100"
+                    }`}
+                  >
+                    {musicPlaying ? <Pause className="w-4 h-4" /> : <Music className="w-4 h-4" />}
+                    {musicPlaying ? "Pausar música" : "Música ambiente"}
+                  </button>
+                </PremiumGate>
+                <PremiumGate feature="Versículos em voz alta">
+                  <button
+                    onClick={() => setTtsEnabled((v) => !v)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
+                      ttsEnabled
+                        ? "border-gold bg-gold/10 text-gold-dark"
+                        : "border-gold/30 bg-divine-50 text-gold-dark hover:bg-divine-100"
+                    }`}
+                  >
+                    {ttsEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                    {ttsEnabled ? "Voz ativa" : "Ouvir versículos"}
+                  </button>
+                </PremiumGate>
+              </div>
+            )}
 
             {/* Timer circle */}
             <div className="flex flex-col items-center gap-4">
-              <div className="relative w-32 h-32 flex items-center justify-center">
+              <div className={`relative flex items-center justify-center ${meditacao ? "w-48 h-48" : "w-32 h-32"}`}>
                 <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 120 120">
                   <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(212,175,55,0.12)" strokeWidth="8" />
                   <circle
@@ -253,10 +299,10 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
                     <span className="text-2xl">🙏</span>
                   ) : (
                     <>
-                      <span className="font-serif text-4xl font-bold text-gold tabular-nums leading-none">
+                      <span className={`font-serif font-bold text-gold tabular-nums leading-none ${meditacao ? "text-6xl" : "text-4xl"}`}>
                         {formatTime(remaining)}
                       </span>
-                      <span className="text-sm text-slate-400 mt-1">restante</span>
+                      <span className={`text-slate-400 mt-1 ${meditacao ? "text-base" : "text-sm"}`}>restante</span>
                     </>
                   )}
                 </div>
@@ -304,10 +350,10 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                className="verse-highlight text-base text-slate-600 leading-relaxed"
+                className={`w-full max-w-sm text-center leading-relaxed ${meditacao ? "border-0 bg-transparent px-4" : "verse-highlight text-base text-slate-600"}`}
               >
-                <p className="italic">"{currentVerse.verse}"</p>
-                <p className="text-sm text-gold-dark font-semibold mt-1 not-italic">— {currentVerse.ref}</p>
+                <p className={`italic ${meditacao ? "text-xl text-gold/80" : ""}`}>"{currentVerse.verse}"</p>
+                <p className={`font-semibold mt-2 not-italic ${meditacao ? "text-base text-gold/60" : "text-sm text-gold-dark"}`}>— {currentVerse.ref}</p>
               </motion.div>
             </AnimatePresence>
           </motion.div>

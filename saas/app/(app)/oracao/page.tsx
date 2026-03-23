@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Timer, BookOpen, CheckCircle2, Clock, Plus } from "lucide-react";
+import { Timer, BookOpen, CheckCircle2, Clock, Plus, Bell, BellOff } from "lucide-react";
 import Link from "next/link";
 import { PrayerList } from "@/components/ui/PrayerList";
 import { PrayerTimer } from "@/components/ui/PrayerTimer";
@@ -13,6 +13,7 @@ interface Prayer {
   id: string;
   title: string;
   description?: string;
+  testimony?: string;
   status: "PENDING" | "ANSWERED";
   prayedCount: number;
   createdAt: string;
@@ -25,6 +26,47 @@ export default function OracaoPage() {
   const [timerOpen, setTimerOpen] = useState(false);
   const [autoOpenForm, setAutoOpenForm] = useState(false);
   const [error, setError] = useState(false);
+
+  // Lembrete
+  const [reminderEnabled, setReminderEnabled] = useState(false);
+  const [reminderTime, setReminderTime] = useState("08:00");
+  const [reminderMsg, setReminderMsg] = useState("");
+
+  useEffect(() => {
+    const stored = localStorage.getItem("prayerReminder");
+    if (stored) {
+      const { enabled, time, msg } = JSON.parse(stored);
+      setReminderEnabled(enabled ?? false);
+      setReminderTime(time ?? "08:00");
+      setReminderMsg(msg ?? "");
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("prayerReminder", JSON.stringify({ enabled: reminderEnabled, time: reminderTime, msg: reminderMsg }));
+    if (!reminderEnabled || !reminderTime) return;
+    const [h, m] = reminderTime.split(":").map(Number);
+    const now = new Date();
+    const target = new Date(); target.setHours(h, m, 0, 0);
+    const alreadyShown = localStorage.getItem("prayerReminderDate") === now.toDateString();
+    if (alreadyShown) return;
+    const ms = target.getTime() - now.getTime();
+    if (ms < 0 || ms > 3 * 60 * 60 * 1000) return;
+    const t = setTimeout(() => {
+      if (Notification.permission === "granted") {
+        new Notification("Luz Divina 🙏", { body: reminderMsg || "Hora da sua oração do dia!", icon: "/cross-crown.svg" });
+        localStorage.setItem("prayerReminderDate", new Date().toDateString());
+      }
+    }, ms);
+    return () => clearTimeout(t);
+  }, [reminderEnabled, reminderTime, reminderMsg]);
+
+  const toggleReminder = async () => {
+    if (!reminderEnabled && "Notification" in window) {
+      await Notification.requestPermission();
+    }
+    setReminderEnabled(v => !v);
+  };
 
   // Random verse on mount
   const verses = PRAYER_VERSES["Livre"];
@@ -63,11 +105,16 @@ export default function OracaoPage() {
     }
   };
 
-  const handleMarkAnswered = async (id: string) => {
-    const res = await fetch(`/api/prayers/${id}/answered`, { method: "PATCH" });
+  const handleMarkAnswered = async (id: string, testimony?: string) => {
+    const res = await fetch(`/api/prayers/${id}/answered`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ testimony }),
+    });
     if (res.ok) {
+      const updated = await res.json();
       setPrayers((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, status: "ANSWERED" as const } : p))
+        prev.map((p) => (p.id === id ? { ...p, status: "ANSWERED" as const, testimony: updated.testimony } : p))
       );
     }
   };
@@ -172,6 +219,50 @@ export default function OracaoPage() {
               Iniciar Oração
             </button>
           </div>
+        </motion.div>
+
+        {/* ── Lembrete de Oração ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          className="divine-card p-5 flex flex-col gap-3"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {reminderEnabled ? <Bell className="w-5 h-5 text-gold-dark" /> : <BellOff className="w-5 h-5 text-slate-400" />}
+              <div>
+                <p className="text-sm font-semibold text-slate-700">Lembrete de Oração</p>
+                <p className="text-xs text-slate-500 mt-0.5">{reminderEnabled ? `Todos os dias às ${reminderTime}` : "Desativado"}</p>
+              </div>
+            </div>
+            <button
+              onClick={toggleReminder}
+              className={`relative w-12 h-7 rounded-full transition-colors ${reminderEnabled ? "bg-gold" : "bg-slate-200"}`}
+              aria-label={reminderEnabled ? "Desativar lembrete" : "Ativar lembrete"}
+            >
+              <span className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-all ${reminderEnabled ? "left-6" : "left-1"}`} />
+            </button>
+          </div>
+          {reminderEnabled && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="flex flex-col gap-2">
+              <input
+                type="time"
+                value={reminderTime}
+                onChange={(e) => setReminderTime(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-amber-100 bg-white text-base text-slate-700 focus:outline-none focus:ring-2 focus:ring-gold/30"
+              />
+              {isPremium && (
+                <input
+                  type="text"
+                  placeholder="Mensagem personalizada (Premium)..."
+                  value={reminderMsg}
+                  onChange={(e) => setReminderMsg(e.target.value.slice(0, 100))}
+                  className="w-full px-4 py-3 rounded-xl border border-gold/30 bg-divine-50/60 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                />
+              )}
+            </motion.div>
+          )}
         </motion.div>
 
         {/* ── Stats ── */}
@@ -281,6 +372,7 @@ export default function OracaoPage() {
               autoOpenForm={autoOpenForm}
               onFormOpened={() => setAutoOpenForm(false)}
               isLoading={loading}
+              isPremium={isPremium}
             />
           )}
         </motion.div>
@@ -293,35 +385,71 @@ export default function OracaoPage() {
             transition={{ delay: 0.25 }}
             className="divine-card p-6 border border-dashed border-gold/50 bg-divine-50/40"
           >
-            <p className="text-sm font-semibold uppercase tracking-widest text-gold-dark mb-4">
-              ✦ Recursos Premium
-            </p>
+            <div className="text-center mb-5">
+              <p className="text-xs font-semibold uppercase tracking-widest text-gold-dark">
+                ✦ Recursos Premium
+              </p>
+              <p className="text-lg font-serif text-slate-700 mt-1">Aprofunde sua vida de oração</p>
+            </div>
+
             <div className="grid grid-cols-2 gap-3">
               {/* Free */}
-              <div className="rounded-xl bg-divine-50/60 border border-divine-100 p-4 flex flex-col gap-2.5">
-                <p className="text-sm font-semibold text-slate-600 mb-1">Grátis</p>
-                {["Timer 5 min", "Diário ilimitado", "Versículos diários", "Lembretes de oração"].map((f) => (
-                  <p key={f} className="text-sm text-slate-500 flex items-center gap-1.5">
-                    <span className="text-gold-dark">✓</span> {f}
-                  </p>
+              <div className="rounded-xl bg-white/70 border border-slate-200 p-4 flex flex-col gap-2.5">
+                <div className="mb-1">
+                  <p className="text-sm font-bold text-slate-600">Grátis</p>
+                  <p className="text-xs text-slate-400">Para começar sua jornada</p>
+                </div>
+                {[
+                  { text: "Timer 5 min", sub: "Modo Livre" },
+                  { text: "Diário ilimitado", sub: "Pedidos sem limite" },
+                  { text: "Versículos diários", sub: "Palavra fresquinha" },
+                  { text: "Lembretes de oração", sub: "Notificações diárias" },
+                  { text: "Marcar respondidas", sub: "Celebre as graças" },
+                ].map(({ text, sub }) => (
+                  <div key={text} className="flex items-start gap-2">
+                    <span className="text-slate-400 text-sm leading-tight mt-0.5">✓</span>
+                    <div>
+                      <p className="text-sm font-medium text-slate-600 leading-tight">{text}</p>
+                      <p className="text-xs text-slate-400 leading-tight">{sub}</p>
+                    </div>
+                  </div>
                 ))}
               </div>
+
               {/* Premium */}
-              <div className="rounded-xl bg-amber-50/60 border border-gold/40 p-4 flex flex-col gap-2.5"
-                   style={{ boxShadow: "inset 0 0 20px rgba(212,175,55,0.06)" }}>
-                <p className="text-sm font-semibold text-gold-dark mb-1">Premium ✦</p>
-                {["Todos os modos", "Timer ilimitado", "Orações da célula"].map((f) => (
-                  <p key={f} className="text-sm text-amber-700 flex items-center gap-1.5">
-                    <span>✦</span> {f}
-                  </p>
+              <div
+                className="rounded-xl bg-amber-50/70 border border-gold/40 p-4 flex flex-col gap-2.5 relative overflow-hidden"
+                style={{ boxShadow: "inset 0 0 24px rgba(212,175,55,0.10), 0 2px 12px rgba(212,175,55,0.12)" }}
+              >
+                {/* Brilho de fundo */}
+                <div className="absolute inset-0 pointer-events-none rounded-xl"
+                     style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.15) 0%, transparent 70%)" }} />
+                <p className="relative text-sm font-bold text-gold-dark mb-1">Premium ✦</p>
+                {[
+                  { text: "Modos guiados", sub: "Adoração, Intercessão, Lectio" },
+                  { text: "Timer ilimitado", sub: "Sem restrição de tempo" },
+                  { text: "Orações da célula", sub: "Ore com seu grupo" },
+                  { text: "Lembrete personalizado", sub: "Mensagem sua cada dia" },
+                  { text: "Relatório de fé", sub: "Veja sua jornada no mês" },
+                  { text: "Testemunho completo", sub: "Registre como Deus agiu" },
+                ].map(({ text, sub }) => (
+                  <div key={text} className="relative flex items-start gap-2">
+                    <span className="text-gold-dark text-sm leading-tight mt-0.5">✦</span>
+                    <div>
+                      <p className="text-sm font-medium text-amber-800 leading-tight">{text}</p>
+                      <p className="text-xs text-amber-600/80 leading-tight">{sub}</p>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
+
             <Link href="/perfil">
-              <button className="btn-divine py-4 text-base w-full mt-4">
-                Assinar Premium
+              <button className="btn-divine py-4 text-base w-full mt-5 flex items-center justify-center gap-2">
+                <span>✦</span> Assinar Premium
               </button>
             </Link>
+            <p className="text-xs text-slate-400 text-center mt-2">Cancele quando quiser</p>
           </motion.div>
         )}
       </div>

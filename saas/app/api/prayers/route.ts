@@ -7,10 +7,13 @@ export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { plan: true } });
+  const isPremium = user?.plan !== "FREE";
+
   const prayers = await prisma.prayer.findMany({
     where: { userId: session.user.id },
     orderBy: { createdAt: "desc" },
-    take: 20,
+    ...(isPremium ? {} : { take: 50 }),
   });
 
   return NextResponse.json(prayers);

@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, Clock, Plus, X, Heart, Users } from "lucide-react";
+import { CheckCircle2, Clock, Plus, X, Heart, Users, Share2 } from "lucide-react";
 import Link from "next/link";
 
 interface Prayer {
   id: string;
   title: string;
   description?: string;
+  testimony?: string;
   status: "PENDING" | "ANSWERED";
   prayedCount: number;
   createdAt: string;
@@ -27,67 +28,124 @@ interface GroupPrayer {
 interface PrayerListProps {
   prayers: Prayer[];
   onAddPrayer: (title: string, description?: string, isPublic?: boolean) => void;
-  onMarkAnswered: (id: string) => void;
+  onMarkAnswered: (id: string, testimony?: string) => void;
   autoOpenForm?: boolean;
   onFormOpened?: () => void;
   groupPrayers?: GroupPrayer[];
   isLoading?: boolean;
+  isPremium?: boolean;
 }
 
 type Tab = "ALL" | "PENDING" | "ANSWERED" | "CELULA";
 
-export function PrayerList({ prayers, onAddPrayer, onMarkAnswered, autoOpenForm, onFormOpened, groupPrayers = [], isLoading }: PrayerListProps) {
-  const [showForm, setShowForm] = useState(false);
+function monthLabel(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+}
 
-  useEffect(() => {
-    if (autoOpenForm) {
-      setShowForm(true);
-      onFormOpened?.();
-    }
-  }, [autoOpenForm, onFormOpened]);
+export function PrayerList({
+  prayers, onAddPrayer, onMarkAnswered, autoOpenForm, onFormOpened,
+  groupPrayers = [], isLoading, isPremium,
+}: PrayerListProps) {
+  const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState(false);
   const [tab, setTab] = useState<Tab>("ALL");
+  const [awaitingTestimony, setAwaitingTestimony] = useState<string | null>(null);
+  const [testimonyText, setTestimonyText] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (autoOpenForm) { setShowForm(true); onFormOpened?.(); }
+  }, [autoOpenForm, onFormOpened]);
 
   const filtered = tab === "CELULA"
     ? []
     : prayers.filter((p) => tab === "ALL" ? true : p.status === tab);
 
+  const grouped: { month: string; items: Prayer[] }[] = [];
+  if (isPremium && filtered.length > 0) {
+    filtered.forEach((p) => {
+      const m = monthLabel(p.createdAt);
+      const last = grouped[grouped.length - 1];
+      if (last && last.month === m) last.items.push(p);
+      else grouped.push({ month: m, items: [p] });
+    });
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
     onAddPrayer(title.trim(), description.trim() || undefined, isPublic);
-    setTitle("");
-    setDescription("");
-    setIsPublic(false);
-    setShowForm(false);
+    setTitle(""); setDescription(""); setIsPublic(false); setShowForm(false);
   };
 
+  const confirmAnswer = (id: string) => {
+    navigator.vibrate?.([30, 30, 60]);
+    onMarkAnswered(id, testimonyText.trim() || undefined);
+    setAwaitingTestimony(null);
+    setTestimonyText("");
+  };
+
+  const handleExport = async () => {
+    const answered = prayers.filter((p) => p.status === "ANSWERED").length;
+    const total = prayers.length;
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+    const text =
+      `📖 Meu Diário de Oração — Luz Divina\n\n` +
+      `✦ ${total} pedidos no total\n✓ ${answered} respondidos por Deus (${pct}%)\n` +
+      `🙏 ${total - answered} aguardando\n\n"Apresentai os vossos pedidos a Deus" — Fp 4:6`;
+    try {
+      if (navigator.share) await navigator.share({ title: "Meu Diário de Oração", text });
+      else { await navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000); }
+    } catch { /* cancelled */ }
+  };
+
+  const answeredCount = prayers.filter((p) => p.status === "ANSWERED").length;
+  const pendingCount  = prayers.filter((p) => p.status === "PENDING").length;
+
   return (
-    <div className="divine-card p-6 flex flex-col gap-4 h-full">
-      {/* Header */}
+    <div className="divine-card p-5 flex flex-col gap-4 h-full">
+
+      {/* ── Header ── */}
       <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-gold-dark">
-            Diário de Oração
-          </p>
-          <p className="text-sm text-slate-600 mt-0.5">
-            {prayers.filter((p) => p.status === "ANSWERED").length} respondidas •{" "}
-            {prayers.filter((p) => p.status === "PENDING").length} pendentes
-          </p>
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-lg bg-gold/10 flex items-center justify-center border border-gold/20 shrink-0">
+            <Heart className="w-3.5 h-3.5 text-gold-dark" />
+          </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-gold-dark leading-none">
+              Diário de Oração
+            </p>
+            <p className="text-[0.7rem] text-slate-500 mt-0.5 leading-none">
+              {answeredCount} respondidas · {pendingCount} pendentes
+            </p>
+          </div>
         </div>
-        {tab !== "CELULA" && (
-          <button
-            onClick={() => setShowForm((v) => !v)}
-            className="w-12 h-12 rounded-full bg-divine-100 flex items-center justify-center text-gold-dark hover:bg-divine-200 transition-colors"
-          >
-            {showForm ? <X className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-          </button>
-        )}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {prayers.length > 0 && (
+            <button
+              onClick={handleExport}
+              title={copied ? "Copiado!" : "Compartilhar diário"}
+              className="w-8 h-8 rounded-lg bg-divine-50 border border-divine-200 flex items-center justify-center text-gold-dark hover:bg-divine-100 transition-colors"
+            >
+              {copied ? <span className="text-[10px] font-bold">✓</span> : <Share2 className="w-3.5 h-3.5" />}
+            </button>
+          )}
+          {tab !== "CELULA" && (
+            <button
+              onClick={() => setShowForm((v) => !v)}
+              className="w-8 h-8 rounded-lg bg-divine-50 border border-divine-200 flex items-center justify-center text-gold-dark hover:bg-divine-100 transition-colors"
+            >
+              {showForm ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Formulário de novo pedido */}
+      <div className="divine-divider" />
+
+      {/* ── Formulário ── */}
       <AnimatePresence>
         {showForm && tab !== "CELULA" && (
           <motion.form
@@ -95,48 +153,46 @@ export function PrayerList({ prayers, onAddPrayer, onMarkAnswered, autoOpenForm,
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             onSubmit={handleSubmit}
-            className="flex flex-col gap-2 overflow-hidden"
+            className="flex flex-col gap-2.5 overflow-hidden"
           >
             <input
               type="text"
               placeholder="Título do pedido..."
               value={title}
               onChange={(e) => setTitle(e.target.value.slice(0, 120))}
-              maxLength={120}
-              className="w-full px-4 py-4 rounded-2xl border border-amber-100 bg-white text-lg text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-amber-100 bg-white text-sm text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold"
               autoFocus
             />
             <textarea
               placeholder="Detalhes (opcional)..."
               value={description}
               onChange={(e) => setDescription(e.target.value.slice(0, 600))}
-              maxLength={600}
-              rows={3}
-              className="w-full px-4 py-4 rounded-2xl border border-amber-100 bg-white text-base text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold resize-none"
+              rows={2}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-amber-100 bg-white text-sm text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 resize-none"
             />
-            <label className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer select-none">
+            <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={isPublic}
                 onChange={(e) => setIsPublic(e.target.checked)}
-                className="w-5 h-5 accent-amber-500 rounded"
+                className="w-4 h-4 accent-amber-500 rounded"
               />
               Compartilhar com minha célula
             </label>
-            <button type="submit" className="btn-divine py-5 text-lg min-h-[56px]">
+            <button type="submit" className="btn-divine py-2.5 text-sm">
               Adicionar pedido 🙏
             </button>
           </motion.form>
         )}
       </AnimatePresence>
 
-      {/* Tabs/Filtros */}
+      {/* ── Tabs ── */}
       <div className="flex gap-1.5 flex-wrap">
         {(["ALL", "PENDING", "ANSWERED"] as const).map((f) => (
           <button
             key={f}
             onClick={() => setTab(f)}
-            className={`px-5 py-3 min-h-[48px] rounded-full text-base font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
               tab === f
                 ? "bg-gold text-white shadow-sm"
                 : "bg-divine-50 text-slate-500 hover:bg-divine-100"
@@ -147,7 +203,7 @@ export function PrayerList({ prayers, onAddPrayer, onMarkAnswered, autoOpenForm,
         ))}
         <button
           onClick={() => setTab("CELULA")}
-          className={`flex items-center gap-1.5 px-5 py-3 min-h-[48px] rounded-full text-base font-medium transition-all ${
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
             tab === "CELULA"
               ? "bg-gold text-white shadow-sm"
               : "bg-divine-50 text-slate-500 hover:bg-divine-100"
@@ -156,22 +212,24 @@ export function PrayerList({ prayers, onAddPrayer, onMarkAnswered, autoOpenForm,
           <Users className="w-3 h-3" />
           Célula
           {groupPrayers.length > 0 && (
-            <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${tab === "CELULA" ? "bg-white/20" : "bg-gold/20 text-gold-dark"}`}>
+            <span className={`text-[10px] font-bold px-1 py-0.5 rounded-full ${
+              tab === "CELULA" ? "bg-white/20" : "bg-gold/20 text-gold-dark"
+            }`}>
               {groupPrayers.length}
             </span>
           )}
         </button>
       </div>
 
-      {/* Lista */}
-      <div className="flex flex-col gap-2 max-h-96 overflow-y-auto custom-scroll pr-1">
+      {/* ── Lista ── */}
+      <div className="flex flex-col gap-2 flex-1 overflow-y-auto custom-scroll pr-0.5 max-h-[26rem]">
         <AnimatePresence initial={false}>
           {isLoading ? (
             [0, 1, 2].map((i) => (
-              <div key={i} className="flex items-start gap-3 p-4 rounded-xl border border-divine-100 animate-pulse">
-                <div className="w-6 h-6 rounded-full bg-divine-100 flex-shrink-0 mt-0.5" />
+              <div key={i} className="flex items-start gap-3 p-3 rounded-xl border border-divine-100 animate-pulse">
+                <div className="w-5 h-5 rounded-full bg-divine-100 shrink-0 mt-0.5" />
                 <div className="flex-1 flex flex-col gap-2">
-                  <div className="h-4 bg-divine-100 rounded w-3/4" />
+                  <div className="h-3.5 bg-divine-100 rounded w-3/4" />
                   <div className="h-3 bg-divine-50 rounded w-1/2" />
                 </div>
               </div>
@@ -179,37 +237,41 @@ export function PrayerList({ prayers, onAddPrayer, onMarkAnswered, autoOpenForm,
           ) : tab === "CELULA" ? (
             groupPrayers.length === 0 ? (
               <div className="text-center py-8 flex flex-col items-center gap-3">
-                <div className="w-14 h-14 rounded-full bg-divine-50 flex items-center justify-center">
-                  <Users className="w-6 h-6 text-divine-300" />
+                <div className="w-12 h-12 rounded-full bg-divine-50 flex items-center justify-center">
+                  <Users className="w-5 h-5 text-divine-300" />
                 </div>
-                <p className="text-base font-medium text-slate-500">Orações da sua célula</p>
-                <p className="text-sm text-slate-400 max-w-[220px] leading-relaxed text-center">
+                <p className="text-sm font-semibold text-slate-600">Orações da sua célula</p>
+                <p className="text-xs text-slate-400 max-w-[200px] leading-relaxed text-center">
                   Com o Premium, veja e ore pelos pedidos dos membros da sua célula.
                 </p>
                 <Link href="/perfil">
-                  <button className="btn-divine py-3 px-6 text-base">✦ Ver com Premium</button>
+                  <button className="btn-divine py-2 px-5 text-xs">✦ Ver com Premium</button>
                 </Link>
               </div>
             ) : (
               groupPrayers.map((gp, i) => (
                 <motion.div
                   key={gp.id}
-                  initial={{ opacity: 0, x: -12 }}
+                  initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="flex items-start gap-3 p-3 rounded-xl border border-divine-100 bg-amber-50/30"
+                  transition={{ delay: i * 0.04 }}
+                  className="flex items-start gap-2.5 p-3 rounded-xl border border-divine-100 bg-amber-50/30"
                 >
-                  <div className="w-7 h-7 rounded-full bg-divine-100 flex items-center justify-center text-gold-dark text-xs font-bold flex-shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-divine-100 flex items-center justify-center text-gold-dark text-[10px] font-bold shrink-0">
                     {gp.author[0]}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-base font-medium text-slate-700 leading-tight">{gp.title}</p>
-                    {gp.description && <p className="text-sm text-slate-500 mt-0.5 line-clamp-2">{gp.description}</p>}
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-slate-500">{gp.author}</span>
-                      <span className="text-xs text-slate-400">•</span>
-                      <span className="text-xs text-slate-400">{gp.createdAt}</span>
-                      {gp.prayedCount > 0 && <span className="text-xs text-rose-400">🙏 {gp.prayedCount}</span>}
+                    <p className="text-sm font-medium text-slate-700 leading-tight">{gp.title}</p>
+                    {gp.description && (
+                      <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">{gp.description}</p>
+                    )}
+                    <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                      <span className="text-[10px] text-slate-500">{gp.author}</span>
+                      <span className="text-[10px] text-slate-300">·</span>
+                      <span className="text-[10px] text-slate-400">{gp.createdAt}</span>
+                      {gp.prayedCount > 0 && (
+                        <span className="text-[10px] text-rose-400">🙏 {gp.prayedCount}</span>
+                      )}
                     </div>
                   </div>
                 </motion.div>
@@ -217,66 +279,147 @@ export function PrayerList({ prayers, onAddPrayer, onMarkAnswered, autoOpenForm,
             )
           ) : filtered.length === 0 ? (
             <div className="text-center py-8 flex flex-col items-center gap-2">
-              <div className="w-12 h-12 rounded-full bg-divine-50 flex items-center justify-center mb-1">
-                <Heart className="w-5 h-5 text-divine-300" />
+              <div className="w-10 h-10 rounded-full bg-divine-50 flex items-center justify-center">
+                <Heart className="w-4 h-4 text-divine-300" />
               </div>
-              <p className="text-base font-semibold text-slate-600">Traga seus pedidos ao Senhor</p>
-              <p className="text-sm text-slate-500 max-w-[200px] leading-relaxed text-center">
+              <p className="text-sm font-semibold text-slate-600">Traga seus pedidos ao Senhor</p>
+              <p className="text-xs text-slate-500 max-w-[180px] leading-relaxed text-center italic">
                 &ldquo;Apresentai os vossos pedidos a Deus em toda oração&rdquo; — Fp 4:6
               </p>
             </div>
+          ) : isPremium ? (
+            grouped.map(({ month, items }) => (
+              <div key={month}>
+                <p className="text-[10px] text-gold-dark font-bold uppercase tracking-widest py-1.5 px-1 capitalize">
+                  {month}
+                </p>
+                {items.map((prayer, i) => (
+                  <PrayerItem
+                    key={prayer.id}
+                    prayer={prayer}
+                    index={i}
+                    awaitingTestimony={awaitingTestimony}
+                    testimonyText={testimonyText}
+                    onSetAwaiting={(id) => { setAwaitingTestimony(id); setTestimonyText(""); }}
+                    onTestimonyChange={setTestimonyText}
+                    onConfirmAnswer={confirmAnswer}
+                    onCancelTestimony={() => setAwaitingTestimony(null)}
+                  />
+                ))}
+              </div>
+            ))
           ) : (
             filtered.map((prayer, i) => (
-              <motion.div
+              <PrayerItem
                 key={prayer.id}
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 12 }}
-                transition={{ delay: i * 0.05 }}
-                className={`flex items-start gap-3 p-4 rounded-xl border transition-all ${
-                  prayer.status === "ANSWERED"
-                    ? "border-gold/40 bg-divine-50/60 shadow-[0_0_16px_rgba(212,175,55,0.18)]"
-                    : "border-divine-100 bg-amber-50/30"
-                }`}
-              >
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (prayer.status === "PENDING") {
-                      navigator.vibrate?.([30, 30, 60]);
-                      onMarkAnswered(prayer.id);
-                    }
-                  }}
-                  className="p-3 -m-3 mt-0.5 flex-shrink-0 rounded-xl transition-transform hover:scale-110 min-w-[44px] min-h-[44px] flex items-center justify-center"
-                  aria-label={prayer.status === "PENDING" ? "Marcar como respondido" : "Pedido respondido"}
-                  title={prayer.status === "PENDING" ? "Marcar como respondido" : "Respondido"}
-                >
-                  {prayer.status === "ANSWERED" ? (
-                    <CheckCircle2 className="w-6 h-6 text-gold drop-shadow-sm" />
-                  ) : (
-                    <Clock className="w-5 h-5 text-slate-500" />
-                  )}
-                </button>
-
-                <div className="min-w-0 flex-1">
-                  <p className={`text-base font-medium leading-tight ${prayer.status === "ANSWERED" ? "line-through text-slate-400" : "text-slate-700"}`}>
-                    {prayer.title}
-                  </p>
-                  {prayer.description && (
-                    <p className="text-base text-slate-500 mt-0.5 line-clamp-2">{prayer.description}</p>
-                  )}
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-slate-500">{prayer.createdAt}</span>
-                    {prayer.prayedCount > 0 && (
-                      <span className="text-xs text-rose-400">🙏 {prayer.prayedCount}</span>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
+                prayer={prayer}
+                index={i}
+                awaitingTestimony={awaitingTestimony}
+                testimonyText={testimonyText}
+                onSetAwaiting={(id) => { setAwaitingTestimony(id); setTestimonyText(""); }}
+                onTestimonyChange={setTestimonyText}
+                onConfirmAnswer={confirmAnswer}
+                onCancelTestimony={() => setAwaitingTestimony(null)}
+              />
             ))
           )}
         </AnimatePresence>
       </div>
     </div>
+  );
+}
+
+function PrayerItem({
+  prayer, index, awaitingTestimony, testimonyText,
+  onSetAwaiting, onTestimonyChange, onConfirmAnswer, onCancelTestimony,
+}: {
+  prayer: Prayer;
+  index: number;
+  awaitingTestimony: string | null;
+  testimonyText: string;
+  onSetAwaiting: (id: string) => void;
+  onTestimonyChange: (v: string) => void;
+  onConfirmAnswer: (id: string) => void;
+  onCancelTestimony: () => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -8 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 8 }}
+      transition={{ delay: index * 0.04 }}
+      className={`flex flex-col p-3 rounded-xl border transition-all ${
+        prayer.status === "ANSWERED"
+          ? "border-gold/30 bg-divine-50/60 shadow-[0_0_12px_rgba(212,175,55,0.10)]"
+          : "border-divine-100 bg-amber-50/20"
+      }`}
+    >
+      <div className="flex items-start gap-2.5">
+        <button
+          type="button"
+          onClick={() => { if (prayer.status === "PENDING") onSetAwaiting(prayer.id); }}
+          className="shrink-0 mt-0.5 flex items-center justify-center w-7 h-7 rounded-lg transition-transform hover:scale-110"
+          aria-label={prayer.status === "PENDING" ? "Marcar como respondido" : "Pedido respondido"}
+        >
+          {prayer.status === "ANSWERED"
+            ? <CheckCircle2 className="w-5 h-5 text-gold" />
+            : <Clock className="w-4 h-4 text-slate-400" />}
+        </button>
+
+        <div className="min-w-0 flex-1">
+          <p className={`text-sm font-medium leading-snug ${
+            prayer.status === "ANSWERED" ? "line-through text-slate-400" : "text-slate-700"
+          }`}>
+            {prayer.title}
+          </p>
+          {prayer.description && (
+            <p className="text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
+              {prayer.description}
+            </p>
+          )}
+          {prayer.testimony && (
+            <div className="mt-1.5 pl-2.5 border-l-2 border-gold/30">
+              <p className="text-[10px] text-gold-dark font-bold uppercase tracking-wide">Testemunho ✦</p>
+              <p className="text-xs text-slate-600 italic mt-0.5">{prayer.testimony}</p>
+            </div>
+          )}
+          <div className="flex items-center gap-1.5 mt-1">
+            <span className="text-[10px] text-slate-400">{prayer.createdAt}</span>
+            {prayer.prayedCount > 0 && (
+              <span className="text-[10px] text-rose-400">🙏 {prayer.prayedCount}</span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {awaitingTestimony === prayer.id && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          className="mt-2.5 flex flex-col gap-2 overflow-hidden"
+        >
+          <p className="text-xs font-semibold text-gold-dark">✦ Como Deus respondeu?</p>
+          <textarea
+            placeholder="Escreva seu testemunho (opcional)..."
+            value={testimonyText}
+            onChange={(e) => onTestimonyChange(e.target.value.slice(0, 400))}
+            rows={2}
+            className="w-full px-3 py-2 rounded-xl border border-gold/30 bg-white text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-gold/30 resize-none"
+            autoFocus
+          />
+          <div className="flex gap-2">
+            <button onClick={() => onConfirmAnswer(prayer.id)} className="btn-divine py-2 px-3 text-xs flex-1">
+              Confirmar ✓
+            </button>
+            <button
+              onClick={onCancelTestimony}
+              className="py-2 px-3 text-xs rounded-xl border border-divine-200 text-slate-500 hover:bg-divine-50 transition-colors"
+            >
+              Pular
+            </button>
+          </div>
+        </motion.div>
+      )}
+    </motion.div>
   );
 }
