@@ -1,43 +1,11 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { BookOpen, Share2, Star } from "lucide-react";
 import { FavoritesModal } from "./FavoritesModal";
 
-function CrownOfThorns({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
-      {/* Anel */}
-      <circle cx="100" cy="100" r="54" stroke="currentColor" strokeWidth="12"/>
-      {/* Nós do galho (a cada 60°) */}
-      <circle cx="154" cy="100" r="6" fill="currentColor"/>
-      <circle cx="127" cy="147" r="6" fill="currentColor"/>
-      <circle cx="73"  cy="147" r="6" fill="currentColor"/>
-      <circle cx="46"  cy="100" r="6" fill="currentColor"/>
-      <circle cx="73"  cy="53"  r="6" fill="currentColor"/>
-      <circle cx="127" cy="53"  r="6" fill="currentColor"/>
-      {/* Espinhos principais — 8 pontas (geometricamente calculados) */}
-      <polygon points="96,38  104,38  100,14"  fill="currentColor"/>
-      <polygon points="141,53 147,59  161,39"  fill="currentColor"/>
-      <polygon points="162,96 162,104 186,100" fill="currentColor"/>
-      <polygon points="147,141 141,147 161,161" fill="currentColor"/>
-      <polygon points="104,162 96,162  100,186" fill="currentColor"/>
-      <polygon points="59,147 53,141  39,161"  fill="currentColor"/>
-      <polygon points="38,104 38,96   14,100"  fill="currentColor"/>
-      <polygon points="53,59  59,53   39,39"   fill="currentColor"/>
-      {/* Espinhos menores — intercalados */}
-      <polygon points="121,42 127,44 130,28" fill="currentColor" fillOpacity="0.7"/>
-      <polygon points="156,73 158,79 172,70" fill="currentColor" fillOpacity="0.7"/>
-      <polygon points="158,121 156,127 172,130" fill="currentColor" fillOpacity="0.7"/>
-      <polygon points="127,156 121,158 130,172" fill="currentColor" fillOpacity="0.7"/>
-      <polygon points="79,158 73,156  70,172" fill="currentColor" fillOpacity="0.7"/>
-      <polygon points="44,127 42,121  28,130" fill="currentColor" fillOpacity="0.7"/>
-      <polygon points="42,79  44,73   28,70"  fill="currentColor" fillOpacity="0.7"/>
-      <polygon points="73,44  79,42   70,28"  fill="currentColor" fillOpacity="0.7"/>
-    </svg>
-  );
-}
 
 interface VerseCardProps {
   verse: string;
@@ -147,7 +115,7 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
 
         {/* ── FILLER: coroa de espinhos (só desktop, preenche espaço livre) ── */}
         <div className="flex items-center justify-center flex-1 max-h-32 pointer-events-none select-none mt-2">
-          <CrownOfThorns className="w-full max-w-[180px] h-auto text-amber-900/[0.28]" />
+          <Image src="/cross-crown.svg" alt="" width={140} height={140} className="opacity-20" aria-hidden="true" />
         </div>
 
         <div className="divine-divider mt-4 mb-3" />
