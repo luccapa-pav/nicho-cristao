@@ -1,0 +1,213 @@
+// ============================================================
+// SCHEMA - SaaS Cristão "Luz Divina"
+// Stack: PostgreSQL + Prisma ORM
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────
+// USUÁRIOS
+// ─────────────────────────────────────────────
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  passwordHash  String?
+  avatarUrl     String?
+  bio           String?
+  plan          Plan     @default(FREE)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relações
+  streak        Streak?
+  groupMember   GroupMember[]
+  prayers       Prayer[]
+  gratitudePosts GratitudePost[]
+  reactions     Reaction[]
+  devotionalLogs DevotionalLog[]
+  sentInvites   GroupInvite[]  @relation("InviteSender")
+
+  @@map("users")
+}
+
+enum Plan {
+  FREE
+  PREMIUM
+  FAMILY
+}
+
+// ─────────────────────────────────────────────
+// STREAK (OFENSIVA DIÁRIA)
+// ─────────────────────────────────────────────
+model Streak {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentStreak  Int      @default(0)
+  longestStreak  Int      @default(0)
+  lastCheckIn    DateTime?
+  totalDays      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("streaks")
+}
+
+// ─────────────────────────────────────────────
+// DEVOCIONAIS (Cápsula de Áudio + Versículo)
+// ─────────────────────────────────────────────
+model Devotional {
+  id          String   @id @default(cuid())
+  date        DateTime @unique @db.Date
+  title       String
+  verse       String
+  verseRef    String   // Ex: "João 3:16"
+  audioUrl    String?
+  audioDuration Int?   // segundos
+  theme       String?
+  publishedAt DateTime @default(now())
+
+  logs        DevotionalLog[]
+
+  @@map("devotionals")
+}
+
+model DevotionalLog {
+  id           String     @id @default(cuid())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  devotionalId String
+  devotional   Devotional @relation(fields: [devotionalId], references: [id])
+  listenedAt   DateTime   @default(now())
+  completed    Boolean    @default(false)
+
+  @@unique([userId, devotionalId])
+  @@map("devotional_logs")
+}
+
+// ─────────────────────────────────────────────
+// GRUPOS / CÉLULAS (12 pessoas)
+// ─────────────────────────────────────────────
+model Group {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  maxMembers  Int      @default(12)
+  progress    Float    @default(0)  // 0-100 progresso coletivo
+  coverUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members     GroupMember[]
+  invites     GroupInvite[]
+  prayers     Prayer[]
+
+  @@map("groups")
+}
+
+model GroupMember {
+  id        String      @id @default(cuid())
+  groupId   String
+  group     Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      GroupRole   @default(MEMBER)
+  joinedAt  DateTime    @default(now())
+
+  @@unique([groupId, userId])
+  @@map("group_members")
+}
+
+enum GroupRole {
+  LEADER
+  MEMBER
+}
+
+model GroupInvite {
+  id        String       @id @default(cuid())
+  groupId   String
+  group     Group        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User         @relation("InviteSender", fields: [senderId], references: [id])
+  token     String       @unique @default(cuid())
+  status    InviteStatus @default(PENDING)
+  expiresAt DateTime
+  createdAt DateTime     @default(now())
+
+  @@map("group_invites")
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+}
+
+// ─────────────────────────────────────────────
+// PEDIDOS DE ORAÇÃO
+// ─────────────────────────────────────────────
+model Prayer {
+  id          String        @id @default(cuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  groupId     String?
+  group       Group?        @relation(fields: [groupId], references: [id])
+  title       String
+  description String?
+  status      PrayerStatus  @default(PENDING)
+  isPublic    Boolean       @default(false)
+  prayedCount Int           @default(0)
+  answeredAt  DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("prayers")
+}
+
+enum PrayerStatus {
+  PENDING
+  ANSWERED
+  CLOSED
+}
+
+// ─────────────────────────────────────────────
+// FEED DE GRATIDÃO
+// ─────────────────────────────────────────────
+model GratitudePost {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  imageUrl  String?
+  createdAt DateTime   @default(now())
+
+  reactions Reaction[]
+
+  @@map("gratitude_posts")
+}
+
+model Reaction {
+  id        String       @id @default(cuid())
+  postId    String
+  post      GratitudePost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      ReactionType
+
+  @@unique([postId, userId])
+  @@map("reactions")
+}
+
+enum ReactionType {
+  AMEN        // Amém
+  GLORY       // Glória a Deus
+}

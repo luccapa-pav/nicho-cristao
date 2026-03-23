@@ -1,0 +1,18 @@
+{
+  "name": "Luz Divina — Sua Jornada de Fé",
+  "short_name": "Luz Divina",
+  "description": "365 dias de crescimento espiritual com comunidade, devocionais e pedidos de oração.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFDF5",
+  "theme_color": "#D4AF37",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "categories": ["lifestyle", "social", "education"],
+  "lang": "pt-BR"
+}

@@ -1,0 +1,108 @@
+{
+  "name": "SUB: Content Generation (Claude)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "node-trigger",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Receber dados do tópico e preparar prompt\nconst topic = $input.first().json.topic || $input.first().json;\n\nconst promptTemplate = `Crie um roteiro completo em JSON para:\\nTema: \"${topic.milagre_de_jesus}\"\\nVersículo base: \"${topic.versiculo_base}\"\\nGancho sugerido: \"${topic.gancho_inicial}\"\\n\\nEstrutura obrigatória do JSON:\\n{\\n  \"titulo\": \"string (máx 60 chars, com emoji, sem hashtag)\",\\n  \"descricao\": \"string (2-3 frases SEO otimizadas, inclui versículo e tema)\",\\n  \"hashtags\": [\"#Jesus\", \"#Milagre\", \"#FéEmDeus\", \"#Cristão\", \"#Shorts\", \"mais 3 a 5 tags específicas do tema\"],\\n  \"duracao_total_segundos\": \"número entre 25 e 40\",\\n  \"narracao_completa\": \"string — TTS PT-BR completo, sem símbolos, sem pontuação que cause pausa artificial. DEVE ser a concatenação exata de todos os texto_narrado das cenas seguido do cta.texto_completo. Ritmo de pregação carismática enérgica, frases curtas com impacto\",\\n  \"cenas\": [\\n    {\\n      \"numero\": 1,\\n      \"duracao_segundos\": \"4 a 6\",\\n      \"tipo\": \"HOOK\",\\n      \"texto_narrado\": \"DECLARAÇÃO DE RUPTURA no passado — ex: '38 anos de prisão acabaram em segundos', 'Cego desde o nascimento — até aquele dia'\",\\n      \"prompt_imagem\": \"English: subject + scene + lighting + mood, photorealistic 8K, vertical 9:16, ancient Judea/Jerusalem, golden hour\",\\n      \"prompt_video_motion\": \"movimento de câmera que combina com a energia da cena (ex: slow push in, dramatic zoom, subtle pan left)\",\\n      \"descricao_visual\": \"PT-BR: o que aparece na tela\"\\n    },\\n    {\\n      \"numero\": 2,\\n      \"duracao_segundos\": \"5 a 8\",\\n      \"tipo\": \"CONTEXTO\",\\n      \"texto_narrado\": \"apresentação rápida da situação e do sofrimento — máx 2 frases diretas e impactantes\",\\n      \"prompt_imagem\": \"...\",\\n      \"prompt_video_motion\": \"...\",\\n      \"descricao_visual\": \"...\"\\n    },\\n    {\\n      \"numero\": 3,\\n      \"duracao_segundos\": \"5 a 8\",\\n      \"tipo\": \"ACAO_JESUS\",\\n      \"texto_narrado\": \"o momento em que Jesus age — com exaltação obrigatória do Seu amor e grandeza\",\\n      \"prompt_imagem\": \"...\",\\n      \"prompt_video_motion\": \"...\",\\n      \"descricao_visual\": \"...\"\\n    },\\n    {\\n      \"numero\": 4,\\n      \"duracao_segundos\": \"5 a 8\",\\n      \"tipo\": \"IMPACTO\",\\n      \"texto_narrado\": \"a transformação e reação — emocional, exaltando o que só Deus poderia ter feito\",\\n      \"prompt_imagem\": \"...\",\\n      \"prompt_video_motion\": \"...\",\\n      \"descricao_visual\": \"...\"\\n    }\\n  ],\\n  \"cta\": {\\n    \"seguir\": \"gatilho emocional ligado ao tema — nunca perder conteúdo conectado diretamente a Deus\",\\n    \"compartilhar\": \"gatilho emocional ligado ao tema — mandar pra quem precisaria ver esse vídeo agora\",\\n    \"texto_completo\": \"CTA unindo os dois em 1-2 frases, tom urgente e acolhedor, 5 segundos\",\\n    \"duracao_segundos\": 5\\n  }\\n}\\n\\nREGRAS:\\n- GANCHO (cena 1): SEMPRE declaração de ruptura no passado — '[duração/condição] de [sofrimento] acabou/terminou'. PROIBIDO: futuro, perguntas, 'Você sabia que', 'Imagine', presente simples\\n- EXALTAÇÃO: toda ação de Jesus ou Deus DEVE ser exaltada — Seu amor incondicional, misericórdia infinita, grandeza, o impossível que só Ele realiza. Nunca neutro ou apenas descritivo. Ex: 'Só o amor de Deus faz isso', 'Nenhum ser humano poderia — mas Ele pôde', 'É assim que Ele nos ama'\\n- NARRAÇÃO: ritmo de pregação carismática enérgica (~1.2x). Frases curtas e diretas, sem palavras de preenchimento, cada frase com impacto próprio. narracao_completa = concatenação de todos os texto_narrado + cta.texto_completo\\n- ESTRUTURA: 4 a 6 cenas | duração total 25-40 segundos | todas as cenas com prompt_imagem, prompt_video_motion e descricao_visual preenchidos\\n- VISUAL: prompts em inglês, ancient Judea/Jerusalem, golden hour, photorealistic 8K, vertical 9:16. Paleta e época consistentes entre todas as cenas. prompt_video_motion variado e adequado à emoção de cada cena\\n- CTA (5s): NUNCA genérico ('curta e compartilhe'). Sempre conectado ao tema e à emoção que o vídeo gerou\\n\\nResponda APENAS com JSON válido.`;"\n\nreturn [{\n  json: {\n    videoId: topic.videoId,\n    topicIndex: topic.topicIndex,\n    topic,\n    prompt: promptTemplate,\n    retryCount: 0\n  }\n}];"
+      },
+      "id": "node-prepare-prompt",
+      "name": "Prepare Prompt",
+      "type": "n8n-nodes-base.code",
+      "position": [320, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $env.ANTHROPIC_API_KEY }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"{{ $env.CLAUDE_MODEL || 'claude-opus-4-6' }}\",\n  \"max_tokens\": 4096,\n  \"system\": \"Você é um roteirista profissional especializado em vídeos cristãos virais, com profunda devoção a Jesus Cristo. Seu estilo exalta a grandeza, o amor e a misericórdia de Deus em cada ação narrada — o espectador deve sentir reverência e emoção genuína ao ver o que Jesus fez.\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify($json.prompt) }}\n    }\n  ]\n}",
+        "options": {
+          "timeout": 90000
+        }
+      },
+      "id": "node-claude-script",
+      "name": "Claude: Generate Script",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [540, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first();\nconst prevData = $('Prepare Prompt').first().json;\n// Em retry, Parse OK? já foi executado e carrega o retryCount incrementado
+let retryCount = 0;
+try {
+  const parseOkOut = $('Parse OK?').first()?.json;
+  if (parseOkOut?.retryCount) retryCount = parseOkOut.retryCount;
+} catch(e) { /* primeiro run — Parse OK? ainda não executou */ }\n\nconst text = response.json.content?.[0]?.text;\nif (!text) {\n  if (retryCount >= 2) throw new Error('Claude não retornou conteúdo válido após 3 tentativas');\n  return [{ json: { ...prevData, retryCount: retryCount + 1, status: 'parse_error', errorMsg: 'Sem conteúdo na resposta' } }];\n}\n\nconst clean = text\n  .replace(/```json\\n?/g, '')\n  .replace(/```\\n?/g, '')\n  .trim();\n\nlet script;\ntry {\n  script = JSON.parse(clean);\n} catch (e) {\n  const match = clean.match(/\\{[\\s\\S]*\\}/);\n  if (match) {\n    try { script = JSON.parse(match[0]); } catch(e2) {}\n  }\n  if (!script) {\n    if (retryCount >= 2) throw new Error('JSON inválido após 3 tentativas: ' + e.message);\n    return [{ json: { ...prevData, retryCount: retryCount + 1, status: 'parse_error', errorMsg: e.message } }];\n  }\n}\n\nif (!script.cenas || !Array.isArray(script.cenas)) {\n  if (retryCount >= 2) throw new Error('Script sem cenas após 3 tentativas');\n  return [{ json: { ...prevData, retryCount: retryCount + 1, status: 'parse_error', errorMsg: 'Script sem array de cenas' } }];\n}\n\nif (script.cenas.length < 4 || script.cenas.length > 6) {\n  console.warn(`Aviso: ${script.cenas.length} cenas (esperado 4-6)`);\n}\n\nconst duracaoTotal = script.cenas.reduce((sum, c) => sum + (c.duracao_segundos || 6), 0);\n\nreturn [{\n  json: {\n    videoId: prevData.videoId,\n    topicIndex: prevData.topicIndex,\n    topic: prevData.topic,\n    script,\n    titulo: script.titulo,\n    descricao: script.descricao,\n    hashtags: script.hashtags,\n    narracao: script.narracao_completa,\n    cenas: script.cenas,\n    duracao_total_segundos: duracaoTotal,\n    status: 'script_ready'\n  }\n}];"
+      },
+      "id": "node-parse-script",
+      "name": "Parse Script",
+      "type": "n8n-nodes-base.code",
+      "position": [760, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.status }}",
+              "operation": "equals",
+              "value2": "script_ready"
+            }
+          ]
+        }
+      },
+      "id": "node-retry-check",
+      "name": "Parse OK?",
+      "type": "n8n-nodes-base.if",
+      "position": [980, 300]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [{ "node": "Prepare Prompt", "type": "main", "index": 0 }]
+      ]
+    },
+    "Prepare Prompt": {
+      "main": [
+        [{ "node": "Claude: Generate Script", "type": "main", "index": 0 }]
+      ]
+    },
+    "Claude: Generate Script": {
+      "main": [
+        [{ "node": "Parse Script", "type": "main", "index": 0 }]
+      ]
+    },
+    "Parse Script": {
+      "main": [
+        [{ "node": "Parse OK?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Parse OK?": {
+      "main": [
+        [],
+        [{ "node": "Claude: Generate Script", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["video-automation", "sub-workflow"]
+}

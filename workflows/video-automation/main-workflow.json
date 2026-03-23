@@ -1,0 +1,377 @@
+{
+  "name": "Nicho Cristão - Video Automation (Main)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "={{ $env.SCHEDULE_CRON || '0 8,12,16,20 * * *' }}"
+            }
+          ]
+        }
+      },
+      "id": "node-schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-videos",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook-trigger",
+      "name": "Webhook Trigger (Manual)",
+      "type": "n8n-nodes-base.webhook",
+      "position": [100, 500]
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "videosPerRun",
+              "value": "={{ parseInt($env.VIDEOS_PER_RUN) || 1 }}"
+            }
+          ],
+          "string": [
+            {
+              "name": "runId",
+              "value": "={{ $now.toFormat('yyyyMMdd-HHmmss') }}"
+            },
+            {
+              "name": "outputDir",
+              "value": "={{ $env.OUTPUT_DIR || '/data/output' }}"
+            },
+            {
+              "name": "tempDir",
+              "value": "={{ $env.TEMP_DIR || '/data/temp' }}"
+            },
+            {
+              "name": "assetsDir",
+              "value": "={{ $env.ASSETS_DIR || '/data/assets' }}"
+            }
+          ]
+        }
+      },
+      "id": "node-set-config",
+      "name": "Set Config",
+      "type": "n8n-nodes-base.set",
+      "position": [320, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.ANTHROPIC_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "={{ $env.CLAUDE_MODEL || 'claude-opus-4-6' }}"
+            },
+            {
+              "name": "max_tokens",
+              "value": 4096
+            },
+            {
+              "name": "system",
+              "value": "Você é um especialista em conteúdo cristão viral com profundo conhecimento bíblico. Crie tópicos criativos, emocionais e variados para vídeos cristãos de alta performance."
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\":\"user\",\"content\":\"Gere exatamente {{ $json.videosPerRun }} tópico(s) para vídeos cristãos curtos. FOCO OBRIGATÓRIO: escolha apenas entre os milagres de Jesus mais conhecidos e impactantes da Bíblia — como a multiplicação dos pães e peixes, ressurreição de Lázaro, cura do cego de nascença, casamento de Caná, caminhada sobre as águas, acalmar a tempestade, cura do paralítico de Betesda, cura dos 10 leprosos, ressurreição da filha de Jairo, cura do endemoninhado, a pesca milagrosa, e a própria ressurreição de Jesus. Retorne array JSON com objetos: milagre_de_jesus (string — nome claro do milagre), versiculo_base (string com referência bíblica exata), gancho_inicial (declaração de ruptura no passado — '[X tempo/condição] acabou/terminou', NUNCA pergunta, NUNCA futuro), palavras_chave (array de strings), categoria (string). Responda APENAS com JSON válido.\"}]"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "node-generate-topics",
+      "name": "Generate Topics (Claude)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [540, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first();\nconst text = response.json.content[0].text;\nconst fs = require('fs');\n\n// Limpar markdown code fences se presentes\nconst clean = text\n  .replace(/```json\\n?/g, '')\n  .replace(/```\\n?/g, '')\n  .trim();\n\nlet topics;\ntry {\n  topics = JSON.parse(clean);\n} catch (e) {\n  const jsonMatch = clean.match(/\\[\\s*\\{[\\s\\S]*\\}\\s*\\]/);\n  if (jsonMatch) {\n    topics = JSON.parse(jsonMatch[0]);\n  } else {\n    throw new Error('Não foi possível parsear JSON dos tópicos: ' + e.message);\n  }\n}\n\nif (!Array.isArray(topics)) {\n  throw new Error('Resposta não é um array de tópicos');\n}\n\n// Deduplicação — filtrar tópicos já usados em runs anteriores\nconst outputDir = process.env.OUTPUT_DIR || '/data/output';\nconst usedFile = `${outputDir}/used_topics.json`;\n\nlet usedTopics = [];\ntry {\n  usedTopics = JSON.parse(fs.readFileSync(usedFile, 'utf8'));\n} catch (e) {\n  // Arquivo ainda não existe — começa do zero\n}\n\nconst usedKeys = new Set(usedTopics.map(t => t.toLowerCase().trim()));\nlet filtered = topics.filter(t => !usedKeys.has((t.milagre_de_jesus || '').toLowerCase().trim()));\n\nif (filtered.length === 0) {\n  console.warn('Todos os tópicos já foram usados anteriormente — reutilizando lista original');\n  filtered = topics;\n}\n\n// Salvar novos tópicos usados (mantém histórico dos últimos 100)\nconst toRegister = filtered.map(t => t.milagre_de_jesus);\nconst updated = [...usedTopics, ...toRegister].slice(-100);\ntry {\n  fs.mkdirSync(outputDir, { recursive: true });\n  fs.writeFileSync(usedFile, JSON.stringify(updated, null, 2));\n} catch (e) {\n  console.error('Erro ao salvar used_topics.json:', e.message);\n}\n\nconst runId = $('Set Config').first().json.runId;\n\nreturn filtered.map((topic, index) => ({\n  json: {\n    ...topic,\n    runId,\n    topicIndex: index + 1,\n    videoId: `${runId}_video_${String(index + 1).padStart(2, '0')}`\n  }\n}));"
+      },
+      "id": "node-parse-topics",
+      "name": "Parse Topics",
+      "type": "n8n-nodes-base.code",
+      "position": [760, 400]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "node-split-batches",
+      "name": "Split In Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [980, 400]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{ $workflow.id }}",
+        "source": "passedData",
+        "workflowValues": {
+          "values": [
+            {
+              "name": "topic",
+              "value": "={{ $json }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-exec-content",
+      "name": "Sub: Generate Content",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [1200, 300],
+      "notes": "Importar sub-content-generation.json separadamente e referenciar o ID aqui"
+    },
+    {
+      "parameters": {
+        "workflowId": "={{ $workflow.id }}",
+        "source": "passedData",
+        "workflowValues": {
+          "values": [
+            {
+              "name": "scriptData",
+              "value": "={{ $json }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-exec-images",
+      "name": "Sub: Generate Videos/Images",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [1200, 500],
+      "notes": "Importar sub-image-generation.json separadamente"
+    },
+    {
+      "parameters": {
+        "workflowId": "={{ $workflow.id }}",
+        "source": "passedData",
+        "workflowValues": {
+          "values": [
+            {
+              "name": "audioData",
+              "value": "={{ $json }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-exec-audio",
+      "name": "Sub: Generate Audio",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [1200, 700],
+      "notes": "Importar sub-audio-generation.json separadamente"
+    },
+    {
+      "parameters": {
+        "command": "=bash {{ $env.SCRIPTS_DIR }}/ffmpeg/assemble-video.sh \"{{ $json.videoId }}\" \"{{ $env.TEMP_DIR }}\" \"{{ $env.OUTPUT_DIR }}\" \"{{ $env.ASSETS_DIR }}\""
+      },
+      "id": "node-ffmpeg-assemble",
+      "name": "FFmpeg: Assemble Video",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [1420, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "const cmdOutput = $input.first().json.stdout || '';\nconst outputMatch = cmdOutput.match(/OUTPUT:(.+)/);\nconst finalPath = outputMatch ? outputMatch[1].trim() : null;\n\nif (!finalPath) {\n  throw new Error('FFmpeg não retornou caminho do arquivo final');\n}\n\nconst prevData = $('Sub: Generate Content').first().json;\n\nreturn [{\n  json: {\n    videoId: prevData.videoId,\n    finalVideoPath: finalPath,\n    titulo: prevData.titulo,\n    descricao: prevData.descricao,\n    hashtags: prevData.hashtags,\n    duracao: prevData.duracao_total_segundos,\n    createdAt: new Date().toISOString(),\n    published: false,\n    platforms: []\n  }\n}];"
+      },
+      "id": "node-parse-output",
+      "name": "Parse Assembly Output",
+      "type": "n8n-nodes-base.code",
+      "position": [1640, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $env.AUTO_PUBLISH }}",
+              "operation": "equals",
+              "value2": "true"
+            }
+          ]
+        }
+      },
+      "id": "node-publish-gate",
+      "name": "Auto Publish?",
+      "type": "n8n-nodes-base.if",
+      "position": [1860, 500]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{ $workflow.id }}",
+        "source": "passedData",
+        "workflowValues": {
+          "values": [
+            {
+              "name": "publishData",
+              "value": "={{ $json }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-exec-publish",
+      "name": "Sub: Publish",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [2080, 400],
+      "notes": "Importar sub-publishing.json separadamente"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Salva metadados do vídeo em JSON\nconst fs = require('fs');\nconst path = require('path');\n\nconst data = $input.first().json;\nconst metaDir = `${process.env.OUTPUT_DIR}/scripts`;\nconst metaFile = `${metaDir}/${data.videoId}_metadata.json`;\n\ntry {\n  fs.mkdirSync(metaDir, { recursive: true });\n  fs.writeFileSync(metaFile, JSON.stringify(data, null, 2));\n  console.log(`Metadata salvo em: ${metaFile}`);\n} catch (e) {\n  console.error('Erro ao salvar metadata:', e.message);\n}\n\nreturn [{ json: { ...data, metadataFile: metaFile, status: 'completed' } }];"
+      },
+      "id": "node-save-metadata",
+      "name": "Save Metadata",
+      "type": "n8n-nodes-base.code",
+      "position": [2080, 600]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Quando todos os vídeos do lote foram processados\nconst allResults = $input.all();\nconst summary = {\n  runId: allResults[0]?.json?.videoId?.split('_video_')[0],\n  totalVideos: allResults.length,\n  completedAt: new Date().toISOString(),\n  videos: allResults.map(r => ({\n    videoId: r.json.videoId,\n    titulo: r.json.titulo,\n    path: r.json.finalVideoPath,\n    status: r.json.status\n  }))\n};\n\nconsole.log('BATCH SUMMARY:', JSON.stringify(summary, null, 2));\nreturn [{ json: summary }];"
+      },
+      "id": "node-batch-summary",
+      "name": "Batch Summary",
+      "type": "n8n-nodes-base.code",
+      "position": [2300, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "node-webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [2520, 500]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [{ "node": "Set Config", "type": "main", "index": 0 }]
+      ]
+    },
+    "Webhook Trigger (Manual)": {
+      "main": [
+        [{ "node": "Set Config", "type": "main", "index": 0 }]
+      ]
+    },
+    "Set Config": {
+      "main": [
+        [{ "node": "Generate Topics (Claude)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Generate Topics (Claude)": {
+      "main": [
+        [{ "node": "Parse Topics", "type": "main", "index": 0 }]
+      ]
+    },
+    "Parse Topics": {
+      "main": [
+        [{ "node": "Split In Batches", "type": "main", "index": 0 }]
+      ]
+    },
+    "Split In Batches": {
+      "main": [
+        [{ "node": "Sub: Generate Content", "type": "main", "index": 0 }],
+        [{ "node": "Batch Summary", "type": "main", "index": 0 }]
+      ]
+    },
+    "Sub: Generate Content": {
+      "main": [
+        [
+          { "node": "Sub: Generate Videos/Images", "type": "main", "index": 0 },
+          { "node": "Sub: Generate Audio", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Sub: Generate Videos/Images": {
+      "main": [
+        [{ "node": "FFmpeg: Assemble Video", "type": "main", "index": 0 }]
+      ]
+    },
+    "Sub: Generate Audio": {
+      "main": [
+        [{ "node": "FFmpeg: Assemble Video", "type": "main", "index": 0 }]
+      ]
+    },
+    "FFmpeg: Assemble Video": {
+      "main": [
+        [{ "node": "Parse Assembly Output", "type": "main", "index": 0 }]
+      ]
+    },
+    "Parse Assembly Output": {
+      "main": [
+        [{ "node": "Auto Publish?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Auto Publish?": {
+      "main": [
+        [{ "node": "Sub: Publish", "type": "main", "index": 0 }],
+        [{ "node": "Save Metadata", "type": "main", "index": 0 }]
+      ]
+    },
+    "Sub: Publish": {
+      "main": [
+        [{ "node": "Save Metadata", "type": "main", "index": 0 }]
+      ]
+    },
+    "Save Metadata": {
+      "main": [
+        [{ "node": "Split In Batches", "type": "main", "index": 0 }]
+      ]
+    },
+    "Batch Summary": {
+      "main": [
+        [{ "node": "Webhook Response", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "",
+    "timezone": "America/Sao_Paulo"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": ["video-automation", "nicho-cristao"],
+  "active": false
+}

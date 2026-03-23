@@ -1,0 +1,164 @@
+{
+  "name": "SUB: Publishing (YouTube + Instagram + TikTok)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "node-trigger",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Preparar dados para publicação\nconst data = $input.first().json.publishData || $input.first().json;\n\n// Formatar caption para Instagram/TikTok\nconst hashtagsStr = (data.hashtags || []).join(' ');\nconst caption = `${data.titulo}\\n\\n${data.descricao}\\n\\n${hashtagsStr}\\n\\n#Jesus #Cristão #FéEmDeus #BibliaSagrada #Shorts #Reels`;\n\n// Formatar título YouTube (sem emojis problemáticos, máx 100 chars)\nconst youtubeTitle = `${data.titulo} #Shorts`.substring(0, 100);\n\nreturn [{\n  json: {\n    ...data,\n    youtubeTitle,\n    caption,\n    hashtagsStr,\n    publishPlatforms: ['youtube', 'instagram', 'tiktok']\n  }\n}];"
+      },
+      "id": "node-prepare-publish",
+      "name": "Prepare Publish Data",
+      "type": "n8n-nodes-base.code",
+      "position": [320, 300]
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{ $json.youtubeTitle }}",
+        "description": "={{ $json.descricao }}\\n\\n{{ $json.hashtagsStr }}\\n\\nVersículo bíblico e história de Jesus.\\n\\n#Shorts #Jesus #Cristão #FéEmDeus",
+        "categoryId": "22",
+        "privacyStatus": "public",
+        "tags": "={{ $json.hashtags }}",
+        "binaryProperty": "videoFile",
+        "options": {
+          "embeddable": true,
+          "publicStatsViewable": true,
+          "selfDeclaredMadeForKids": false,
+          "notifySubscribers": true
+        }
+      },
+      "id": "node-youtube-upload",
+      "name": "YouTube Shorts Upload",
+      "type": "n8n-nodes-base.youtube",
+      "position": [540, 150],
+      "credentials": {
+        "youTubeOAuth2Api": "YouTube Main"
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v19.0/{{ $env.INSTAGRAM_ACCOUNT_ID }}/media",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"media_type\": \"REELS\",\n  \"video_url\": {{ JSON.stringify($json.publicVideoUrl || 'https://example.com/video.mp4') }},\n  \"caption\": {{ JSON.stringify($json.caption) }},\n  \"share_to_feed\": true,\n  \"access_token\": \"{{ $env.INSTAGRAM_ACCESS_TOKEN }}\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "node-instagram-container",
+      "name": "Instagram: Create Container",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [540, 300],
+      "continueOnFail": true,
+      "notes": "Requer que o vídeo esteja em URL pública acessível. Use um bucket S3/GCS ou Supabase Storage."
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "node-wait-instagram",
+      "name": "Wait Instagram Processing",
+      "type": "n8n-nodes-base.wait",
+      "position": [760, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v19.0/{{ $env.INSTAGRAM_ACCOUNT_ID }}/media_publish",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"creation_id\": \"{{ $json.id }}\",\n  \"access_token\": \"{{ $env.INSTAGRAM_ACCESS_TOKEN }}\"\n}",
+        "options": { "timeout": 30000 }
+      },
+      "id": "node-instagram-publish",
+      "name": "Instagram: Publish Reel",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [980, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.tiktokapis.com/v2/post/publish/video/init/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "=Bearer {{ $env.TIKTOK_ACCESS_TOKEN }}" },
+            { "name": "Content-Type", "value": "application/json; charset=UTF-8" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post_info\": {\n    \"title\": {{ JSON.stringify($json.youtubeTitle.substring(0, 100)) }},\n    \"privacy_level\": \"PUBLIC_TO_EVERYONE\",\n    \"disable_duet\": false,\n    \"disable_comment\": false,\n    \"disable_stitch\": false\n  },\n  \"source_info\": {\n    \"source\": \"PULL_FROM_URL\",\n    \"video_url\": {{ JSON.stringify($json.publicVideoUrl || '') }}\n  }\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "node-tiktok-upload",
+      "name": "TikTok Upload",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [540, 450],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Coletar resultados de todas as plataformas\nconst results = {\n  youtube: $('YouTube Shorts Upload').first()?.json || { error: 'not executed' },\n  instagram: $('Instagram: Publish Reel').first()?.json || { error: 'not executed' },\n  tiktok: $('TikTok Upload').first()?.json || { error: 'not executed' }\n};\n\nconst prevData = $('Prepare Publish Data').first().json;\n\nreturn [{\n  json: {\n    videoId: prevData.videoId,\n    titulo: prevData.titulo,\n    publishResults: results,\n    publishedAt: new Date().toISOString(),\n    platforms: Object.entries(results)\n      .filter(([_, r]) => !r.error)\n      .map(([p]) => p),\n    status: 'published'\n  }\n}];"
+      },
+      "id": "node-collect-results",
+      "name": "Collect Publish Results",
+      "type": "n8n-nodes-base.code",
+      "position": [1200, 300]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [{ "node": "Prepare Publish Data", "type": "main", "index": 0 }]
+      ]
+    },
+    "Prepare Publish Data": {
+      "main": [
+        [
+          { "node": "YouTube Shorts Upload", "type": "main", "index": 0 },
+          { "node": "Instagram: Create Container", "type": "main", "index": 0 },
+          { "node": "TikTok Upload", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Instagram: Create Container": {
+      "main": [
+        [{ "node": "Wait Instagram Processing", "type": "main", "index": 0 }]
+      ]
+    },
+    "Wait Instagram Processing": {
+      "main": [
+        [{ "node": "Instagram: Publish Reel", "type": "main", "index": 0 }]
+      ]
+    },
+    "YouTube Shorts Upload": {
+      "main": [
+        [{ "node": "Collect Publish Results", "type": "main", "index": 0 }]
+      ]
+    },
+    "Instagram: Publish Reel": {
+      "main": [
+        [{ "node": "Collect Publish Results", "type": "main", "index": 0 }]
+      ]
+    },
+    "TikTok Upload": {
+      "main": [
+        [{ "node": "Collect Publish Results", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["video-automation", "sub-workflow"]
+}

@@ -1,0 +1,99 @@
+Você é um roteirista profissional especializado em vídeos cristãos virais para redes sociais (YouTube Shorts, Instagram Reels, TikTok).
+
+Crie um roteiro completo em JSON para o seguinte tópico:
+Tema: "{{TEMA}}"
+Versículo base: "{{VERSICULO}}"
+Gancho sugerido: "{{GANCHO}}"
+
+O JSON deve ter EXATAMENTE esta estrutura (sem texto antes ou depois, apenas o JSON):
+
+{
+  "titulo": "string — título do vídeo para YouTube/Instagram (máx 60 chars, com emoji, sem hashtag)",
+  "descricao": "string — descrição SEO-friendly para plataformas, 2-3 frases, inclui versículo",
+  "hashtags": ["#Jesus", "#Milagre", "#FéEmDeus", "#Cristão", "#BibliaSagrada", "#Shorts"],
+  "duracao_total_segundos": 32,
+  "narracao_completa": "string — texto completo para TTS em PT-BR natural, sem pausas marcadas, sem símbolos especiais, fluido",
+  "cenas": [
+    {
+      "numero": 1,
+      "duracao_segundos": 4,
+      "tipo": "HOOK",
+      "texto_narrado": "string — palavras exatas desta cena em PT-BR",
+      "prompt_imagem": "string — prompt em INGLÊS para IA gerar imagem/vídeo, rico em detalhes visuais",
+      "prompt_video_motion": "string — movimento de câmera: slow zoom in / slow pan left / static wide / dramatic pull back",
+      "descricao_visual": "string — descrição PT-BR do que aparece na tela"
+    },
+    {
+      "numero": 2,
+      "duracao_segundos": 7,
+      "tipo": "HISTORIA",
+      "texto_narrado": "...",
+      "prompt_imagem": "...",
+      "prompt_video_motion": "...",
+      "descricao_visual": "..."
+    },
+    {
+      "numero": 3,
+      "duracao_segundos": 7,
+      "tipo": "HISTORIA",
+      "texto_narrado": "...",
+      "prompt_imagem": "...",
+      "prompt_video_motion": "...",
+      "descricao_visual": "..."
+    },
+    {
+      "numero": 4,
+      "duracao_segundos": 8,
+      "tipo": "NARRATIVA",
+      "texto_narrado": "...",
+      "prompt_imagem": "...",
+      "prompt_video_motion": "...",
+      "descricao_visual": "..."
+    },
+    {
+      "numero": 5,
+      "duracao_segundos": 6,
+      "tipo": "CTA",
+      "texto_narrado": "Se você acredita no poder de Deus, INSCREVA-SE agora e ative o sino! Compartilhe com quem precisa de um milagre hoje!",
+      "prompt_imagem": "Radiant heavenly light breaking through clouds over Jerusalem, golden rays, divine glow, wide establishing shot, photorealistic 8K",
+      "prompt_video_motion": "slow zoom out",
+      "descricao_visual": "Luz divina celestial sobre Jerusalém, cena inspiradora para encerramento"
+    }
+  ],
+  "cta": {
+    "texto": "Se inscreva AGORA e ative o sino para ver mais milagres! Compartilhe com alguém que precisa de fé hoje!",
+    "duracao_segundos": 5
+  }
+}
+
+═══════════════════════════════════════
+REGRAS OBRIGATÓRIAS:
+═══════════════════════════════════════
+
+1. QUANTIDADE DE CENAS: 4 a 6 cenas (nunca menos, nunca mais)
+2. DURAÇÃO TOTAL: entre 25-40 segundos (soma de todas as cenas)
+3. CENA 1 (HOOK): Pergunta ou afirmação CHOCANTE que prende atenção nos 3 primeiros segundos
+   - Exemplos bons: "Você sabia que Jesus fez isso apenas com palavras?"
+   - Exemplos bons: "O que aconteceu neste dia nunca foi esquecido"
+   - Evitar clichês óbvios: "Jesus é incrível" é fraco
+
+4. NARRAÇÃO (PT-BR):
+   - Linguagem natural, emotiva, fluida — como se estivesse contando para um amigo
+   - Sem vírgulas em excesso, sem jargões religiosos excessivos
+   - Verbos no presente para criar urgência: "Jesus caminha até ele", "as ondas param"
+   - Tom: inspirador, confiante, reverente, com urgência
+
+5. PROMPTS DE IMAGEM (obrigatoriamente em inglês):
+   - Sempre incluir: cenário (ancient Judea/Jerusalem/Galilee), iluminação (golden hour, divine rays, soft heavenly glow)
+   - Sempre incluir: qualidade (photorealistic, 8K, cinematic)
+   - Sempre incluir: formato (vertical 9:16, portrait orientation)
+   - Estilo consistente em TODAS as cenas (mesma paleta, mesmo período histórico)
+   - Sem elementos modernos (carros, eletricidade, roupas modernas, texto, marcas d'água)
+   - Personagens com vestimentas da época (1º século d.C., região do Oriente Médio)
+   - Paleta de cores: dourado, azul celeste, branco puro, terra
+
+6. CONTINUIDADE VISUAL: As cenas devem contar uma história visual contínua (mesmos personagens, mesma localização quando possível, progressão narrativa)
+
+7. CTA FINAL: Sempre agressivo e com urgência, mencionar "inscreva-se" e "ative o sino"
+
+Responda APENAS com o JSON válido. Nenhum texto antes ou depois.

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260">
+  <defs>
+
+    <!-- Gradiente lateral — mastro vertical 3D -->
+    <linearGradient id="vg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#110600"/>
+      <stop offset="7%"   stop-color="#50300A"/>
+      <stop offset="28%"  stop-color="#8A5C12"/>
+      <stop offset="50%"  stop-color="#A87016"/>
+      <stop offset="72%"  stop-color="#8A5C12"/>
+      <stop offset="93%"  stop-color="#50300A"/>
+      <stop offset="100%" stop-color="#110600"/>
+    </linearGradient>
+
+    <!-- Gradiente vertical — travessão 3D -->
+    <linearGradient id="hg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#110600"/>
+      <stop offset="14%"  stop-color="#583A0C"/>
+      <stop offset="46%"  stop-color="#9A6814"/>
+      <stop offset="54%"  stop-color="#9A6814"/>
+      <stop offset="86%"  stop-color="#583A0C"/>
+      <stop offset="100%" stop-color="#110600"/>
+    </linearGradient>
+
+    <!-- Sombra da cruz -->
+    <filter id="sh" x="-25%" y="-10%" width="160%" height="135%">
+      <feDropShadow dx="4" dy="7" stdDeviation="6"
+        flood-color="#050100" flood-opacity="0.72"/>
+    </filter>
+
+    <!-- Halo divino -->
+    <radialGradient id="dl" cx="50%" cy="38%" r="52%">
+      <stop offset="0%"   stop-color="#FFF5A0" stop-opacity="0.50"/>
+      <stop offset="70%"  stop-color="#FFF8D0" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#FFFFFF"  stop-opacity="0"/>
+    </radialGradient>
+
+  </defs>
+
+  <!-- Halo divino -->
+  <ellipse cx="100" cy="100" rx="92" ry="116" fill="url(#dl)"/>
+
+  <!-- Cruz -->
+  <g filter="url(#sh)">
+    <!-- Mastro vertical -->
+    <rect x="88" y="18" width="24" height="224" rx="2" fill="url(#vg)"/>
+    <!-- Fibras de madeira vertical -->
+    <line x1="93"  y1="20" x2="92"  y2="242" stroke="#3B1800" stroke-width="0.7" opacity="0.40"/>
+    <line x1="97"  y1="20" x2="96"  y2="242" stroke="#3B1800" stroke-width="0.5" opacity="0.28"/>
+    <line x1="100" y1="20" x2="100" y2="242" stroke="#C08830" stroke-width="0.4" opacity="0.18"/>
+    <line x1="103" y1="20" x2="104" y2="242" stroke="#3B1800" stroke-width="0.5" opacity="0.28"/>
+    <line x1="108" y1="20" x2="107" y2="242" stroke="#3B1800" stroke-width="0.7" opacity="0.40"/>
+    <!-- Travessão horizontal -->
+    <rect x="34" y="72" width="132" height="22" rx="2" fill="url(#hg)"/>
+    <!-- Fibras de madeira horizontal -->
+    <line x1="36" y1="77" x2="164" y2="76" stroke="#3B1800" stroke-width="0.7" opacity="0.40"/>
+    <line x1="36" y1="81" x2="164" y2="80" stroke="#3B1800" stroke-width="0.5" opacity="0.28"/>
+    <line x1="36" y1="83" x2="164" y2="83" stroke="#C08830" stroke-width="0.4" opacity="0.18"/>
+    <line x1="36" y1="86" x2="164" y2="87" stroke="#3B1800" stroke-width="0.5" opacity="0.28"/>
+    <line x1="36" y1="91" x2="164" y2="90" stroke="#3B1800" stroke-width="0.7" opacity="0.40"/>
+  </g>
+</svg>

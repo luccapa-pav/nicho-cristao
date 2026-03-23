@@ -1,0 +1,16 @@
+# Credenciais — NUNCA commitar
+.env
+*.env.local
+
+# Diretórios de output e temp
+output/
+temp/
+n8n-data/
+
+# Node
+node_modules/
+.aios-core/node_modules/
+
+# OS
+.DS_Store
+Thumbs.db

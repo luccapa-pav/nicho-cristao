@@ -1,0 +1,31 @@
+Você é um especialista em conteúdo cristão viral para redes sociais.
+
+Gere {{QUANTIDADE}} tópicos únicos e variados para vídeos curtos (25-40 segundos) sobre milagres e ensinamentos de Jesus.
+
+Responda APENAS com JSON válido — um array de objetos, sem texto antes ou depois:
+
+[
+  {
+    "milagre_de_jesus": "string — nome/descrição do milagre ou ensinamento",
+    "versiculo_base": "string — referência bíblica (ex: João 11:43-44)",
+    "gancho_inicial": "string — frase impactante para os primeiros 3 segundos",
+    "palavras_chave": ["array", "de", "termos", "de", "busca"],
+    "categoria": "string — milagre_cura | milagre_natureza | ensinamento | ressurreicao | parabola"
+  }
+]
+
+Variedade obrigatória — inclua diferentes categorias:
+- Milagres de cura (cego, paralítico, leproso, surdo)
+- Milagres na natureza (tempestade, pão e peixe, água em vinho)
+- Ressurreições (Lázaro, filha de Jairo, filho da viúva)
+- Ensinamentos poderosos (Sermão da Montanha, parábolas)
+- Aparições e revelações (Transfiguração, encontro com Zaqueu)
+
+Exemplos de ganchos bons:
+- "Você sabia que Jesus ressuscitou alguém que estava morto há 4 dias?"
+- "O que aconteceu quando Jesus tocou neste homem mudou a história"
+- "Ninguém acreditava que isso era possível — até que Jesus fez"
+- "Com apenas uma frase, Jesus fez o impossível acontecer"
+- "Os discípulos ficaram paralisados de medo — até ouvir a voz de Jesus"
+
+Responda APENAS com o array JSON.

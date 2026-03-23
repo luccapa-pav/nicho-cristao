@@ -1,0 +1,152 @@
+{
+  "name": "SUB: Video Generation (Google Veo 3 Flash)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "node-trigger",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Preparar cenas para geração via Veo 3 Flash\nconst data = $input.first().json.scriptData || $input.first().json;\nconst cenas = data.cenas || data.script?.cenas || [];\n\nconst tempDir = `${process.env.TEMP_DIR || '/data/temp'}/${data.videoId}`;\n\nconst fs = require('fs');\nfs.mkdirSync(tempDir, { recursive: true });\n\n// Sufixo visual obrigatório em todos os prompts\nconst VISUAL_SUFFIX = ', divine golden light breaking through clouds, heavenly atmosphere, ancient Judea first century AD, cinematic composition, photorealistic, ultra detailed, no text overlay, no watermark, no modern elements, no anachronisms';\n\nreturn cenas.map((cena, i) => ({\n  json: {\n    videoId: data.videoId,\n    cenaNumero: cena.numero || (i + 1),\n    duracaoSegundos: Math.min(Math.max(cena.duracao_segundos || 6, 5), 8),\n    prompt: cena.prompt_imagem + VISUAL_SUFFIX,\n    tempDir,\n    outputFile: `${tempDir}/scene_${String(i + 1).padStart(2, '0')}.mp4`\n  }\n}));"
+      },
+      "id": "node-prepare-scenes",
+      "name": "Prepare Scenes",
+      "type": "n8n-nodes-base.code",
+      "position": [320, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "node-split-scenes",
+      "name": "Process Each Scene",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [540, 300]
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "generate",
+        "modelId": {
+          "__rl": true,
+          "value": "veo-3.0-flash-preview-0001",
+          "mode": "id"
+        },
+        "prompt": "={{ $json.prompt }}",
+        "options": {
+          "aspectRatio": "9:16",
+          "durationSeconds": "={{ parseInt($json.duracaoSegundos) }}",
+          "personGeneration": "allow_adult"
+        }
+      },
+      "id": "node-veo3-generate",
+      "name": "Veo 3: Generate Video",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [760, 300],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "",
+          "name": "Google Gemini"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Combinar binary do Veo3 com metadados da cena atual\nconst sceneData = $('Process Each Scene').first().json;\nconst binaryData = $input.first().binary;\n\nif (!binaryData || !binaryData.data) {\n  throw new Error(`Veo 3 não retornou vídeo binário para cena ${sceneData.cenaNumero}. Resposta: ${JSON.stringify($input.first().json)}`);\n}\n\nreturn [{\n  json: {\n    videoId: sceneData.videoId,\n    cenaNumero: sceneData.cenaNumero,\n    outputFile: sceneData.outputFile,\n    tempDir: sceneData.tempDir,\n    duracaoSegundos: sceneData.duracaoSegundos\n  },\n  binary: binaryData\n}];"
+      },
+      "id": "node-merge-data",
+      "name": "Merge Scene Data",
+      "type": "n8n-nodes-base.code",
+      "position": [980, 300]
+    },
+    {
+      "parameters": {
+        "fileName": "={{ $json.outputFile }}",
+        "dataPropertyName": "data"
+      },
+      "id": "node-save-raw",
+      "name": "Save Raw Video",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "position": [1200, 300]
+    },
+    {
+      "parameters": {
+        "command": "=FFMPEG=\"${FFMPEG_PATH:-ffmpeg}\"\nINPUT=\"{{ $json.outputFile }}\"\nOUTPUT=\"{{ $json.outputFile.replace('.mp4', '_v.mp4') }}\"\nDUR={{ $json.duracaoSegundos }}\n\n# Verificar orientação do vídeo gerado\nWIDTH=$(\"$FFMPEG\" -i \"$INPUT\" 2>&1 | grep 'Video:' | grep -oP '\\d+x\\d+' | head -1 | cut -dx -f1)\nHEIGHT=$(\"$FFMPEG\" -i \"$INPUT\" 2>&1 | grep 'Video:' | grep -oP '\\d+x\\d+' | head -1 | cut -dx -f2)\n\nif [ \"$WIDTH\" -gt \"$HEIGHT\" ]; then\n  # Landscape → crop para 9:16\n  \"$FFMPEG\" -y -i \"$INPUT\" \\\n    -vf \"crop=ih*9/16:ih,scale=1080:1920,setsar=1,fps=24\" \\\n    -c:v libx264 -preset fast -crf 20 -pix_fmt yuv420p \\\n    -t $DUR -an \"$OUTPUT\"\nelse\n  # Já vertical → normalizar\n  \"$FFMPEG\" -y -i \"$INPUT\" \\\n    -vf \"scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=24\" \\\n    -c:v libx264 -preset fast -crf 20 -pix_fmt yuv420p \\\n    -t $DUR -an \"$OUTPUT\"\nfi\n\necho \"PROCESSED:$OUTPUT\""
+      },
+      "id": "node-ffmpeg-reframe",
+      "name": "FFmpeg: Garantir 9:16",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [1420, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const cmdOut = $input.first().json.stdout || '';\nconst match = cmdOut.match(/PROCESSED:(.+)/);\n\nif (!match) {\n  const stderr = $input.first().json.stderr || '';\n  throw new Error(`FFmpeg falhou para cena ${$('Merge Scene Data').first().json.cenaNumero}: ${stderr}`);\n}\n\nconst sceneData = $('Merge Scene Data').first().json;\n\nreturn [{\n  json: {\n    videoId: sceneData.videoId,\n    cenaNumero: sceneData.cenaNumero,\n    outputFile: match[1].trim(),\n    status: 'scene_ready'\n  }\n}];"
+      },
+      "id": "node-confirm-scene",
+      "name": "Confirm Scene Ready",
+      "type": "n8n-nodes-base.code",
+      "position": [1640, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Todas as cenas prontas — montar resumo\nconst allScenes = $('Confirm Scene Ready').all();\nconst videoId = allScenes[0]?.json?.videoId;\n\nreturn [{\n  json: {\n    videoId,\n    totalScenes: allScenes.length,\n    scenes: allScenes.map(s => ({\n      numero: s.json.cenaNumero,\n      file: s.json.outputFile,\n      status: s.json.status\n    })),\n    status: 'all_scenes_ready'\n  }\n}];"
+      },
+      "id": "node-all-done",
+      "name": "All Scenes Ready",
+      "type": "n8n-nodes-base.code",
+      "position": [1640, 500]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [{ "node": "Prepare Scenes", "type": "main", "index": 0 }]
+      ]
+    },
+    "Prepare Scenes": {
+      "main": [
+        [{ "node": "Process Each Scene", "type": "main", "index": 0 }]
+      ]
+    },
+    "Process Each Scene": {
+      "main": [
+        [{ "node": "Veo 3: Generate Video", "type": "main", "index": 0 }],
+        [{ "node": "All Scenes Ready", "type": "main", "index": 0 }]
+      ]
+    },
+    "Veo 3: Generate Video": {
+      "main": [
+        [{ "node": "Merge Scene Data", "type": "main", "index": 0 }]
+      ]
+    },
+    "Merge Scene Data": {
+      "main": [
+        [{ "node": "Save Raw Video", "type": "main", "index": 0 }]
+      ]
+    },
+    "Save Raw Video": {
+      "main": [
+        [{ "node": "FFmpeg: Garantir 9:16", "type": "main", "index": 0 }]
+      ]
+    },
+    "FFmpeg: Garantir 9:16": {
+      "main": [
+        [{ "node": "Confirm Scene Ready", "type": "main", "index": 0 }]
+      ]
+    },
+    "Confirm Scene Ready": {
+      "main": [
+        [{ "node": "Process Each Scene", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["video-automation", "sub-workflow", "veo3"]
+}

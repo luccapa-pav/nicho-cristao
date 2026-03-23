@@ -1,0 +1,618 @@
+{
+  "updatedAt": "2026-03-20T14:16:58.274Z",
+  "createdAt": "2026-03-18T11:40:38.853Z",
+  "id": "VttkyR0BTetRiXbc",
+  "name": "SUB: Audio Generation (ElevenLabs)",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "node-trigger",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        112,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs2 = require('fs');\nconst input = $input.first().json;\nconst data = input.audioData || input;\nconst ELEVENLABS_API_KEY = input.ELEVENLABS_API_KEY || data.ELEVENLABS_API_KEY;\n\nconst videoId = data.videoId;\nconst tempDir = '/home/node/.n8n/temp/' + videoId;\nfs2.mkdirSync(tempDir, { recursive: true });\n\nlet narracao = data.narracao || (data.script && data.script.narracao_completa) || '';\n\nnarracao = narracao\n  .replace(/[\\u{1F300}-\\u{1FAFF}]/gu, '')\n  .replace(/[\\u2600-\\u27BF]/gu, '')\n  .replace(/[\\u201C\\u201D\\u00AB\\u00BB]/g, '\"')\n  .replace(/[\\u2018\\u2019]/g, \"'\")\n  .replace(/[\\u2014\\u2013]/g, ', ')\n  .replace(/[*]+/g, '')\n  .replace(/#[^ \\t\\r\\n]*/g, '')\n  .replace(/[\\[]/g, '').replace(/]/g, '')\n  .replace(/[ \\t\\r\\n]{2,}/g, ' ')\n  .trim();\n\nreturn [{\n  json: {\n    videoId,\n    narracao,\n    tempDir,\n    audioFile: tempDir + '/narration.mp3',\n    ELEVENLABS_API_KEY\n  }\n}];"
+      },
+      "id": "node-prepare",
+      "name": "Prepare Audio Dir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.elevenlabs.io/v1/text-to-speech/HIGUfNOdjuWQwwapnTRW",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "xi-api-key",
+              "value": "={{ $('Execute Workflow Trigger').item.json.topic.ELEVENLABS_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Accept",
+              "value": "audio/mpeg"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": {{ JSON.stringify($json.narracao) }},\n  \"model_id\": \"eleven_multilingual_v2\",\n  \"voice_settings\": {\n    \"stability\": 0.75,\n    \"similarity_boost\": 0.85,\n    \"style\": 0.40,\n    \"use_speaker_boost\": true\n  },\n  \"speed\": 1.2\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "id": "85402c9b-7bbc-453d-99eb-739d33b74237",
+      "name": "ElevenLabs TTS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        544,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=data",
+        "name": "={{ $json.audioFile }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "id": "9a671f8e-5e81-47bd-96c8-84a3413be9fa",
+      "name": "Upload file",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        752,
+        304
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "HN60vRphPZY9kxN2",
+          "name": "Luccapavanallo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "id": "share-audio-public",
+      "name": "Share Publicly",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        976,
+        304
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "HN60vRphPZY9kxN2",
+          "name": "Luccapavanallo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "var driveData = $('Upload file').first().json;\nvar prepData = $('Prepare Audio Dir').first().json;\nvar triggerData = $('Execute Workflow Trigger').first().json;\n\nvar fileId = driveData.id || driveData.fileId || '';\nif (!fileId) throw new Error('Google Drive upload did not return a file ID');\n\nvar audioUrl = 'https://drive.google.com/uc?id=' + fileId + '&export=download&confirm=1';\n\nreturn [{\n  json: {\n    videoId: prepData.videoId,\n    audioFileId: fileId,\n    audioFileName: driveData.name || prepData.audioFile,\n    audioUrl: audioUrl,\n    tempDir: prepData.tempDir,\n    titulo: triggerData.titulo,\n    descricao: triggerData.descricao,\n    hashtags: triggerData.hashtags,\n    narracao: triggerData.narracao,\n    topic: triggerData.topic,\n    ctaText: (triggerData.script && triggerData.script.cta && triggerData.script.cta.texto_completo) || 'Siga e Compartilhe!',\n    status: 'audio_ready'\n  }\n}];"
+      },
+      "id": "node-confirm",
+      "name": "Confirm Audio Ready",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        304
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare Audio Dir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Audio Dir": {
+      "main": [
+        [
+          {
+            "node": "ElevenLabs TTS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ElevenLabs TTS": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Share Publicly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share Publicly": {
+      "main": [
+        [
+          {
+            "node": "Confirm Audio Ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Execute Workflow Trigger": [
+      {
+        "json": {
+          "videoId": "20260320-100939_video_01",
+          "topicIndex": 1,
+          "topic": {
+            "milagre_de_jesus": "Jesus acalma a tempestade no mar",
+            "versiculo_base": "Marcos 4:39",
+            "gancho_inicial": "Quando o barco estava quase afundando...",
+            "palavras_chave": [
+              "poder divino",
+              "tempestade",
+              "paz interior",
+              "fé inabalável",
+              "milagre nas águas"
+            ],
+            "categoria": "milagre_natureza",
+            "runId": "20260320-100939",
+            "topicIndex": 1,
+            "videoId": "20260320-100939_video_01",
+            "GOOGLE_AI_API_KEY": "AIzaSyBMsKSA1FzrpGE78nSngCHd3zh-Ok5I56c",
+            "ELEVENLABS_API_KEY": "7725c641b57d3177577c93291aeffe8dc63b5103ee1ab46afde0bb6f7e7e262d"
+          },
+          "script": {
+            "titulo": "🌊 Jesus Acalma a Tempestade! ✨",
+            "descricao": "Testemunhe o milagre de Jesus acalmando a tempestade! Em Marcos 4:39, Ele demonstra Seu poder e amor incondicional. A fé em Deus pode te acalmar!",
+            "hashtags": [
+              "#Jesus",
+              "#Milagre",
+              "#FéEmDeus",
+              "#Cristão",
+              "#Shorts",
+              "#TempestadeAcalmada",
+              "#Marcos439",
+              "#PoderDeDeus",
+              "#CalmaNaTempestade"
+            ],
+            "duracao_total_segundos": 30,
+            "narracao_completa": "O desespero da morte iminente se dissipou em instantes. O medo paralisante dominava os corações dos discípulos apavorados. Jesus levantou a voz com amor incondicional e poder absoluto. A fúria do mar se curvou ao toque divino da paz eterna. Se você ama receber uma palavra que vem direto do coração de Deus siga agora mesmo. Compartilhe com quem precisa sentir a paz de Jesus hoje. Receba a paz de Jesus agora mesmo! Ele te ama incondicionalmente e cuida de você sempre",
+            "cenas": [
+              {
+                "numero": 1,
+                "duracao_segundos": 6,
+                "tipo": "HOOK",
+                "texto_narrado": "O desespero da morte iminente se dissipou em instantes.",
+                "prompt_imagem": "Jesus' disciples in a small fishing boat during a violent storm, waves crashing over the sides, dark ominous clouds, golden hour, photorealistic 8K, vertical 9:16, ancient Judea, dramatic lighting.",
+                "prompt_video_motion": "Subtle camera shake to simulate the boat rocking violently.",
+                "descricao_visual": "Pequeno barco de pesca em meio a uma tempestade violenta. Ondas quebrando sobre o barco, nuvens escuras e densas. Discípulos apavorados."
+              },
+              {
+                "numero": 2,
+                "duracao_segundos": 6,
+                "tipo": "CONTEXTO",
+                "texto_narrado": "O medo paralisante dominava os corações dos discípulos apavorados.",
+                "prompt_imagem": "Close-up of the disciples' faces filled with fear and panic as they try to bail water from the boat, dramatic lighting, golden hour, photorealistic 8K, vertical 9:16, ancient Judea.",
+                "prompt_video_motion": "Slow zoom in on one disciple's terrified face.",
+                "descricao_visual": "Close-up dos rostos dos discípulos, mostrando medo e pânico enquanto tentam esvaziar a água do barco."
+              },
+              {
+                "numero": 3,
+                "duracao_segundos": 6,
+                "tipo": "ACAO_JESUS",
+                "texto_narrado": "Jesus levantou a voz com amor incondicional e poder absoluto.",
+                "prompt_imagem": "Jesus standing calmly in the boat, raising his hand towards the storm, a serene expression on his face, light emanating from him, golden hour, photorealistic 8K, vertical 9:16, ancient Judea.",
+                "prompt_video_motion": "Slow pan up from Jesus' feet to his face as he raises his hand.",
+                "descricao_visual": "Jesus em pé no barco, calmo, levantando a mão em direção à tempestade. Uma expressão serena em seu rosto, com luz emanando dele."
+              },
+              {
+                "numero": 4,
+                "duracao_segundos": 6,
+                "tipo": "IMPACTO",
+                "texto_narrado": "A fúria do mar se curvou ao toque divino da paz eterna.",
+                "prompt_imagem": "The storm subsiding rapidly, the waves calming down, the sky clearing, and sunlight breaking through the clouds, golden hour, photorealistic 8K, vertical 9:16, ancient Judea.",
+                "prompt_video_motion": "Fast-motion showing the storm calming down and the sky clearing.",
+                "descricao_visual": "A tempestade diminuindo rapidamente, as ondas se acalmando, o céu clareando e a luz do sol rompendo as nuvens."
+              }
+            ],
+            "cta": {
+              "seguir": "Se você ama receber uma palavra que vem direto do coração de Deus siga agora mesmo.",
+              "compartilhar": "Compartilhe com quem precisa sentir a paz de Jesus hoje.",
+              "texto_completo": "Receba a paz de Jesus agora mesmo! Ele te ama incondicionalmente e cuida de você sempre",
+              "duracao_segundos": 6
+            }
+          },
+          "titulo": "🌊 Jesus Acalma a Tempestade! ✨",
+          "descricao": "Testemunhe o milagre de Jesus acalmando a tempestade! Em Marcos 4:39, Ele demonstra Seu poder e amor incondicional. A fé em Deus pode te acalmar!",
+          "hashtags": [
+            "#Jesus",
+            "#Milagre",
+            "#FéEmDeus",
+            "#Cristão",
+            "#Shorts",
+            "#TempestadeAcalmada",
+            "#Marcos439",
+            "#PoderDeDeus",
+            "#CalmaNaTempestade"
+          ],
+          "narracao": "O desespero da morte iminente se dissipou em instantes. O medo paralisante dominava os corações dos discípulos apavorados. Jesus levantou a voz com amor incondicional e poder absoluto. A fúria do mar se curvou ao toque divino da paz eterna. Se você ama receber uma palavra que vem direto do coração de Deus siga agora mesmo. Compartilhe com quem precisa sentir a paz de Jesus hoje. Receba a paz de Jesus agora mesmo! Ele te ama incondicionalmente e cuida de você sempre",
+          "cenas": [
+            {
+              "numero": 1,
+              "duracao_segundos": 6,
+              "tipo": "HOOK",
+              "texto_narrado": "O desespero da morte iminente se dissipou em instantes.",
+              "prompt_imagem": "Jesus' disciples in a small fishing boat during a violent storm, waves crashing over the sides, dark ominous clouds, golden hour, photorealistic 8K, vertical 9:16, ancient Judea, dramatic lighting.",
+              "prompt_video_motion": "Subtle camera shake to simulate the boat rocking violently.",
+              "descricao_visual": "Pequeno barco de pesca em meio a uma tempestade violenta. Ondas quebrando sobre o barco, nuvens escuras e densas. Discípulos apavorados."
+            },
+            {
+              "numero": 2,
+              "duracao_segundos": 6,
+              "tipo": "CONTEXTO",
+              "texto_narrado": "O medo paralisante dominava os corações dos discípulos apavorados.",
+              "prompt_imagem": "Close-up of the disciples' faces filled with fear and panic as they try to bail water from the boat, dramatic lighting, golden hour, photorealistic 8K, vertical 9:16, ancient Judea.",
+              "prompt_video_motion": "Slow zoom in on one disciple's terrified face.",
+              "descricao_visual": "Close-up dos rostos dos discípulos, mostrando medo e pânico enquanto tentam esvaziar a água do barco."
+            },
+            {
+              "numero": 3,
+              "duracao_segundos": 6,
+              "tipo": "ACAO_JESUS",
+              "texto_narrado": "Jesus levantou a voz com amor incondicional e poder absoluto.",
+              "prompt_imagem": "Jesus standing calmly in the boat, raising his hand towards the storm, a serene expression on his face, light emanating from him, golden hour, photorealistic 8K, vertical 9:16, ancient Judea.",
+              "prompt_video_motion": "Slow pan up from Jesus' feet to his face as he raises his hand.",
+              "descricao_visual": "Jesus em pé no barco, calmo, levantando a mão em direção à tempestade. Uma expressão serena em seu rosto, com luz emanando dele."
+            },
+            {
+              "numero": 4,
+              "duracao_segundos": 6,
+              "tipo": "IMPACTO",
+              "texto_narrado": "A fúria do mar se curvou ao toque divino da paz eterna.",
+              "prompt_imagem": "The storm subsiding rapidly, the waves calming down, the sky clearing, and sunlight breaking through the clouds, golden hour, photorealistic 8K, vertical 9:16, ancient Judea.",
+              "prompt_video_motion": "Fast-motion showing the storm calming down and the sky clearing.",
+              "descricao_visual": "A tempestade diminuindo rapidamente, as ondas se acalmando, o céu clareando e a luz do sol rompendo as nuvens."
+            }
+          ],
+          "duracao_total_segundos": 24,
+          "GOOGLE_AI_API_KEY": "AIzaSyBMsKSA1FzrpGE78nSngCHd3zh-Ok5I56c",
+          "ELEVENLABS_API_KEY": "7725c641b57d3177577c93291aeffe8dc63b5103ee1ab46afde0bb6f7e7e262d",
+          "status": "script_ready"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "versionId": "76b9131b-0b73-4270-a962-2e569d9c5349",
+  "activeVersionId": "76b9131b-0b73-4270-a962-2e569d9c5349",
+  "versionCounter": 87,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-03-18T11:40:38.857Z",
+      "createdAt": "2026-03-18T11:40:38.857Z",
+      "role": "workflow:owner",
+      "workflowId": "VttkyR0BTetRiXbc",
+      "projectId": "lSmAYRY2Zk1SmuDH",
+      "project": {
+        "updatedAt": "2026-02-23T16:22:49.206Z",
+        "createdAt": "2025-12-30T20:02:49.088Z",
+        "id": "lSmAYRY2Zk1SmuDH",
+        "name": "Lucca Pavanello <luccapavanallo@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "33d3d99a-4632-422b-96df-7e793f9c30f5"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-03-20T14:16:58.276Z",
+    "createdAt": "2026-03-20T14:16:58.276Z",
+    "versionId": "76b9131b-0b73-4270-a962-2e569d9c5349",
+    "workflowId": "VttkyR0BTetRiXbc",
+    "nodes": [
+      {
+        "parameters": {},
+        "id": "node-trigger",
+        "name": "Execute Workflow Trigger",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "position": [
+          112,
+          304
+        ]
+      },
+      {
+        "parameters": {
+          "jsCode": "const fs2 = require('fs');\nconst input = $input.first().json;\nconst data = input.audioData || input;\nconst ELEVENLABS_API_KEY = input.ELEVENLABS_API_KEY || data.ELEVENLABS_API_KEY;\n\nconst videoId = data.videoId;\nconst tempDir = '/home/node/.n8n/temp/' + videoId;\nfs2.mkdirSync(tempDir, { recursive: true });\n\nlet narracao = data.narracao || (data.script && data.script.narracao_completa) || '';\n\nnarracao = narracao\n  .replace(/[\\u{1F300}-\\u{1FAFF}]/gu, '')\n  .replace(/[\\u2600-\\u27BF]/gu, '')\n  .replace(/[\\u201C\\u201D\\u00AB\\u00BB]/g, '\"')\n  .replace(/[\\u2018\\u2019]/g, \"'\")\n  .replace(/[\\u2014\\u2013]/g, ', ')\n  .replace(/[*]+/g, '')\n  .replace(/#[^ \\t\\r\\n]*/g, '')\n  .replace(/[\\[]/g, '').replace(/]/g, '')\n  .replace(/[ \\t\\r\\n]{2,}/g, ' ')\n  .trim();\n\nreturn [{\n  json: {\n    videoId,\n    narracao,\n    tempDir,\n    audioFile: tempDir + '/narration.mp3',\n    ELEVENLABS_API_KEY\n  }\n}];"
+        },
+        "id": "node-prepare",
+        "name": "Prepare Audio Dir",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          320,
+          304
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.elevenlabs.io/v1/text-to-speech/HIGUfNOdjuWQwwapnTRW",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "xi-api-key",
+                "value": "={{ $('Execute Workflow Trigger').item.json.topic.ELEVENLABS_API_KEY }}"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Accept",
+                "value": "audio/mpeg"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"text\": {{ JSON.stringify($json.narracao) }},\n  \"model_id\": \"eleven_multilingual_v2\",\n  \"voice_settings\": {\n    \"stability\": 0.75,\n    \"similarity_boost\": 0.85,\n    \"style\": 0.40,\n    \"use_speaker_boost\": true\n  },\n  \"speed\": 1.2\n}",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            },
+            "timeout": 60000
+          }
+        },
+        "id": "85402c9b-7bbc-453d-99eb-739d33b74237",
+        "name": "ElevenLabs TTS",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          544,
+          304
+        ]
+      },
+      {
+        "parameters": {
+          "inputDataFieldName": "=data",
+          "name": "={{ $json.audioFile }}",
+          "driveId": {
+            "__rl": true,
+            "mode": "list",
+            "value": "My Drive"
+          },
+          "folderId": {
+            "__rl": true,
+            "mode": "list",
+            "value": "root",
+            "cachedResultName": "/ (Root folder)"
+          },
+          "options": {}
+        },
+        "id": "9a671f8e-5e81-47bd-96c8-84a3413be9fa",
+        "name": "Upload file",
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          752,
+          304
+        ],
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "HN60vRphPZY9kxN2",
+            "name": "Luccapavanallo"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "share",
+          "fileId": {
+            "__rl": true,
+            "value": "={{ $json.id }}",
+            "mode": "id"
+          },
+          "permissionsUi": {
+            "permissionsValues": {
+              "role": "reader",
+              "type": "anyone"
+            }
+          },
+          "options": {}
+        },
+        "id": "share-audio-public",
+        "name": "Share Publicly",
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          976,
+          304
+        ],
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "HN60vRphPZY9kxN2",
+            "name": "Luccapavanallo"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "var driveData = $('Upload file').first().json;\nvar prepData = $('Prepare Audio Dir').first().json;\nvar triggerData = $('Execute Workflow Trigger').first().json;\n\nvar fileId = driveData.id || driveData.fileId || '';\nif (!fileId) throw new Error('Google Drive upload did not return a file ID');\n\nvar audioUrl = 'https://drive.google.com/uc?id=' + fileId + '&export=download&confirm=1';\n\nreturn [{\n  json: {\n    videoId: prepData.videoId,\n    audioFileId: fileId,\n    audioFileName: driveData.name || prepData.audioFile,\n    audioUrl: audioUrl,\n    tempDir: prepData.tempDir,\n    titulo: triggerData.titulo,\n    descricao: triggerData.descricao,\n    hashtags: triggerData.hashtags,\n    narracao: triggerData.narracao,\n    topic: triggerData.topic,\n    ctaText: (triggerData.script && triggerData.script.cta && triggerData.script.cta.texto_completo) || 'Siga e Compartilhe!',\n    status: 'audio_ready'\n  }\n}];"
+        },
+        "id": "node-confirm",
+        "name": "Confirm Audio Ready",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1200,
+          304
+        ]
+      }
+    ],
+    "connections": {
+      "Execute Workflow Trigger": {
+        "main": [
+          [
+            {
+              "node": "Prepare Audio Dir",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Prepare Audio Dir": {
+        "main": [
+          [
+            {
+              "node": "ElevenLabs TTS",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "ElevenLabs TTS": {
+        "main": [
+          [
+            {
+              "node": "Upload file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload file": {
+        "main": [
+          [
+            {
+              "node": "Share Publicly",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Share Publicly": {
+        "main": [
+          [
+            {
+              "node": "Confirm Audio Ready",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Lucca Pavanello",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-03-20T14:16:58.344Z",
+        "id": 1668,
+        "workflowId": "VttkyR0BTetRiXbc",
+        "versionId": "76b9131b-0b73-4270-a962-2e569d9c5349",
+        "event": "activated",
+        "userId": "33d3d99a-4632-422b-96df-7e793f9c30f5"
+      },
+      {
+        "createdAt": "2026-03-20T14:16:58.320Z",
+        "id": 1667,
+        "workflowId": "VttkyR0BTetRiXbc",
+        "versionId": "76b9131b-0b73-4270-a962-2e569d9c5349",
+        "event": "deactivated",
+        "userId": "33d3d99a-4632-422b-96df-7e793f9c30f5"
+      }
+    ]
+  }
+}

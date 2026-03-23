@@ -1,0 +1,189 @@
+"use client";
+
+import { useState, useCallback } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, X, Trophy, Heart, Star } from "lucide-react";
+
+interface GratitudePost {
+  id: string;
+  author: string;
+  avatarUrl?: string;
+  content: string;
+  reactions: { AMEN: number; GLORY: number };
+  userReacted?: "AMEN" | "GLORY" | null;
+  createdAt: string;
+}
+
+interface GratitudeFeedProps {
+  posts: GratitudePost[];
+  onReact: (postId: string, type: "AMEN" | "GLORY") => void;
+  onPost: (content: string) => void;
+}
+
+function PostCard({ post, onReact }: { post: GratitudePost; onReact: (type: "AMEN" | "GLORY") => void }) {
+  const [localReaction, setLocalReaction] = useState(post.userReacted ?? null);
+  const [counts, setCounts] = useState(post.reactions);
+  const [burst, setBurst] = useState(false);
+
+  const react = useCallback((type: "AMEN" | "GLORY") => {
+    if (localReaction === type) return;
+    setBurst(true);
+    setTimeout(() => setBurst(false), 600);
+    if (localReaction) {
+      setCounts((prev) => ({ ...prev, [localReaction]: prev[localReaction] - 1, [type]: prev[type] + 1 }));
+    } else {
+      setCounts((prev) => ({ ...prev, [type]: prev[type] + 1 }));
+    }
+    setLocalReaction(type);
+    onReact(type);
+  }, [localReaction, onReact]);
+
+  const initials = post.author.split(" ").map((n) => n[0]).slice(0, 2).join("");
+  const isRecent = post.createdAt.includes("hora") || post.createdAt.includes("minuto") || post.createdAt === "agora";
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      className={`divine-card p-6 flex flex-col gap-3 ${isRecent ? "border-l-2 border-l-gold/40" : ""}`}
+    >
+      {/* Author */}
+      <div className="flex items-center gap-2.5">
+        <div className="w-10 h-10 rounded-full bg-divine-100 flex items-center justify-center text-gold-dark text-xs font-bold flex-shrink-0">
+          {post.avatarUrl
+            ? <Image src={post.avatarUrl} alt={post.author} width={40} height={40} className="w-full h-full rounded-full object-cover" />
+            : initials
+          }
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-slate-700">{post.author}</p>
+          <p className="text-[10px] text-slate-400">{post.createdAt}</p>
+        </div>
+        {/* Troféu de vitória */}
+        <Trophy className="ml-auto w-4 h-4 text-gold/50" />
+      </div>
+
+      {/* Content */}
+      <p className="text-sm text-slate-600 leading-relaxed">{post.content}</p>
+
+      {/* Reactions */}
+      <div className="flex gap-2 relative">
+        {(["AMEN", "GLORY"] as const).map((type) => (
+          <motion.button
+            key={type}
+            onClick={() => react(type)}
+            whileTap={{ scale: 0.85 }}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+              localReaction === type
+                ? "bg-divine-100 border-gold text-gold-dark"
+                : "bg-white border-divine-200 text-slate-400 hover:border-gold hover:text-gold-dark"
+            }`}
+          >
+            <span>{type === "AMEN" ? <Heart className="w-3 h-3" /> : <Star className="w-3 h-3" />}</span>
+            <span>{type === "AMEN" ? "Amém" : "Glória a Deus"}</span>
+            <span className={`text-[10px] font-bold ${localReaction === type ? "" : "text-slate-300"}`}>
+              {counts[type]}
+            </span>
+          </motion.button>
+        ))}
+
+        {/* Burst de luz */}
+        <AnimatePresence>
+          {burst && (
+            <motion.div
+              className="absolute left-0 top-0 w-8 h-8 rounded-full pointer-events-none"
+              style={{ background: "radial-gradient(circle, rgba(212,175,55,0.7) 0%, transparent 70%)" }}
+              initial={{ scale: 0.5, opacity: 1 }}
+              animate={{ scale: 3, opacity: 0 }}
+              transition={{ duration: 0.6 }}
+            />
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.div>
+  );
+}
+
+export function GratitudeFeed({ posts, onReact, onPost }: GratitudeFeedProps) {
+  const [showForm, setShowForm] = useState(false);
+  const [content, setContent] = useState("");
+
+  const handlePost = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!content.trim()) return;
+    onPost(content.trim());
+    setContent("");
+    setShowForm(false);
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Header + botão postar */}
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-gold-dark">
+            Feed de Gratidão
+          </p>
+          <p className="text-xs text-slate-400 mt-0.5">Compartilhe suas vitórias</p>
+        </div>
+        <button
+          onClick={() => setShowForm((v) => !v)}
+          className="btn-divine py-2 px-4 text-sm"
+        >
+          {showForm ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+          {showForm ? "Cancelar" : "Compartilhar"}
+        </button>
+      </div>
+
+      {/* Form */}
+      <AnimatePresence>
+        {showForm && (
+          <motion.form
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            onSubmit={handlePost}
+            className="divine-card p-4 flex flex-col gap-3 overflow-hidden"
+          >
+            <p className="text-sm font-medium text-slate-600">
+              🏆 Qual vitória você quer compartilhar?
+            </p>
+            <textarea
+              placeholder="Escreva aqui... Ex: Deus respondeu minha oração por cura!"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={3}
+              autoFocus
+              className="w-full px-3 py-2 rounded-xl border border-divine-200 bg-divine-50/50 text-sm text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold resize-none"
+            />
+            <button type="submit" disabled={!content.trim()} className="btn-divine py-2 text-sm disabled:opacity-40">
+              Publicar vitória ✨
+            </button>
+          </motion.form>
+        )}
+      </AnimatePresence>
+
+      {/* Posts */}
+      <div className="flex flex-col gap-3">
+        <AnimatePresence initial={false}>
+          {posts.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              onReact={(type) => onReact(post.id, type)}
+            />
+          ))}
+        </AnimatePresence>
+        {posts.length === 0 && (
+          <div className="text-center py-10 text-slate-300">
+            <p className="text-3xl mb-2">🕊️</p>
+            <p className="text-sm">Seja o primeiro a compartilhar uma vitória!</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

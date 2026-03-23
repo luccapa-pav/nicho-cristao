@@ -1,0 +1,638 @@
+"""
+Fix v14 — AI, AJ, AK (+ AX=AK):
+AI: Frame preto 0.3s de abertura + fade-in após ele + timing ajustado
+AJ: Limpeza automática de temp ao final (mantém final.mp4 e fontes)
+AK: Roboto-Italic.ttf para o versículo
+"""
+import json, urllib.request, urllib.error, ssl, sys
+sys.stdout.reconfigure(encoding='utf-8')
+
+N8N = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzM2QzZDk5YS00NjMyLTQyMmItOTZkZi03ZTc5M2Y5YzMwZjUiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwianRpIjoiY2RlNzMzM2MtMTJlMS00ZmJjLWE0OTItZDJhYjVkM2U5ZGE1IiwiaWF0IjoxNzczMTkwOTA0fQ.DI0te7DG89FQOywg1jdXRGbsV8udA-NuaEK88nvIYBs"
+CTX = ssl._create_unverified_context()
+
+def get(wf_id):
+    req = urllib.request.Request("https://n8n-n8n.yjlhot.easypanel.host/api/v1/workflows/" + wf_id)
+    req.add_header("X-N8N-API-KEY", N8N)
+    req.add_header("Accept", "application/json")
+    with urllib.request.urlopen(req, timeout=30, context=CTX) as r:
+        return json.loads(r.read())
+
+def put(wf_id, wf):
+    url = "https://n8n-n8n.yjlhot.easypanel.host/api/v1/workflows/" + wf_id
+    payload = {"name": wf["name"], "nodes": wf["nodes"], "connections": wf["connections"], "settings": wf.get("settings", {})}
+    body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    req = urllib.request.Request(url, data=body, method="PUT")
+    req.add_header("X-N8N-API-KEY", N8N)
+    req.add_header("Content-Type", "application/json; charset=utf-8")
+    req.add_header("Accept", "application/json")
+    try:
+        with urllib.request.urlopen(req, timeout=30, context=CTX) as r:
+            return r.status
+    except urllib.error.HTTPError as e:
+        print("ERRO:", e.code, e.read().decode()[:300])
+        return e.code
+
+NEW_FFMPEG_CODE = r"""var childProcess = require('child_process');
+var fs2 = require('fs');
+var https2 = require('https');
+var http2 = require('http');
+
+// ── CONFIGURACAO DE BRANDING ─────────────────────────────────────────────────
+var LOGO_URL       = '';
+var CHANNEL_HANDLE = '@NichoCristao';
+// ────────────────────────────────────────────────────────────────────────────
+
+var allItems = $input.all().map(function(i) { return i.json; });
+var imageData = allItems.find(function(d) { return d.scenes && d.scenes.length > 0; }) || {};
+var audioData = allItems.find(function(d) { return d.audioUrl; }) || {};
+
+var videoId   = imageData.videoId || audioData.videoId;
+var audioUrl  = audioData.audioUrl;
+if (!audioUrl) throw new Error('No audioUrl for ' + videoId);
+
+var titulo    = audioData.titulo    || imageData.titulo    || '';
+var descricao = audioData.descricao || imageData.descricao || '';
+var hashtags  = audioData.hashtags  || imageData.hashtags  || [];
+var narracao  = audioData.narracao  || imageData.narracao  || '';
+var topic     = audioData.topic     || imageData.topic     || {};
+var ctaText   = audioData.ctaText   || imageData.ctaText   || '';
+var versiculo = topic.versiculo || audioData.versiculo || imageData.versiculo || '';
+
+// ── FIX AF: CTA TEXT ROTATIVO ─────────────────────────────────────────────────
+var CTA_DEFAULTS = [
+  'Siga e Compartilhe!',
+  'Siga e Ore com a Gente!',
+  'Compartilhe com Quem Precisa!',
+  'Salve e Reflita Hoje!',
+  'Siga para Mais Mensagens!'
+];
+if (!ctaText || ctaText === 'Siga e Compartilhe!') {
+  var ctaHash = (videoId || '').split('').reduce(function(a, c) { return a + c.charCodeAt(0); }, 0);
+  ctaText = CTA_DEFAULTS[ctaHash % CTA_DEFAULTS.length];
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+var scenes = (imageData.scenes || [])
+  .filter(function(s) { return s.url; })
+  .sort(function(a, b) { return (a.numero || 0) - (b.numero || 0); });
+if (!scenes.length) throw new Error('No scene URLs for ' + videoId);
+
+var tempDir = '/home/node/.n8n/temp/' + videoId;
+fs2.mkdirSync(tempDir, { recursive: true });
+
+function download(fileUrl, destPath) {
+  return new Promise(function(resolve, reject) {
+    var mod = fileUrl.startsWith('https:') ? https2 : http2;
+    var file = fs2.createWriteStream(destPath);
+    mod.get(fileUrl, { rejectUnauthorized: false }, function(res) {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        file.destroy();
+        try { fs2.unlinkSync(destPath); } catch(e) {}
+        return download(res.headers.location, destPath).then(resolve).catch(reject);
+      }
+      res.pipe(file);
+      file.on('finish', function() { file.destroy(); resolve(); });
+      file.on('error', reject);
+      res.on('error', reject);
+    }).on('error', function(err) {
+      try { fs2.unlinkSync(destPath); } catch(e) {}
+      reject(err);
+    });
+  });
+}
+
+async function downloadWithRetry(url, destPath) {
+  var maxRetries = 3;
+  var lastError;
+  for (var i = 0; i < maxRetries; i++) {
+    try { await download(url, destPath); return; } catch (err) {
+      lastError = err;
+      if (i < maxRetries - 1) await new Promise(function(r) { setTimeout(r, Math.pow(2, i) * 1000); });
+    }
+  }
+  throw new Error('Download failed after ' + maxRetries + ' attempts: ' + url + ' — ' + lastError.message);
+}
+
+function probeDuration(filePath) {
+  var raw = childProcess.execSync(
+    'ffprobe -v quiet -print_format json -show_format "' + filePath + '"'
+  ).toString();
+  var dur = parseFloat((JSON.parse(raw).format || {}).duration || 0);
+  if (isNaN(dur) || dur <= 0) throw new Error('Invalid duration for ' + filePath + ': ' + dur);
+  return dur;
+}
+
+// Fontes
+var fontPath = '/home/node/.n8n/temp/Roboto-Bold.ttf';
+if (!fs2.existsSync(fontPath)) {
+  await downloadWithRetry('https://github.com/google/fonts/raw/main/apache/roboto/static/Roboto-Bold.ttf', fontPath);
+}
+
+// Fix AK: Roboto-Italic para versículo (com fallback para Bold se download falhar)
+var fontItalicPath = fontPath;  // fallback seguro
+try {
+  var fontItalicCandidate = '/home/node/.n8n/temp/Roboto-Italic.ttf';
+  if (!fs2.existsSync(fontItalicCandidate)) {
+    await downloadWithRetry('https://github.com/google/fonts/raw/main/apache/roboto/static/Roboto-Italic.ttf', fontItalicCandidate);
+  }
+  fontItalicPath = fontItalicCandidate;
+} catch(e) {
+  // fallback: usa Bold — versículo ainda aparece, só sem itálico
+}
+
+var audioFile = tempDir + '/narration.mp3';
+await downloadWithRetry(audioUrl, audioFile);
+var audioDuration = probeDuration(audioFile);
+
+var MUSIC_TRACKS = [
+  'https://cdn.pixabay.com/audio/2022/12/13/audio_a7e11a169f.mp3',
+  'https://cdn.pixabay.com/audio/2024/05/28/audio_5bbbca17bf.mp3'
+];
+var musicFile = tempDir + '/music.mp3';
+await downloadWithRetry(MUSIC_TRACKS[Math.floor(Math.random() * MUSIC_TRACKS.length)], musicFile);
+
+var sceneFiles = [];
+for (var i = 0; i < scenes.length; i++) {
+  var sceneFile = tempDir + '/scene_' + String(i + 1).padStart(2, '0') + '.mp4';
+  await downloadWithRetry(scenes[i].url, sceneFile);
+  sceneFiles.push(sceneFile);
+}
+
+// ── FIX J + AD: XFADE COM TRANSIÇÕES VARIADAS ────────────────────────────────
+var FADE_DUR = 0.4;
+var INTRO_DUR = 0.3;  // Fix AI: duração do frame preto de abertura
+var N = sceneFiles.length;
+var XFADE_TRANSITIONS = ['fade', 'wipeleft', 'slideleft', 'wiperight', 'slideright'];
+
+var scaledSceneFiles = [];
+for (var sci = 0; sci < N; sci++) {
+  var scaledScene = tempDir + '/scene_scaled_' + String(sci + 1).padStart(2, '0') + '.mp4';
+  childProcess.execSync(
+    'ffmpeg -y -i "' + sceneFiles[sci] + '"' +
+    ' -vf "scale=1080:1920:flags=lanczos,setsar=1,fps=30"' +
+    ' -c:v libx264 -preset veryfast -crf 23 -an "' + scaledScene + '"',
+    { timeout: 120000 }
+  );
+  scaledSceneFiles.push(scaledScene);
+}
+
+var scaledDurations = [];
+for (var sdi = 0; sdi < N; sdi++) {
+  scaledDurations.push(probeDuration(scaledSceneFiles[sdi]));
+}
+
+var rawScenesDuration = 0;
+for (var ri = 0; ri < scaledDurations.length; ri++) rawScenesDuration += scaledDurations[ri];
+var scenesDuration = rawScenesDuration - (N - 1) * FADE_DUR;
+
+var VERSICULO_DUR = 2;
+var CTA_TEXT_DUR  = 3;
+var MIN_CTA       = VERSICULO_DUR + CTA_TEXT_DUR;
+var ctaDuration   = Math.max(Math.ceil(audioDuration - scenesDuration), MIN_CTA);
+
+var ctaRaw = tempDir + '/cta_raw.mp4';
+childProcess.execSync(
+  'ffmpeg -y -stream_loop -1 -i "' + scaledSceneFiles[N - 1] + '" -t ' + ctaDuration +
+  ' -c:v libx264 -preset veryfast -crf 23 -an "' + ctaRaw + '"',
+  { timeout: 60000 }
+);
+
+// Fix AJ: rastrear xfadeVideoPath para cleanup
+var xfadeVideoPath = null;
+var xfadedScenes;
+if (N === 1) {
+  xfadedScenes = scaledSceneFiles[0];
+} else {
+  var xfInputs  = scaledSceneFiles.map(function(f) { return '-i "' + f + '"'; }).join(' ');
+  var xfFilters = [];
+  var cumDur    = 0;
+  var prevLabel = '0:v';
+  for (var xi = 0; xi < N - 1; xi++) {
+    cumDur += scaledDurations[xi];
+    var xfOffset     = Math.max(cumDur - (xi + 1) * FADE_DUR, 0).toFixed(3);
+    var outLabel     = xi === N - 2 ? 'xout' : 'x' + (xi + 1);
+    var xfTransition = XFADE_TRANSITIONS[Math.floor(Math.random() * XFADE_TRANSITIONS.length)];
+    xfFilters.push(
+      '[' + prevLabel + '][' + (xi + 1) + ':v]xfade=transition=' + xfTransition +
+      ':duration=' + FADE_DUR + ':offset=' + xfOffset + '[' + outLabel + ']'
+    );
+    prevLabel = outLabel;
+  }
+  xfadeVideoPath = tempDir + '/xfaded_scenes.mp4';
+  childProcess.execSync(
+    'ffmpeg -y ' + xfInputs +
+    ' -filter_complex "' + xfFilters.join(';') + '"' +
+    ' -map "[xout]" -c:v libx264 -preset veryfast -crf 23 -an "' + xfadeVideoPath + '"',
+    { timeout: 300000 }
+  );
+  xfadedScenes = xfadeVideoPath;
+}
+
+// Fix AI: gerar frame preto 0.3s antes do concat
+var blackIntro = tempDir + '/black_intro.mp4';
+childProcess.execSync(
+  'ffmpeg -y -f lavfi -i color=black:s=1080x1920:r=30 -t ' + INTRO_DUR +
+  ' -c:v libx264 -preset veryfast -crf 23 -an "' + blackIntro + '"',
+  { timeout: 30000 }
+);
+
+// Concat: blackIntro + cenas + CTA
+var concatList = tempDir + '/concat_full.txt';
+fs2.writeFileSync(concatList, [blackIntro, xfadedScenes, ctaRaw].map(function(f) { return "file '" + f + "'"; }).join('\n'));
+var fullConcat = tempDir + '/full_concat.mp4';
+childProcess.execSync(
+  'ffmpeg -y -f concat -safe 0 -i "' + concatList + '" -c:v copy -an "' + fullConcat + '"',
+  { timeout: 120000 }
+);
+// ─────────────────────────────────────────────────────────────────────────────
+
+function escapeDrawtext(str) {
+  return (str || '')
+    .replace(/\\/g,  '')
+    .replace(/'/g,   '\u2019')
+    .replace(/:/g,   ' -')
+    .replace(/[\[\]%"]/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+// ── FIX T: PALAVRAS DIVINAS EM LARANJA ───────────────────────────────────────
+var GOD_WORDS = [
+  'deus','jesus','cristo','senhor','espirito','pai','fe','graca',
+  'amor','paz','vida','luz','verdade','salvacao','esperanca','bencao',
+  'gloria','reino','cura','perdao','milagre','promessa','eterno','santa',
+  'santo','sagrado','divino','divina','filho','palavra'
+];
+
+function normalizeWord(word) {
+  return (word || '').toLowerCase()
+    .replace(/[àáâãä]/g, 'a')
+    .replace(/[èéêë]/g,  'e')
+    .replace(/[ìíîï]/g,  'i')
+    .replace(/[òóôõö]/g, 'o')
+    .replace(/[ùúûü]/g,  'u')
+    .replace(/[ç]/g,     'c')
+    .replace(/[ñ]/g,     'n')
+    .replace(/[^a-z]/g,  '');
+}
+
+function isGodWord(word) {
+  if (!word || word.length < 2) return false;
+  return GOD_WORDS.indexOf(normalizeWord(word)) !== -1;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── FIX M+Q+T+AC: KARAOKE 2 CAMADAS + SOMBRA ─────────────────────────────────
+// Karaoke ancorado em t=0 (sync com áudio que também começa em t=0)
+// Os primeiros 0.3s (blackIntro) ficam invisíveis pelo frame preto
+function buildSubtitleFilters(text, fontP, narDur, stopAt) {
+  if (!text) return [];
+  var words = text.trim().split(/\s+/).filter(function(w) { return w.length > 0; });
+  if (!words.length) return [];
+
+  var totalChars = words.reduce(function(sum, w) { return sum + Math.max(w.length, 1); }, 0);
+
+  var wordStarts = [];
+  var wordEnds   = [];
+  var cursor = 0;
+  for (var wi = 0; wi < words.length; wi++) {
+    wordStarts.push(cursor);
+    cursor += narDur * Math.max(words[wi].length, 1) / totalChars;
+    wordEnds.push(Math.min(cursor, narDur));
+  }
+
+  var filters  = [];
+  var GRP_SIZE = 5;
+
+  for (var gi = 0; gi < words.length; gi += GRP_SIZE) {
+    var gEnd        = Math.min(gi + GRP_SIZE, words.length);
+    var groupWords  = words.slice(gi, gEnd);
+    var groupText   = escapeDrawtext(groupWords.join(' '));
+    var groupStart  = wordStarts[gi];
+    var groupEnd    = wordEnds[gEnd - 1];
+    var gDisplayEnd = Math.min(groupEnd, stopAt);
+
+    if (!groupText || groupStart >= stopAt) continue;
+
+    // Layer 1: grupo em branco semi-transparente + sombra (Fix AC)
+    filters.push(
+      'drawtext=fontfile=' + fontP +
+      ':text=\'' + groupText + '\'' +
+      ':fontsize=46:fontcolor=white@0.55' +
+      ':bordercolor=black@0.9:borderw=4' +
+      ':shadowx=3:shadowy=3:shadowcolor=black@0.8' +
+      ':x=(w-text_w)/2:y=h-150' +
+      ':enable=\'between(t,' + groupStart.toFixed(3) + ',' + gDisplayEnd.toFixed(3) + ')\''
+    );
+
+    // Layer 2: palavra individual — laranja (divina) ou amarelo + sombra (Fix AC)
+    for (var i = gi; i < gEnd; i++) {
+      var wordText    = escapeDrawtext(words[i]);
+      var wStart      = wordStarts[i];
+      var wEnd        = wordEnds[i];
+      var wDisplayEnd = Math.min(wEnd, stopAt);
+      var wordColor   = isGodWord(words[i]) ? 'orange' : 'yellow';
+
+      if (!wordText || wStart >= stopAt) continue;
+
+      filters.push(
+        'drawtext=fontfile=' + fontP +
+        ':text=\'' + wordText + '\'' +
+        ':fontsize=72:fontcolor=' + wordColor +
+        ':bordercolor=black@1.0:borderw=5' +
+        ':shadowx=3:shadowy=3:shadowcolor=black@0.8' +
+        ':x=(w-text_w)/2:y=h-230' +
+        ':enable=\'between(t,' + wStart.toFixed(3) + ',' + wDisplayEnd.toFixed(3) + ')\''
+      );
+    }
+  }
+  return filters;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── FIX S+U+AK: VERSICULO EM ITALIC COM FADE-IN/OUT ──────────────────────────
+function buildVersiculoFilters(text, fontP, startTime, dur) {
+  var cleaned = (text || '').trim();
+  if (!cleaned) return [];
+
+  var words    = cleaned.split(/\s+/).filter(function(w) { return w.length > 0; });
+  var lines    = [];
+  var WORDS_PER_LINE = 7;
+  for (var li = 0; li < words.length; li += WORDS_PER_LINE) {
+    var line = escapeDrawtext(words.slice(li, li + WORDS_PER_LINE).join(' '));
+    if (line) lines.push(line);
+  }
+  if (!lines.length) return [];
+
+  var numLines = lines.length;
+  var LINE_H   = 52;
+  var totalH   = numLines * LINE_H;
+  var T        = startTime.toFixed(3);
+  var endT     = (startTime + dur).toFixed(3);
+  var FADE     = 0.4;
+
+  var alphaExpr =
+    'if(lt(t-' + T + ',' + FADE + '),' +
+      'clip((t-' + T + ')/' + FADE + ',0,1),' +
+      'if(gt(t,' + T + '+' + dur + '-' + FADE + '),' +
+        'clip((' + T + '+' + dur + '-t)/' + FADE + ',0,1),' +
+        '1))';
+
+  var out = [];
+  lines.forEach(function(line, idx) {
+    var yOffset = Math.round(-totalH / 2 + idx * LINE_H);
+    var yExpr   = yOffset >= 0 ? '(h/2+' + yOffset + ')' : '(h/2' + yOffset + ')';
+    out.push(
+      'drawtext=fontfile=' + fontP +
+      ':text=\'' + line + '\'' +
+      ':fontsize=38:fontcolor=white' +
+      ':bordercolor=black@1.0:borderw=4' +
+      ':box=1:boxcolor=black@0.60:boxborderw=12' +
+      ':x=(w-text_w)/2:y=' + yExpr +
+      ':alpha=\'' + alphaExpr + '\'' +
+      ':enable=\'between(t,' + T + ',' + endT + ')\''
+    );
+  });
+  return out;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── FIX CTA: between 3s + slide-in 0.5s ──────────────────────────────────────
+function buildCtaFilters(text, fontP, startTime, ctaTextDur) {
+  var cleaned = (text || '').trim();
+  if (!cleaned) return [];
+  var words = cleaned.split(/\s+/);
+  var lines  = [];
+  for (var li = 0; li < words.length; li += 6) {
+    var line = escapeDrawtext(words.slice(li, li + 6).join(' '));
+    if (line) lines.push(line);
+  }
+  var SLIDE  = 0.5;
+  var T      = startTime.toFixed(3);
+  var endT   = (startTime + ctaTextDur).toFixed(3);
+  var lineH  = 80;
+  var out    = [];
+  lines.forEach(function(line, idx) {
+    var finalY     = idx === 0 ? '(h*72/100)' : '(h*72/100+' + (idx * lineH) + ')';
+    var slideRatio = 'if(gte(t-' + T + ',' + SLIDE + '),0,1-(t-' + T + ')/' + SLIDE + ')';
+    var yExpr      = finalY + '+100*' + slideRatio;
+    out.push(
+      'drawtext=fontfile=' + fontP +
+      ':text=\'' + line + '\'' +
+      ':fontsize=52:fontcolor=white' +
+      ':bordercolor=black@1.0:borderw=5' +
+      ':box=1:boxcolor=black@0.65:boxborderw=14' +
+      ':x=(w-text_w)/2:y=' + yExpr +
+      ':enable=\'between(t,' + T + ',' + endT + ')\''
+    );
+  });
+  return out;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── FIX W+AB+AI: TÍTULO CENTRALIZADO 2s COM FADE E OFFSET ────────────────────
+function stripEmoji(str) {
+  return (str || '')
+    .replace(/[\uD800-\uDFFF]/g, '')
+    .replace(/[\u0100-\uD7FF\uE000-\uFFFD]/g, function(ch) {
+      var cp = ch.charCodeAt(0);
+      if (cp <= 0x024F) return ch;
+      if (cp >= 0x1E00 && cp <= 0x1EFF) return ch;
+      return '';
+    })
+    .replace(/\uFE0F/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+function buildTitleFilters(text, fontP, tOffset) {
+  var cleaned = stripEmoji(text || '').trim();
+  if (!cleaned) return [];
+
+  var tOff = (tOffset != null) ? tOffset : 0;
+
+  var words    = cleaned.split(/\s+/).filter(function(w) { return w.length > 0; });
+  var lines    = [];
+  var WORDS_PER_LINE = 5;
+  for (var li = 0; li < words.length; li += WORDS_PER_LINE) {
+    var line = escapeDrawtext(words.slice(li, li + WORDS_PER_LINE).join(' '));
+    if (line) lines.push(line);
+  }
+  if (!lines.length) return [];
+
+  var numLines = lines.length;
+  var LINE_H   = 74;
+  var totalH   = numLines * LINE_H;
+
+  // Fix AI+AB: fade-in/out na janela [tOff, tOff+2.0]
+  var FADE_T = 0.4;
+  var DUR_T  = 2.0;
+  var T0 = tOff.toFixed(3);                        // ex: "0.300"
+  var T1 = (tOff + DUR_T).toFixed(3);              // ex: "2.300"
+  var TF = (tOff + DUR_T - FADE_T).toFixed(3);     // ex: "1.900"
+
+  var titleAlpha =
+    'if(lt(t-' + T0 + ',' + FADE_T + '),' +
+      'clip((t-' + T0 + ')/' + FADE_T + ',0,1),' +
+      'if(gt(t,' + TF + '),' +
+        'clip((' + T1 + '-t)/' + FADE_T + ',0,1),' +
+        '1))';
+
+  var out = [];
+  lines.forEach(function(line, idx) {
+    var yOffset = Math.round(-totalH / 2 + idx * LINE_H);
+    var yExpr   = yOffset >= 0 ? '(h/2+' + yOffset + ')' : '(h/2' + yOffset + ')';
+    out.push(
+      'drawtext=fontfile=' + fontP +
+      ':text=\'' + line + '\'' +
+      ':fontsize=58:fontcolor=white' +
+      ':bordercolor=black@1.0:borderw=5' +
+      ':box=1:boxcolor=black@0.65:boxborderw=16' +
+      ':x=(w-text_w)/2:y=' + yExpr +
+      ':alpha=\'' + titleAlpha + '\'' +
+      ':enable=\'between(t,' + T0 + ',' + T1 + ')\''
+    );
+  });
+  return out;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Fix AI: videoDuration inclui INTRO_DUR
+var videoDuration  = INTRO_DUR + scenesDuration + ctaDuration;
+var fadeOutSt      = Math.max(videoDuration - 0.5, 0);
+var fadeOutFilter  = fadeOutSt > 0 ? 'fade=t=out:st=' + fadeOutSt.toFixed(3) + ':d=0.5' : null;
+
+// Fix AI+S: todos os timestamps absolutos incluem INTRO_DUR
+var versiculoStart = INTRO_DUR + scenesDuration;
+var ctaStart       = versiculo.trim()
+  ? INTRO_DUR + scenesDuration + VERSICULO_DUR
+  : INTRO_DUR + scenesDuration;
+
+var allVfFilters = buildSubtitleFilters(narracao, fontPath, audioDuration, videoDuration)
+  .concat(buildVersiculoFilters(versiculo, fontItalicPath, versiculoStart, VERSICULO_DUR))
+  .concat(buildCtaFilters(ctaText, fontPath, ctaStart, CTA_TEXT_DUR))
+  .concat(buildTitleFilters(titulo, fontPath, INTRO_DUR));
+
+// Branding + Fix AE: watermark alterna canto
+var logoPath = '/home/node/.n8n/temp/logo.png';
+var hasLogo  = false;
+if (LOGO_URL) {
+  try {
+    if (!fs2.existsSync(logoPath)) await downloadWithRetry(LOGO_URL, logoPath);
+    hasLogo = true;
+  } catch(e) { hasLogo = false; }
+}
+if (!hasLogo) {
+  var wmRight = ((videoId || '').charCodeAt(0) || 0) % 2 === 0;
+  var wmXPos  = wmRight ? 'w-text_w-20' : '20';
+  allVfFilters.push(
+    'drawtext=fontfile=' + fontPath +
+    ':text=\'' + CHANNEL_HANDLE + '\'' +
+    ':fontsize=28+2*sin(t*3):fontcolor=white@0.65' +
+    ':bordercolor=black@0.50:borderw=2' +
+    ':x=' + wmXPos + ':y=20'
+  );
+}
+
+// Fix N+AI: fade-in começa APÓS o frame preto (st=INTRO_DUR)
+allVfFilters.unshift('fade=t=in:st=' + INTRO_DUR.toFixed(3) + ':d=0.5');
+
+var vfChain        = allVfFilters.length > 0 ? allVfFilters.join(',') : 'null';
+var musicFadeStart = Math.max(audioDuration - 2, 0).toFixed(2);
+
+var filterComplex, ffmpegLogoInput;
+if (hasLogo) {
+  ffmpegLogoInput = ' -i "' + logoPath + '"';
+  var overlayEnd  = 'overlay=W-w-20:20' + (fadeOutFilter ? ',' + fadeOutFilter : '');
+  filterComplex =
+    '[0:v]' + vfChain + '[vtext];' +
+    '[3:v]scale=120:-1[logo];' +
+    '[vtext][logo]' + overlayEnd + '[v];' +
+    '[1:a]volume=1.0[narr];' +
+    '[2:a]volume=0.20,afade=t=out:st=' + musicFadeStart + ':d=2[mus];' +
+    '[narr][mus]amix=inputs=2:duration=first[aout]';
+} else {
+  ffmpegLogoInput  = '';
+  var vFinal       = fadeOutFilter ? vfChain + ',' + fadeOutFilter : vfChain;
+  filterComplex =
+    '[0:v]' + vFinal + '[v];' +
+    '[1:a]volume=1.0[narr];' +
+    '[2:a]volume=0.20,afade=t=out:st=' + musicFadeStart + ':d=2[mus];' +
+    '[narr][mus]amix=inputs=2:duration=first[aout]';
+}
+
+var finalVideo = tempDir + '/final.mp4';
+childProcess.execSync(
+  'ffmpeg -y' +
+  ' -i "' + fullConcat + '"' +
+  ' -i "' + audioFile + '"' +
+  ' -stream_loop -1 -i "' + musicFile + '"' +
+  ffmpegLogoInput +
+  ' -filter_complex "' + filterComplex + '"' +
+  ' -map "[v]" -map "[aout]"' +
+  ' -c:v libx264 -preset veryfast -crf 25' +
+  ' -c:a aac -b:a 128k -shortest' +
+  ' "' + finalVideo + '"',
+  { timeout: 300000 }
+);
+
+var fileBuffer = fs2.readFileSync(finalVideo);
+
+// Fix AJ: limpeza de arquivos temporários (mantém final.mp4, fontPath, fontItalicPath)
+var tempFilesToDelete = []
+  .concat(sceneFiles)
+  .concat(scaledSceneFiles)
+  .concat([audioFile, musicFile, ctaRaw, concatList, fullConcat, blackIntro]);
+if (xfadeVideoPath) tempFilesToDelete.push(xfadeVideoPath);
+for (var di = 0; di < tempFilesToDelete.length; di++) {
+  try { fs2.unlinkSync(tempFilesToDelete[di]); } catch(e) {}
+}
+
+return [{
+  json: {
+    videoId:    videoId,
+    localPath:  finalVideo,
+    titulo:     titulo,
+    descricao:  descricao,
+    hashtags:   hashtags,
+    narracao:   narracao,
+    topic:      topic,
+    sceneCount: scenes.length,
+    fileName:   videoId + '.mp4'
+  },
+  binary: {
+    data: {
+      data:          fileBuffer.toString('base64'),
+      mimeType:      'video/mp4',
+      fileName:      videoId + '.mp4',
+      fileExtension: 'mp4'
+    }
+  }
+}];
+"""
+
+print("Patching FFmpeg: Assemble Video (v14 — AI/AJ/AK)...")
+wf_main = get("zloYjCYLVf6BWhF9")
+patched = False
+for node in wf_main["nodes"]:
+    if node["name"] == "FFmpeg: Assemble Video":
+        node["parameters"]["jsCode"] = NEW_FFMPEG_CODE
+        patched = True
+        print("  Patched")
+
+if not patched:
+    print("ERROR: node 'FFmpeg: Assemble Video' not found!")
+    sys.exit(1)
+
+st = put("zloYjCYLVf6BWhF9", wf_main)
+print("  PUT:", st)
+
+if st == 200:
+    print()
+    print("=== DONE v14 ===")
+    print("FIX AI: Frame preto 0.3s antes do fade-in — abertura limpa em dispositivos lentos")
+    print("        fade=t=in:st=0.300 (começa após o frame preto)")
+    print("        videoDuration, ctaStart, versiculoStart, título todos ajustados +0.3s")
+    print("FIX AJ: Limpeza automática de temp após readFileSync — disco liberado a cada run")
+    print("        Mantém: final.mp4, Roboto-Bold.ttf, Roboto-Italic.ttf")
+    print("FIX AK: Roboto-Italic.ttf baixado e usado no versículo — destaque visual distinto")
