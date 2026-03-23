@@ -1,5 +1,7 @@
 import { PrismaClient, Plan, GroupRole, PrayerStatus, ReactionType } from "@prisma/client";
 import readingPlansData from "./data/reading-plans.json";
+import fs from "fs";
+import path from "path";
 
 const prisma = new PrismaClient();
 
@@ -40,10 +42,30 @@ async function main() {
     prisma.streak.upsert({ where: { userId: carlos.id }, update: {}, create: { userId: carlos.id, currentStreak: 3,  longestStreak: 15, totalDays: 22,  lastCheckIn: new Date() } }),
   ]);
 
-  // ── Devocionais (hoje -7 até hoje +22) ───────────────────
+  // ── Devocionais ───────────────────────────────────────────
+  // Se o JSON gerado pelo Gemini existir, usa ele (365 dias).
+  // Caso contrário, cai no fallback de 30 dias hardcoded.
+  const generatedPath = path.join(__dirname, "data", "devotionals.json");
+  const hasGenerated = fs.existsSync(generatedPath);
+
   function day(offset: number): Date {
     const d = new Date(); d.setHours(0, 0, 0, 0);
     d.setDate(d.getDate() + offset); return d;
+  }
+
+  if (hasGenerated) {
+    console.log("   📖 Usando devocionais gerados pelo Gemini (365 dias)...");
+    type GenDev = { day: number; title: string; verse: string; verseRef: string; theme: string; reflection?: string };
+    const generated: GenDev[] = JSON.parse(fs.readFileSync(generatedPath, "utf-8"));
+    // day=1 é hoje, day=2 é amanhã, day=0/negativo não existe nesse formato
+    for (const d of generated) {
+      const date = day(d.day - 1); // day 1 = offset 0 = hoje
+      await prisma.devotional.upsert({
+        where: { date },
+        update: {},
+        create: { date, title: d.title, verse: d.verse, verseRef: d.verseRef, theme: d.theme },
+      });
+    }
   }
 
   const devotionalsData = [
