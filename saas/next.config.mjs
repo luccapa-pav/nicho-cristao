@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      { source: "/celula", destination: "/fraternidade", permanent: true },
+      { source: "/celula/:path*", destination: "/fraternidade/:path*", permanent: true },
+    ];
+  },
   experimental: {
     typedRoutes: false,
   },
