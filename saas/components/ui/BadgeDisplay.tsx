@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { BADGE_DEFS } from "@/lib/badges";
-import { PremiumGate } from "@/components/ui/PremiumGate";
 
 interface BadgeState {
   badgeId: string;
@@ -27,8 +26,6 @@ export function BadgeDisplay() {
       .finally(() => setLoading(false));
   }, []);
 
-  const isPremiumUser = plan === "PREMIUM" || plan === "FAMILY";
-
   const getState = (badgeId: string) =>
     badges.find((b) => b.badgeId === badgeId) ?? { badgeId, earned: false };
 
@@ -45,37 +42,39 @@ export function BadgeDisplay() {
     );
   }
 
-  const freeBadges = BADGE_DEFS.filter((b) => !b.isPremium);
-  const premiumBadges = BADGE_DEFS.filter((b) => b.isPremium);
+  const earnedCount = badges.filter((b) => b.earned).length;
 
   return (
-    <div className="divine-card p-6 flex flex-col gap-5">
-      <div>
-        <p className="text-sm font-semibold uppercase tracking-widest text-gold-dark">Conquistas</p>
-        <p className="text-sm text-slate-600 mt-0.5">
-          {badges.filter((b) => b.earned).length} de {BADGE_DEFS.length} conquistadas
+    <div className="divine-card p-5 flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-slate-500">
+          <span className="font-bold text-gold-dark text-sm">{earnedCount}</span> de {BADGE_DEFS.length} conquistadas
         </p>
+        {earnedCount > 0 && (
+          <span className="text-xs font-semibold text-gold-dark bg-gold/10 px-2.5 py-1 rounded-full border border-gold/20">
+            ✦ {Math.round((earnedCount / BADGE_DEFS.length) * 100)}% completo
+          </span>
+        )}
       </div>
 
-      {/* FREE badges */}
-      <div className="grid grid-cols-4 sm:grid-cols-4 gap-3">
-        {freeBadges.map((def, i) => {
+      <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
+        {BADGE_DEFS.map((def, i) => {
           const state = getState(def.id);
           return (
             <motion.div
               key={def.id}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.04 }}
+              transition={{ delay: i * 0.03 }}
               title={`${def.label}: ${def.description}`}
               className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl border text-center transition-all ${
                 state.earned
                   ? "border-gold/50 bg-amber-50/60 shadow-sm"
-                  : "border-divine-100 bg-white opacity-30"
+                  : "border-divine-100 bg-white opacity-30 grayscale"
               }`}
             >
               <span className="text-2xl">{def.icon}</span>
-              <p className={`text-[10px] font-semibold leading-tight ${state.earned ? "text-gold-dark" : "text-slate-400"}`}>
+              <p className={`text-xs font-semibold leading-tight ${state.earned ? "text-gold-dark" : "text-slate-400"}`}>
                 {def.label}
               </p>
               {state.progress !== undefined && !state.earned && (
@@ -86,39 +85,6 @@ export function BadgeDisplay() {
             </motion.div>
           );
         })}
-      </div>
-
-      {/* PREMIUM badges */}
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-dark/60 mb-3">
-          ✦ Exclusivas Premium
-        </p>
-        <PremiumGate feature="Conquistas Premium" blur>
-          <div className="grid grid-cols-4 gap-3">
-            {premiumBadges.map((def, i) => {
-              const state = getState(def.id);
-              return (
-                <motion.div
-                  key={def.id}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.05 }}
-                  title={`${def.label}: ${def.description}`}
-                  className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl border text-center transition-all ${
-                    state.earned && isPremiumUser
-                      ? "border-gold/50 bg-amber-50/60 shadow-sm"
-                      : "border-divine-100 bg-white opacity-50"
-                  }`}
-                >
-                  <span className="text-2xl">{def.icon}</span>
-                  <p className={`text-[10px] font-semibold leading-tight ${state.earned && isPremiumUser ? "text-gold-dark" : "text-slate-400"}`}>
-                    {def.label}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </PremiumGate>
       </div>
     </div>
   );

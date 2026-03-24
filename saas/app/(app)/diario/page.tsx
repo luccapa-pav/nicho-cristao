@@ -42,6 +42,16 @@ export default function DiarioPage() {
   const [showAnalytics, setShowAnalytics] = useState(false);
 
   useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (moodRef.current && !moodRef.current.contains(e.target as Node)) {
+        setMoodOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  useEffect(() => {
     fetch("/api/journal")
       .then((r) => r.ok ? r.json() : [])
       .then((data) => setEntries(data))
@@ -153,7 +163,7 @@ export default function DiarioPage() {
           whileTap={{ scale: 0.96 }}
         >
           <PlusCircle className="w-4 h-4" />
-          Escrever minha primeira reflexão
+          {entries.length === 0 ? "Escrever minha primeira reflexão" : "Nova reflexão"}
         </motion.button>
       </motion.div>
 
@@ -179,7 +189,7 @@ export default function DiarioPage() {
                 />
               </>
             ) : (
-              <a href="/perfil" className="flex items-center gap-2 w-full pl-3 pr-4 py-2.5 rounded-xl border border-divine-200 bg-divine-50/50 text-sm text-slate-400 cursor-pointer hover:border-gold/40 transition-colors">
+              <a href="/assinar" className="flex items-center gap-2 w-full pl-3 pr-4 py-2.5 rounded-xl border border-divine-200 bg-divine-50/50 text-sm text-slate-400 cursor-pointer hover:border-gold/40 transition-colors">
                 <Lock className="w-3.5 h-3.5 text-gold-dark/60" />
                 <span className="text-slate-400">Buscar reflexões</span>
                 <span className="ml-auto text-[10px] font-bold text-gold-dark bg-gold/10 px-1.5 py-0.5 rounded-full">Premium</span>
@@ -189,15 +199,10 @@ export default function DiarioPage() {
 
           {/* Analytics */}
           <button
-            onClick={() => isPremium ? setShowAnalytics((v) => !v) : undefined}
-            className={`relative flex items-center gap-1.5 px-3 py-2.5 rounded-xl border text-sm font-semibold transition-all ${
-              isPremium
-                ? "border-divine-200 bg-white text-gold-dark hover:bg-divine-50"
-                : "border-divine-200 bg-divine-50/50 text-slate-400 cursor-default"
-            }`}
-            title={isPremium ? "Análise de humores" : "Premium"}
+            onClick={() => setShowAnalytics((v) => !v)}
+            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-divine-200 bg-white text-sm font-semibold text-gold-dark hover:bg-divine-50 transition-all"
+            title="Análise de humores"
           >
-            {!isPremium && <Lock className="w-3 h-3 text-gold-dark/50 absolute -top-1 -right-1" />}
             <BarChart2 className="w-4 h-4" />
           </button>
 
@@ -219,7 +224,7 @@ export default function DiarioPage() {
 
       {/* ── Analytics panel (Premium) ── */}
       <AnimatePresence>
-        {showAnalytics && isPremium && (
+        {showAnalytics && (
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -268,10 +273,10 @@ export default function DiarioPage() {
         >
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-slate-700">Sua jornada merece ser lembrada.</p>
-            <p className="text-xs text-slate-500 mt-0.5">Com Premium: busca nas reflexões, análise de humores e exportação do diário.</p>
+            <p className="text-xs text-slate-500 mt-0.5">Com Premium: busca nas reflexões e exportação completa do seu diário.</p>
           </div>
-          <a href="/perfil" className="shrink-0 text-xs font-bold text-gold-dark bg-gold/10 border border-gold/30 px-3 py-2 rounded-xl hover:bg-gold/20 transition-colors whitespace-nowrap">
-            ✦ Ver Premium
+          <a href="/assinar" className="shrink-0 text-xs font-bold text-gold-dark bg-gold/10 border border-gold/30 px-3 py-2 rounded-xl hover:bg-gold/20 transition-colors whitespace-nowrap">
+            ✦ Aprofundar minha jornada
           </a>
         </motion.div>
       )}
@@ -280,81 +285,122 @@ export default function DiarioPage() {
       <AnimatePresence>
         {formOpen && (
           <motion.div
-            className="divine-card overflow-hidden"
+            className="divine-card overflow-hidden border-l-[3px] border-l-gold/50"
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.25 }}
           >
-            <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-divine-100">
-              <div className="flex items-center gap-2">
-                <BookMarked className="w-4 h-4 text-gold-dark" />
-                <p className="text-sm font-bold text-gold-dark uppercase tracking-widest">Nova Entrada</p>
-              </div>
-              <button onClick={() => setFormOpen(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
+            {/* Header — data como diário */}
+            <div className="relative px-5 pt-5 pb-4 text-center border-b border-amber-100/80 bg-gradient-to-b from-amber-50/50 to-transparent">
+              <button
+                onClick={() => setFormOpen(false)}
+                className="absolute right-4 top-4 p-1.5 text-slate-400 hover:text-slate-600 transition-colors rounded-lg hover:bg-slate-100/80"
+              >
                 <X className="w-4 h-4" />
               </button>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-dark/70 mb-1">Nova Entrada</p>
+              <p className="font-serif text-2xl font-bold text-slate-800 leading-tight">
+                {new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "long" })}
+              </p>
+              <p className="text-xs text-slate-400 mt-0.5 capitalize">
+                {new Date().toLocaleDateString("pt-BR", { weekday: "long" })} · {new Date().getFullYear()}
+              </p>
             </div>
 
             <div className="p-5 space-y-4">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Como está seu coração?</p>
-                <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                  {MOOD_ORDER.map((m) => {
-                    const def = MOODS[m];
-                    const active = mood === m;
-                    return (
-                      <button
-                        key={m}
-                        onClick={() => setMood(m)}
-                        className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full border text-xs font-semibold transition-all ${
-                          active
-                            ? `${def.bg} ${def.border} ${def.color} shadow-sm`
-                            : "border-divine-200 text-slate-500 hover:border-divine-300 bg-white"
-                        }`}
-                      >
-                        <span>{def.emoji}</span>
-                        {def.label}
-                      </button>
-                    );
-                  })}
-                </div>
-                {mood && (
-                  <p className={`text-[10px] mt-2 ${MOODS[mood].color} opacity-80`}>
-                    {MOODS[mood].prompt}
-                  </p>
-                )}
+              {/* Mood — botão dropdown */}
+              <div ref={moodRef} className="relative">
+                <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-2 px-0.5">Como está seu coração?</p>
+                <button
+                  onClick={() => setMoodOpen((v) => !v)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-sm font-semibold transition-all shadow-sm ${
+                    MOODS[mood].bg
+                  } ${MOODS[mood].border} ${MOODS[mood].color}`}
+                >
+                  <span className="text-xl leading-none">{MOODS[mood].emoji}</span>
+                  <span className="flex-1 text-left font-semibold">{MOODS[mood].label}</span>
+                  <ChevronDown className={`w-4 h-4 opacity-60 transition-transform ${moodOpen ? "rotate-180" : ""}`} />
+                </button>
+
+                <AnimatePresence>
+                  {moodOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-full left-0 right-0 mt-1 z-50 divine-card shadow-divine border border-divine-200 overflow-hidden"
+                    >
+                      <div className="relative">
+                        <div className="max-h-48 overflow-y-auto custom-scroll py-1">
+                          {MOOD_ORDER.map((m) => {
+                            const def = MOODS[m];
+                            const active = mood === m;
+                            return (
+                              <button
+                                key={m}
+                                onClick={() => { setMood(m); setMoodOpen(false); }}
+                                className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-semibold transition-colors ${
+                                  active ? `${def.bg} ${def.color}` : "text-slate-600 hover:bg-divine-50"
+                                }`}
+                              >
+                                <span className="text-base">{def.emoji}</span>
+                                <span className="flex-1 text-left">{def.label}</span>
+                                {active && <span className="text-xs opacity-60">✓</span>}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {/* Indicador de scroll */}
+                        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent rounded-b-2xl" />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Prompt inspiracional */}
+                <p className={`text-xs mt-2 px-0.5 italic ${MOODS[mood].color} opacity-80`}>
+                  {MOODS[mood].prompt}
+                </p>
               </div>
 
-              <div>
+              {/* Textarea — estilo caderno */}
+              <div className={`rounded-xl border-2 ${MOODS[mood].border} overflow-hidden transition-colors`}>
                 <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="Escreva livremente..."
-                  className="w-full h-44 px-4 py-3 rounded-xl border border-divine-200 bg-divine-50/30 font-serif text-base text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold resize-none leading-relaxed"
+                  placeholder="Derrame seu coração diante do Senhor..."
+                  className="w-full h-48 px-4 py-3 font-serif text-base text-slate-700 placeholder-slate-300 focus:outline-none resize-none leading-relaxed bg-white/80"
                   maxLength={2000}
                 />
-                <div className="flex justify-between items-center mt-1">
-                  <span className="text-[10px] text-slate-400 tabular-nums">{content.length}/2000</span>
-                  <span className="text-[10px] text-slate-400">
-                    {new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}
-                  </span>
+                <div className={`flex justify-between items-center px-4 py-2 border-t ${MOODS[mood].border} ${MOODS[mood].bg}`}>
+                  <span className={`text-xs tabular-nums font-medium ${MOODS[mood].color} opacity-70`}>{content.length} / 2000</span>
+                  <BookMarked className={`w-3 h-3 ${MOODS[mood].color} opacity-40`} />
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-1">
-                <button
-                  onClick={() => setFormOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl border border-divine-200 text-sm text-slate-500 hover:bg-divine-50 transition-colors"
-                >
-                  Cancelar
-                </button>
+              {/* Ações */}
+              <div className="space-y-2 pt-1">
                 <button
                   onClick={handleCreate}
                   disabled={saving || !content.trim()}
-                  className="flex-1 btn-divine py-2.5 text-sm disabled:opacity-50"
+                  className="w-full btn-divine py-3 text-sm flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {saving ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Salvar reflexão"}
+                  {saving ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      <BookMarked className="w-3.5 h-3.5" />
+                      Guardar no diário
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => setFormOpen(false)}
+                  className="w-full py-2 rounded-xl text-sm text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  Cancelar
                 </button>
               </div>
             </div>
@@ -402,9 +448,9 @@ export default function DiarioPage() {
                     {/* Data */}
                     <div className="flex flex-col items-center shrink-0 w-12 pt-3 relative z-10">
                       <div className="flex flex-col items-center bg-white border border-divine-100 rounded-xl px-1.5 py-2 shadow-sm w-full">
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-gold-dark/70 leading-none">{month}</span>
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-gold-dark/70 leading-none">{month}</span>
                         <span className="font-serif text-2xl font-bold text-gold leading-none tabular-nums mt-0.5">{day}</span>
-                        <span className="text-[8px] text-slate-400 leading-none mt-0.5">{year}</span>
+                        <span className="text-[10px] text-slate-400 leading-none mt-0.5">{year}</span>
                       </div>
                     </div>
 
@@ -437,7 +483,7 @@ export default function DiarioPage() {
                           ) : (
                             <button
                               onClick={() => setConfirmDelete(entry.id)}
-                              className="flex items-center gap-1 text-[10px] text-slate-300 hover:text-red-400 transition-colors py-1 px-2 rounded-lg hover:bg-red-50"
+                              className="flex items-center gap-1 text-xs text-slate-300 hover:text-red-400 transition-colors py-1 px-2 rounded-lg hover:bg-red-50"
                             >
                               <Trash2 className="w-3 h-3" />
                               Excluir

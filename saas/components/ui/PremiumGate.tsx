@@ -107,9 +107,9 @@ export function PremiumGate({ children, fallback, feature, benefits, blur = true
         </ul>
 
         {/* CTA */}
-        <Link href="/perfil" className="w-full max-w-xs">
+        <Link href="/assinar" className="w-full max-w-xs">
           <button className="btn-divine py-3.5 text-base w-full flex flex-col items-center gap-0.5">
-            <span className="font-bold">✦ Assinar Premium</span>
+            <span className="font-bold">✦ Quero crescer na fé</span>
             <span className="text-[11px] opacity-80 font-normal">R$ 9,90/mês · cancele quando quiser</span>
           </button>
         </Link>

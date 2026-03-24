@@ -135,10 +135,10 @@ export function DevotionalHistory() {
                         "Guarda no coração os mandamentos que te ensino." — Pv 3:1
                       </p>
                       <a
-                        href="/perfil"
+                        href="/assinar"
                         className="inline-block mt-2 text-[11px] font-bold text-gold-dark bg-white border border-gold/40 rounded-full px-3 py-1 hover:bg-divine-50 transition-colors"
                       >
-                        ✦ Ver todo o histórico com Premium
+                        ✦ Guardar cada dia no coração — Premium
                       </a>
                     </div>
                   )}

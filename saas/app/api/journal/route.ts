@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import type { JournalMood } from "@prisma/client";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -28,10 +29,10 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { content, mood } = body as { content: string; mood: string };
   if (!content?.trim() || !mood) return NextResponse.json({ error: "Invalid" }, { status: 400 });
-  const VALID_MOODS = ["GRATIDAO", "APRENDIZADO", "DESAFIO", "LOUVOR"];
+  const VALID_MOODS = ["GRATIDAO", "APRENDIZADO", "DESAFIO", "LOUVOR", "PAZ", "ADORACAO", "RENOVACAO", "ARREPENDIMENTO"];
   if (!VALID_MOODS.includes(mood)) return NextResponse.json({ error: "Invalid mood" }, { status: 400 });
   const entry = await prisma.journalEntry.create({
-    data: { userId: session.user.id, content: content.trim().slice(0, 2000), mood: mood as "GRATIDAO" | "APRENDIZADO" | "DESAFIO" | "LOUVOR" },
+    data: { userId: session.user.id, content: content.trim().slice(0, 2000), mood: mood as JournalMood },
   });
   return NextResponse.json(entry, { status: 201 });
 }

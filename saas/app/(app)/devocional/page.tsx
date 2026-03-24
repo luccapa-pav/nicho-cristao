@@ -250,7 +250,7 @@ export default function DevocionalPage() {
                         <p className="italic leading-relaxed">&ldquo;Mergulhe mais fundo na Palavra — toda Escritura é inspirada por Deus.&rdquo;</p>
                         <p className="text-xs font-semibold text-gold-dark mt-1.5 not-italic">— 2 Tm 3:16</p>
                       </div>
-                      <Link href="/perfil" className="w-full">
+                      <Link href="/assinar" className="w-full">
                         <button className="btn-divine w-full rounded-xl text-sm flex items-center justify-center gap-2">
                           <Sparkles className="w-4 h-4" /> Desbloquear e mergulhar na Palavra
                         </button>

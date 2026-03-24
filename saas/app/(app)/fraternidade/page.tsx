@@ -263,7 +263,7 @@ export default function CelulaPage() {
           </a>
 
           <a
-            href="/devocional"
+            href="/plano-leitura"
             className="divine-card p-4 flex flex-col items-center gap-2 text-center hover:border-gold/40 transition-all group sm:col-span-1 col-span-2"
           >
             <div className="w-10 h-10 rounded-xl bg-divine-50 flex items-center justify-center group-hover:bg-divine-100 transition-colors">
@@ -400,9 +400,10 @@ export default function CelulaPage() {
                 <div>
                   <p className="text-sm font-semibold text-slate-600">Fraternidade pública</p>
                   <p className="text-xs text-slate-400">
-                    Grupos privados no plano{" "}
-                    <a href="/perfil" className="text-gold-dark font-semibold hover:underline">Premium</a>
+                    Crie um espaço sagrado e privado —{" "}
+                    <a href="/assinar" className="text-gold-dark font-semibold hover:underline">✦ Premium</a>
                   </p>
+                  <p className="text-[10px] text-slate-400 italic mt-0.5">&ldquo;Onde dois ou três se reúnem em meu nome&rdquo; — Mt 18:20</p>
                 </div>
               </div>
             )}

@@ -211,7 +211,7 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
                 <p className="text-xs text-slate-500 text-center leading-relaxed">
                   Ore com profundidade. Deus merece sua atenção total.
                 </p>
-                <Link href="/perfil" className="btn-divine py-2.5 px-4 text-sm text-center" onClick={onClose}>
+                <Link href="/assinar" className="btn-divine py-2.5 px-4 text-sm text-center" onClick={onClose}>
                   ✦ Quero orar com mais profundidade
                 </Link>
               </div>

@@ -232,6 +232,10 @@ enum JournalMood {
   APRENDIZADO
   DESAFIO
   LOUVOR
+  PAZ
+  ADORACAO
+  RENOVACAO
+  ARREPENDIMENTO
 }
 
 // ─────────────────────────────────────────────

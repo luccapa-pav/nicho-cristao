@@ -254,7 +254,7 @@ export default function OracaoPage() {
               <p className="text-sm sm:text-base text-slate-500 mt-1">
                 {isPremium
                   ? "Todos os modos: Adoração, Intercessão, Lectio Divina"
-                  : "Modo Livre · 5 minutos grátis"}
+                  : "Modo Livre · 5 minutos inclusos"}
               </p>
             </div>
             <button
@@ -318,15 +318,13 @@ export default function OracaoPage() {
                 onChange={(e) => setReminderTime(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl border border-amber-100 bg-white text-base text-slate-700 focus:outline-none focus:ring-2 focus:ring-gold/30"
               />
-              {isPremium && (
-                <input
-                  type="text"
-                  placeholder="Mensagem personalizada (Premium)..."
-                  value={reminderMsg}
-                  onChange={(e) => setReminderMsg(e.target.value.slice(0, 100))}
-                  className="w-full px-4 py-3 rounded-xl border border-gold/30 bg-divine-50/60 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-gold/30"
-                />
-              )}
+              <input
+                type="text"
+                placeholder="Mensagem personalizada (ex: Tempo de orar, Senhor!)..."
+                value={reminderMsg}
+                onChange={(e) => setReminderMsg(e.target.value.slice(0, 100))}
+                className="w-full px-4 py-3 rounded-xl border border-divine-200 bg-white text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-gold/30"
+              />
             </motion.div>
           )}
         </motion.div>
@@ -469,9 +467,9 @@ export default function OracaoPage() {
                 {[
                   { text: "Timer 5 min", sub: "Modo Livre" },
                   { text: "Diário ilimitado", sub: "Pedidos sem limite" },
-                  { text: "Versículos diários", sub: "Palavra fresquinha" },
-                  { text: "Lembretes de oração", sub: "Notificações diárias" },
-                  { text: "Marcar respondidas", sub: "Celebre as graças" },
+                  { text: "Lembretes personalizados", sub: "Mensagem sua cada dia" },
+                  { text: "Marcar respondidas", sub: "Com seu testemunho" },
+                  { text: "Versículos diários", sub: "A Palavra te sustenta" },
                 ].map(({ text, sub }) => (
                   <div key={text} className="flex items-start gap-2">
                     <span className="text-slate-400 text-sm leading-tight mt-0.5">✓</span>
@@ -494,11 +492,11 @@ export default function OracaoPage() {
                 <p className="relative text-sm font-bold text-gold-dark mb-1">Premium ✦</p>
                 {[
                   { text: "Modos guiados", sub: "Adoração, Intercessão, Lectio" },
-                  { text: "Timer ilimitado", sub: "Sem restrição de tempo" },
+                  { text: "Timer ilimitado", sub: "5, 10, 15, 30 e 60 min" },
                   { text: "Orações da fraternidade", sub: "Ore com sua fraternidade" },
-                  { text: "Lembrete personalizado", sub: "Mensagem sua cada dia" },
-                  { text: "Relatório de fé", sub: "Veja sua jornada no mês" },
-                  { text: "Testemunho completo", sub: "Registre como Deus agiu" },
+                  { text: "Música ambiente", sub: "Foco total na presença de Deus" },
+                  { text: "Versículos em voz alta", sub: "A Palavra soando enquanto ora" },
+                  { text: "Relatório de fé mensal", sub: "Veja sua jornada crescer" },
                 ].map(({ text, sub }) => (
                   <div key={text} className="relative flex items-start gap-2">
                     <span className="text-gold-dark text-sm leading-tight mt-0.5">✦</span>
@@ -511,12 +509,12 @@ export default function OracaoPage() {
               </div>
             </div>
 
-            <Link href="/perfil">
+            <Link href="/assinar">
               <button className="btn-divine py-4 text-base w-full mt-5 flex items-center justify-center gap-2">
-                <span>✦</span> Assinar Premium
+                <span>✦</span> Orar como os discípulos pediram — Mt 6:9
               </button>
             </Link>
-            <p className="text-xs text-slate-400 text-center mt-2">Cancele quando quiser</p>
+            <p className="text-xs text-slate-400 text-center mt-2">R$ 9,90/mês · cancele quando quiser</p>
           </motion.div>
         )}
       </div>

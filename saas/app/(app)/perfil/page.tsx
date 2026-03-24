@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { motion } from "framer-motion";
-import { Camera, Flame, CheckCircle2, BookOpen, MapPin, Loader2, Check } from "lucide-react";
+import { Camera, Flame, CheckCircle2, BookOpen, MapPin, Loader2, Check, User, FileText, Church, Heart } from "lucide-react";
 import { BadgeDisplay } from "@/components/ui/BadgeDisplay";
 import { StreakCalendar } from "@/components/ui/StreakCalendar";
 import { MonthlyReport } from "@/components/ui/MonthlyReport";
@@ -143,18 +143,27 @@ export default function PerfilPage() {
   const labelCls = "text-base font-semibold text-slate-700 mb-2 flex items-center gap-2";
 
   return (
-    <div className="w-full px-6 md:px-10 py-10 md:py-14">
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-8">
 
       {/* ── Título ── */}
       <motion.div
         initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-        className="mb-10 text-center"
+        className="mb-8 text-center"
       >
         <p className="text-sm font-bold uppercase tracking-[0.3em] text-gold-dark/60 mb-1">Meu Perfil</p>
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
-          Sua jornada de fé
+        <h1 className="font-serif text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
+          {name || "Sua jornada de fé"}
         </h1>
-        <p className="text-lg text-slate-500 mt-2">Membro desde {memberSince}</p>
+        <div className="flex items-center justify-center gap-2 mt-2">
+          <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${
+            profile.plan === "FREE"
+              ? "text-slate-500 bg-slate-50 border-slate-200"
+              : "text-gold-dark bg-gold/10 border-gold/30"
+          }`}>
+            {profile.plan === "FREE" ? "Gratuito" : profile.plan === "PREMIUM" ? "✦ Premium" : "✦ Família"}
+          </span>
+          <span className="text-sm text-slate-400">· Membro desde {memberSince}</span>
+        </div>
       </motion.div>
 
       {/* ── Profile Completion Bar ── */}
@@ -186,7 +195,7 @@ export default function PerfilPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8 items-start">
 
         {/* ── COLUNA ESQUERDA ── */}
-        <div className="flex flex-col gap-6 lg:sticky lg:top-6">
+        <div className="flex flex-col gap-4 lg:sticky lg:top-6">
 
           {/* Avatar */}
           <motion.div
@@ -232,32 +241,28 @@ export default function PerfilPage() {
           {/* Stats */}
           <motion.div
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className="divine-card p-6 flex flex-col gap-4"
+            className="divine-card p-5"
           >
-            <h3 className="font-serif text-xl font-bold text-slate-800 text-center">Minha jornada</h3>
-
-            {[
-              { icon: Flame,        label: "Ofensiva atual",       value: profile.streak?.currentStreak ?? 0, unit: "dias seguidos" },
-              { icon: CheckCircle2, label: "Total completados",    value: profile.streak?.totalDays ?? 0,     unit: "dias" },
-              { icon: BookOpen,     label: "Orações registradas",  value: profile._count.prayers,             unit: "orações" },
-            ].map(({ icon: Icon, label, value, unit }) => (
-              <div key={label} className="flex items-center gap-3 p-3 rounded-xl bg-divine-50/60">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-white shadow-sm flex-shrink-0">
-                  <Icon className="w-6 h-6 text-gold" />
+            <h3 className="font-serif text-base font-bold text-slate-700 text-center mb-4">Minha jornada</h3>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { icon: Flame,        label: "Ofensiva",   value: profile.streak?.currentStreak ?? 0, unit: "dias" },
+                { icon: CheckCircle2, label: "Completados", value: profile.streak?.totalDays ?? 0,     unit: "dias" },
+                { icon: BookOpen,     label: "Orações",    value: profile._count.prayers,             unit: "" },
+              ].map(({ icon: Icon, label, value, unit }) => (
+                <div key={label} className="flex flex-col items-center gap-1 p-3 rounded-xl bg-divine-50/60 text-center">
+                  <Icon className="w-4 h-4 text-gold mb-0.5" />
+                  <p className="text-2xl font-bold text-slate-800 leading-none tabular-nums">{value}</p>
+                  <p className="text-[11px] text-slate-500 leading-tight">{unit || label}</p>
+                  {unit && <p className="text-[10px] text-slate-400 leading-none">{label}</p>}
                 </div>
-                <div>
-                  <p className="text-3xl font-bold text-slate-800 leading-none">
-                    {value}
-                    <span className="text-sm font-normal text-slate-500 ml-1">{unit}</span>
-                  </p>
-                  <p className="text-sm text-slate-500 mt-0.5">{label}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </motion.div>
 
           {/* Plano */}
           <motion.div
+            id="plano"
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
             className="divine-card p-6 flex flex-col gap-3"
           >
@@ -279,7 +284,7 @@ export default function PerfilPage() {
                   <span className="italic text-slate-400 text-xs">&ldquo;Buscai primeiro o Reino de Deus&rdquo; — Mt 6:33</span>
                 </p>
                 <button className="btn-divine w-full py-3 text-sm">
-                  ✦ Investir na minha fé
+                  ✦ Crescer na graça — "Buscai primeiro o Reino" Mt 6:33
                 </button>
               </>
             )}
@@ -314,7 +319,7 @@ export default function PerfilPage() {
 
           {/* Nome */}
           <div>
-            <label className={labelCls}>Nome completo</label>
+            <label className={labelCls}><User className="w-4 h-4 text-gold-dark/60" /> Nome completo</label>
             <input
               type="text"
               value={name}
@@ -328,7 +333,7 @@ export default function PerfilPage() {
           {/* Bio */}
           <div>
             <label className={labelCls}>
-              Sobre mim
+              <FileText className="w-4 h-4 text-gold-dark/60" /> Sobre mim
               <span className="text-slate-400 font-normal text-sm ml-1">({bio.length}/300)</span>
             </label>
             <textarea
@@ -344,7 +349,7 @@ export default function PerfilPage() {
           {/* Igreja e Cidade — lado a lado */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
-              <label className={labelCls}>Igreja</label>
+              <label className={labelCls}><Church className="w-4 h-4 text-gold-dark/60" /> Igreja</label>
               <input
                 type="text"
                 value={church}
@@ -372,7 +377,7 @@ export default function PerfilPage() {
           {/* Versículo favorito */}
           <div>
             <label className={labelCls}>
-              Versículo favorito
+              <BookOpen className="w-4 h-4 text-gold-dark/60" /> Versículo favorito
               <span className="text-slate-400 font-normal text-sm ml-1">({verse.length}/200)</span>
             </label>
             <textarea
@@ -387,7 +392,7 @@ export default function PerfilPage() {
 
           {/* Ministério */}
           <div>
-            <label className={labelCls}>Ministério</label>
+            <label className={labelCls}><Heart className="w-4 h-4 text-gold-dark/60" /> Ministério</label>
             <input
               type="text"
               value={ministry}
@@ -431,11 +436,11 @@ export default function PerfilPage() {
       {/* ── Seção: Minha Jornada — Streak Calendar ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
-        className="mt-10"
+        className="mt-8 max-w-xl mx-auto w-full"
       >
-        <div className="mb-4 text-center">
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-gold-dark/60 mb-1">Consistência</p>
-          <h2 className="font-serif text-2xl font-semibold text-slate-800">Minha Jornada</h2>
+        <div className="mb-3 text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-gold-dark/60 mb-0.5">Consistência</p>
+          <h2 className="font-serif text-xl font-semibold text-slate-800">Minha Jornada</h2>
         </div>
         <StreakCalendar />
       </motion.div>
@@ -443,11 +448,12 @@ export default function PerfilPage() {
       {/* ── Seção: Conquistas — Badge Display ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}
-        className="mt-10"
+        className="mt-8"
       >
-        <div className="mb-4 text-center">
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-gold-dark/60 mb-1">Gamificação</p>
-          <h2 className="font-serif text-2xl font-semibold text-slate-800">Conquistas</h2>
+        <div className="mb-3 text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-gold-dark/60 mb-0.5">Sua caminhada</p>
+          <h2 className="font-serif text-xl font-semibold text-slate-800">Conquistas Espirituais</h2>
+          <p className="text-xs text-slate-400 mt-1">Marcos da sua jornada de fidelidade com Deus</p>
         </div>
         <BadgeDisplay />
       </motion.div>

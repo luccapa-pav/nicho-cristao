@@ -296,7 +296,7 @@ export function PrayerList({
                 <p className="text-xs text-slate-400 max-w-[200px] leading-relaxed text-center">
                   Com o Premium, interceda pelos pedidos da sua fraternidade em tempo real.
                 </p>
-                <Link href="/perfil">
+                <Link href="/assinar">
                   <button className="btn-divine py-2.5 px-5 text-xs">✦ Quero interceder pela minha fraternidade</button>
                 </Link>
               </div>

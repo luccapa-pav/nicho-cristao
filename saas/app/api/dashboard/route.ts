@@ -42,7 +42,7 @@ export async function GET(request: Request) {
   }
 
   const [user, streak, devotional, prayers, posts, membership] = await Promise.all([
-    prisma.user.findUnique({ where: { id: userId }, select: { name: true, plan: true } }),
+    prisma.user.findUnique({ where: { id: userId }, select: { name: true, plan: true, emailVerified: true } }),
 
     prisma.streak.findUnique({ where: { userId } }),
 
