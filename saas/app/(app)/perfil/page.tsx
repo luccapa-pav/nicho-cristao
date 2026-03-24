@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { motion } from "framer-motion";
-import { Camera, Flame, CheckCircle2, BookOpen, MapPin, Loader2, Check, User, FileText, Church, Heart } from "lucide-react";
+import { Camera, Flame, CheckCircle2, BookOpen, MapPin, Loader2, Check, User, FileText, Church, Heart, UserPlus } from "lucide-react";
 import { BadgeDisplay } from "@/components/ui/BadgeDisplay";
 import { StreakCalendar } from "@/components/ui/StreakCalendar";
 import { MonthlyReport } from "@/components/ui/MonthlyReport";
@@ -306,6 +306,29 @@ export default function PerfilPage() {
                 {premiumTheme ? "✦ Tema Dourado ativo — desativar" : "Ativar Tema Dourado ✦"}
               </button>
             )}
+          </motion.div>
+
+          {/* Convidar Amigos */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
+            className="divine-card p-5 flex flex-col gap-3"
+          >
+            <p className="text-sm font-semibold uppercase tracking-widest text-gold-dark text-center">Convidar Amigos</p>
+            <p className="text-sm text-slate-500 text-center leading-relaxed">
+              Chame alguém para caminhar com Deus ao seu lado.
+            </p>
+            <button
+              onClick={() => {
+                const msg = encodeURIComponent(
+                  `Oi! Estou usando o *Luz Divina*, um app cristão de devocional diário, oração e comunidade. Venha caminhar comigo na fé! 🙏✝️\n${window.location.origin}`
+                );
+                window.open(`https://wa.me/?text=${msg}`, "_blank");
+              }}
+              className="w-full py-3 rounded-xl bg-[#25D366] hover:bg-[#1ebe59] text-white font-bold text-sm flex items-center justify-center gap-2 transition-colors"
+            >
+              <UserPlus className="w-4 h-4" />
+              Convidar pelo WhatsApp
+            </button>
           </motion.div>
 
         </div>

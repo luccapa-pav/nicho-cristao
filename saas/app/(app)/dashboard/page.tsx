@@ -342,6 +342,12 @@ export default function DashboardPage() {
                   navigator.clipboard.writeText(`"${devotional.verse}" — ${devotional.verseRef}`).catch(() => {});
                 }
               }}
+              onConvidar={() => {
+                const msg = encodeURIComponent(
+                  `Oi! Estou usando o *Luz Divina*, um app cristão de devocional diário, oração e comunidade. Venha caminhar comigo na fé! 🙏✝️\n${window.location.origin}`
+                );
+                window.open(`https://wa.me/?text=${msg}`, "_blank");
+              }}
             />
           </motion.div>
 

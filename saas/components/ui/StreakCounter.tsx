@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Flame, CheckCircle2, Share2 } from "lucide-react";
 import confetti from "canvas-confetti";
+import { ShareStreakModal } from "@/components/ui/ShareStreakModal";
 
 interface StreakCounterProps {
   days: number;
@@ -23,6 +24,8 @@ export function StreakCounter({ days, longestStreak, completedToday, onComplete 
   const [displayed, setDisplayed] = useState(0);
   const [showRecord, setShowRecord] = useState(false);
   const [celebrationMilestone, setCelebrationMilestone] = useState<number | null>(null);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareVerse, setShareVerse] = useState<{ verse: string; ref: string } | undefined>();
 
   useEffect(() => {
     let start = 0;
@@ -61,14 +64,7 @@ export function StreakCounter({ days, longestStreak, completedToday, onComplete 
         </span>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => {
-              const text = `Estou no dia ${days} da minha ofensiva! 🔥 "Corramos com perseverança a corrida que nos é proposta" — Hb 12:1`;
-              if (navigator.share) {
-                navigator.share({ title: "Luz Divina", text, url: window.location.origin }).catch(() => {});
-              } else {
-                navigator.clipboard.writeText(text).catch(() => {});
-              }
-            }}
+            onClick={() => { setShareVerse(undefined); setShareOpen(true); }}
             aria-label="Compartilhar ofensiva"
             className="text-slate-400 hover:text-gold-dark transition-colors"
           >
@@ -220,9 +216,10 @@ export function StreakCounter({ days, longestStreak, completedToday, onComplete 
             <div className="flex flex-col gap-3 w-full">
               <button
                 onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({ text: `🔥 ${celebrationMilestone} dias de ofensiva no Luz Divina! "${MILESTONE_VERSES[celebrationMilestone]?.verse}" — ${MILESTONE_VERSES[celebrationMilestone]?.ref}` }).catch(() => {});
-                  }
+                  const mv = MILESTONE_VERSES[celebrationMilestone!];
+                  setShareVerse(mv);
+                  setCelebrationMilestone(null);
+                  setShareOpen(true);
                 }}
                 className="btn-divine py-3 text-sm"
               >
@@ -239,6 +236,14 @@ export function StreakCounter({ days, longestStreak, completedToday, onComplete 
         </motion.div>
       )}
     </AnimatePresence>
+
+    <ShareStreakModal
+      open={shareOpen}
+      onClose={() => setShareOpen(false)}
+      days={days}
+      verse={shareVerse?.verse}
+      verseRef={shareVerse?.ref}
+    />
     </>
   );
 }
