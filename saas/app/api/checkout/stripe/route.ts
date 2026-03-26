@@ -26,15 +26,20 @@ export async function POST(req: NextRequest) {
 
   const origin = req.headers.get("origin") ?? process.env.NEXTAUTH_URL ?? "https://vidacomjesus.app";
 
-  const checkoutSession = await stripe.checkout.sessions.create({
-    customer: customerId,
-    mode: "subscription",
-    line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${origin}/dashboard?payment=success`,
-    cancel_url: `${origin}/assinar?payment=cancelled`,
-    metadata: { userId: session.user.id, planId },
-    subscription_data: { metadata: { userId: session.user.id, planId } },
-  });
+  try {
+    const checkoutSession = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: "subscription",
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${origin}/dashboard?payment=success`,
+      cancel_url: `${origin}/assinar?payment=cancelled`,
+      metadata: { userId: session.user.id, planId },
+      subscription_data: { metadata: { userId: session.user.id, planId } },
+    });
 
-  return NextResponse.json({ url: checkoutSession.url });
+    return NextResponse.json({ url: checkoutSession.url });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Erro ao criar sessão de pagamento";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

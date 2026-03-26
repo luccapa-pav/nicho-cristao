@@ -160,6 +160,7 @@ export default function AssinarPage() {
   const [payModalPlan, setPayModalPlan] = useState<string | null>(null);
   const [payLoading, setPayLoading] = useState<"stripe" | "pix" | null>(null);
   const [payError, setPayError] = useState<string | null>(null);
+  const [pixCpf, setPixCpf] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const handleStartTrial = async () => {
@@ -175,14 +176,23 @@ export default function AssinarPage() {
 
   const handlePay = async (method: "stripe" | "pix") => {
     if (!payModalPlan) return;
+    if (method === "pix") {
+      const cpfClean = pixCpf.replace(/\D/g, "");
+      if (cpfClean.length !== 11) {
+        setPayError("CPF inválido. Digite os 11 dígitos para pagar com PIX.");
+        return;
+      }
+    }
     setPayLoading(method);
     setPayError(null);
     try {
       const endpoint = method === "stripe" ? "/api/checkout/stripe" : "/api/checkout/pix";
+      const body: Record<string, string> = { planId: payModalPlan };
+      if (method === "pix") body.cpf = pixCpf.replace(/\D/g, "");
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId: payModalPlan }),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
       if (data.url) {
@@ -474,6 +484,26 @@ export default function AssinarPage() {
             </div>
 
             <div className="px-6 pb-6 pt-4 flex flex-col gap-3">
+              {/* CPF — required for PIX */}
+              <div className="flex flex-col gap-1">
+                <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">CPF (para PIX)</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="000.000.000-00"
+                  maxLength={14}
+                  value={pixCpf}
+                  onChange={(e) => {
+                    const v = e.target.value.replace(/\D/g, "").slice(0, 11);
+                    setPixCpf(v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+                      .replace(/(\d{3})(\d{3})(\d{3})/, "$1.$2.$3")
+                      .replace(/(\d{3})(\d{3})/, "$1.$2"));
+                  }}
+                  className="w-full px-3 py-2.5 text-sm rounded-xl border border-divine-200 bg-white focus:outline-none focus:ring-2 focus:ring-divine-300 text-slate-800 placeholder:text-slate-300"
+                />
+                <p className="text-[10px] text-slate-400">Necessário apenas para pagamento via PIX</p>
+              </div>
+
               {/* PIX */}
               <button
                 onClick={() => handlePay("pix")}

@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { planId } = await req.json();
+  const { planId, cpf } = await req.json();
   const planInfo = PIX_PRICES[planId];
   if (!planInfo) return NextResponse.json({ error: "Plano inválido" }, { status: 400 });
 
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
       name: user?.name ?? (session.user as { name?: string }).name ?? "Cliente",
       email: user?.email ?? (session.user as { email?: string }).email ?? "",
       cellphone: user?.phone ?? "",
+      taxId: (cpf as string | undefined)?.replace(/\D/g, "") ?? "",
     },
     metadata: { userId: session.user.id, planId, months: String(planInfo.months), plan: planInfo.plan },
   };
