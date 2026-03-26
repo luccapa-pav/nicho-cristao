@@ -71,11 +71,11 @@ export function OnboardingModal() {
             className="fixed bottom-0 inset-x-0 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-md w-full z-50 px-0 md:px-0"
           >
             <div
-              className="bg-white rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden"
+              className="bg-white dark:bg-zinc-900 rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden"
               style={{ boxShadow: "0 0 80px rgba(212,175,55,0.18), 0 8px 40px rgba(0,0,0,0.18)" }}
             >
               {/* Header dourado */}
-              <div className="relative bg-gradient-to-br from-divine-50 via-amber-50/60 to-divine-100/50 px-6 pt-7 pb-5 text-center">
+              <div className="relative bg-gradient-to-br from-divine-50 via-amber-50/60 to-divine-100/50 dark:from-zinc-800 dark:via-zinc-800/60 dark:to-zinc-800/40 px-6 pt-7 pb-5 text-center">
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.22) 0%, transparent 70%)" }}
@@ -87,10 +87,10 @@ export function OnboardingModal() {
                 >
                   🙏
                 </motion.div>
-                <h2 className="relative font-serif text-2xl font-bold text-slate-800 leading-tight">
-                  Bem-vindo ao Luz Divina
+                <h2 className="relative font-serif text-2xl font-bold text-slate-800 dark:text-white leading-tight">
+                  Bem-vindo ao Vida com Jesus
                 </h2>
-                <p className="relative text-sm text-slate-500 mt-1">
+                <p className="relative text-sm text-slate-500 dark:text-zinc-400 mt-1">
                   Sua jornada espiritual começa agora
                 </p>
               </div>
@@ -100,11 +100,11 @@ export function OnboardingModal() {
                 {FEATURES.map(({ icon, title, desc }) => (
                   <div
                     key={title}
-                    className="rounded-2xl bg-divine-50/60 border border-divine-100 p-3.5 flex flex-col gap-1.5"
+                    className="rounded-2xl bg-divine-50/60 dark:bg-zinc-800/60 border border-divine-100 dark:border-zinc-700 p-3.5 flex flex-col gap-1.5"
                   >
                     <span className="text-2xl leading-none">{icon}</span>
-                    <p className="text-sm font-bold text-slate-700 leading-tight">{title}</p>
-                    <p className="text-xs text-slate-500 leading-relaxed">{desc}</p>
+                    <p className="text-sm font-bold text-slate-700 dark:text-zinc-100 leading-tight">{title}</p>
+                    <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed">{desc}</p>
                   </div>
                 ))}
               </div>
@@ -118,7 +118,7 @@ export function OnboardingModal() {
                 </Link>
                 <button
                   onClick={dismiss}
-                  className="text-sm text-slate-400 hover:text-slate-600 transition-colors py-1"
+                  className="text-sm text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors py-1"
                 >
                   Já conheço o app — pular
                 </button>

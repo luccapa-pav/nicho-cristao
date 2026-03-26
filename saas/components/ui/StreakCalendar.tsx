@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { PremiumGate } from "@/components/ui/PremiumGate";
 import { usePlan } from "@/hooks/usePlan";
 
@@ -34,10 +34,11 @@ export function StreakCalendar() {
   const today = new Date();
   const [viewYear, setViewYear] = useState(today.getFullYear());
   const [viewMonth, setViewMonth] = useState(today.getMonth());
+  const [gateOpen, setGateOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/streak/history")
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then((d) => setDates(new Set(d.dates ?? [])))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -63,7 +64,7 @@ export function StreakCalendar() {
         <div className="h-4 bg-divine-100 rounded w-40 mb-4" />
         <div className="grid grid-cols-7 gap-1">
           {Array.from({ length: 35 }).map((_, i) => (
-            <div key={i} className="w-8 h-8 bg-divine-100 rounded-md" />
+            <div key={i} className="h-10 bg-divine-100 rounded-lg" />
           ))}
         </div>
       </div>
@@ -71,7 +72,7 @@ export function StreakCalendar() {
   }
 
   return (
-    <div className="divine-card p-4 flex flex-col gap-2.5">
+    <div className="divine-card p-5 flex flex-col gap-3">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
@@ -94,7 +95,7 @@ export function StreakCalendar() {
       </div>
 
       {/* Day labels */}
-      <div className="grid grid-cols-7 gap-0.5">
+      <div className="grid grid-cols-7 gap-1.5">
         {DAY_LABELS.map((d) => (
           <div key={d} className="text-center text-[10px] font-bold text-slate-400 uppercase pb-0.5">
             {d.charAt(0)}
@@ -103,7 +104,7 @@ export function StreakCalendar() {
 
         {/* Day cells */}
         {grid.flat().map((date, i) => {
-          if (!date) return <div key={i} />;
+          if (!date) return <div key={i} className="h-10" />;
           const key = date.toISOString().split("T")[0];
           const completed = dates.has(key);
           const isToday = key === today.toISOString().split("T")[0];
@@ -116,9 +117,9 @@ export function StreakCalendar() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.004 }}
               title={`${date.toLocaleDateString("pt-BR")}${completed ? " ✓" : ""}`}
-              className={`aspect-square rounded flex items-center justify-center text-[10px] font-medium transition-all ${
+              className={`h-10 rounded-lg flex items-center justify-center text-[11px] font-medium transition-all ${
                 isFuture
-                  ? "text-slate-200"
+                  ? "text-slate-300 dark:text-zinc-700"
                   : completed
                   ? "bg-gold text-white shadow-sm"
                   : isToday
@@ -134,9 +135,28 @@ export function StreakCalendar() {
 
       {/* Premium gate for full history */}
       {!isPremium && (
-        <PremiumGate feature="Histórico completo de 365 dias" blur={false}>
-          <p className="text-xs text-center text-slate-400 py-1">Ver histórico completo</p>
-        </PremiumGate>
+        <div>
+          <button
+            onClick={() => setGateOpen((v) => !v)}
+            className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-gold-dark hover:text-gold transition-colors"
+          >
+            <span>✦ Ver histórico completo</span>
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${gateOpen ? "rotate-180" : ""}`} />
+          </button>
+          {gateOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <PremiumGate feature="Histórico completo de 365 dias" blur={false}>
+                <p className="text-xs text-center text-slate-400 py-1">Ver histórico completo</p>
+              </PremiumGate>
+            </motion.div>
+          )}
+        </div>
       )}
     </div>
   );

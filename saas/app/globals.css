@@ -106,7 +106,7 @@
   }
 
   h1, h2, h3 {
-    font-family: var(--font-playfair), Georgia, serif;
+    font-family: var(--font-cormorant), Georgia, serif;
   }
 
   /* ── Gradiente top→bottom: mais escuro/quente no topo, clareia ao descer ── */
@@ -127,6 +127,22 @@
 
 /* ── Componentes utilitários ───────────────────────────────── */
 @layer components {
+
+  /* Card vazio "Descubra sua Fraternidade" */
+  .fraternity-empty-card {
+    background: linear-gradient(145deg, #FFFEF5 0%, #FFF9E6 35%, #FFFEF0 65%, #FFF5D6 100%);
+  }
+  .dark .fraternity-empty-card {
+    background: linear-gradient(145deg, #0f0d08 0%, #111108 35%, #0f0d08 65%, #111108 100%);
+  }
+
+  /* Medalha de membro (avatar) */
+  .member-medallion-bg {
+    background: linear-gradient(135deg, #FFF9E6 0%, rgba(245,226,122,0.13) 50%, #FFF3CC 100%);
+  }
+  .dark .member-medallion-bg {
+    background: linear-gradient(135deg, #1a1208 0%, rgba(212,175,55,0.12) 50%, #1a1208 100%);
+  }
 
   /* Card flutuante com brilho dourado */
   .divine-card {
@@ -199,59 +215,215 @@
   }
 }
 
-/* ── Modo letra grande ─────────────────────────────────────── */
-html.font-large { font-size: 115%; }
+/* ── Modos de acessibilidade ───────────────────────────────── */
+html.font-large  { font-size: 120%; line-height: 1.65; }
+html.font-xlarge { font-size: 145%; line-height: 1.72; letter-spacing: 0.01em; }
+
+/* Inputs maiores em modo extra-grande */
+html.font-xlarge input,
+html.font-xlarge textarea,
+html.font-xlarge select {
+  padding-top: 1.25rem !important;
+  padding-bottom: 1.25rem !important;
+  font-size: 1.125rem !important;
+  min-height: 3.5rem;
+}
+
+/* Reduzir animações — preserva layout, elimina movimento */
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+}
 
 /* ── Tema escuro ────────────────────────────────────────────── */
 .dark body {
-  background-color: #17130e;
-  color: #e8dcc8;
+  background-color: #000000;
+  color: #F3F4F6;
 }
 .dark body::before {
-  opacity: 0.04;
+  opacity: 0.06;
 }
 .dark body::after {
   background: linear-gradient(
     180deg,
-    rgba(212, 175, 55, 0.07) 0%,
-    rgba(212, 175, 55, 0.03) 35%,
+    rgba(212, 175, 55, 0.10) 0%,
+    rgba(212, 175, 55, 0.04) 35%,
     transparent 65%
   );
 }
 .dark .divine-card {
-  background-color: #1f1a14;
-  border-color: rgba(212,175,55,0.18);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 8px 24px rgba(212,175,55,0.04), inset 0 1px 0 rgba(255,255,255,0.04);
+  background-color: #111111;
+  border-color: rgba(212,175,55,0.25);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 8px 32px rgba(212,175,55,0.10), inset 0 1px 0 rgba(255,255,255,0.04);
 }
 .dark .divine-card:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4), 0 24px 56px rgba(212,175,55,0.12), 0 4px 12px rgba(212,175,55,0.08);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.9), 0 24px 56px rgba(212,175,55,0.18), 0 4px 12px rgba(212,175,55,0.12);
 }
 .dark aside {
-  background-color: #17130e !important;
-  border-color: rgba(212,175,55,0.12) !important;
+  background-color: #000000 !important;
+  border-color: rgba(212,175,55,0.15) !important;
 }
 .dark header, .dark nav.md\:hidden {
-  background-color: rgba(23,19,14,0.95) !important;
-  border-color: rgba(212,175,55,0.12) !important;
+  background-color: rgba(0,0,0,0.95) !important;
+  border-color: rgba(212,175,55,0.15) !important;
 }
-.dark .text-slate-900 { color: #e8dcc8 !important; }
-.dark .text-slate-800 { color: #ddd0b5 !important; }
-.dark .text-slate-700 { color: #d4c9b0 !important; }
-.dark .text-slate-600 { color: #b8aa90 !important; }
-.dark .text-slate-500 { color: #9a8c72 !important; }
-.dark .text-slate-400 { color: #7d7060 !important; }
-.dark .bg-white { background-color: #1f1a14 !important; }
-.dark .bg-divine-50, .dark .bg-amber-50\/30 { background-color: rgba(212,175,55,0.06) !important; }
-.dark .bg-divine-100 { background-color: rgba(212,175,55,0.12) !important; }
-.dark .border-divine-100 { border-color: rgba(212,175,55,0.12) !important; }
-.dark .border-divine-200 { border-color: rgba(212,175,55,0.16) !important; }
-.dark .border-amber-100 { border-color: rgba(212,175,55,0.16) !important; }
+/* ── Texto slate ── */
+.dark .text-slate-900 { color: #FFFFFF !important; }
+.dark .text-slate-800 { color: #F3F4F6 !important; }
+.dark .text-slate-700 { color: #E5E7EB !important; }
+.dark .text-slate-600 { color: #D1D5DB !important; }
+.dark .text-slate-500 { color: #9CA3AF !important; }
+.dark .text-slate-400 { color: #9CA3AF !important; }
+.dark .text-slate-300 { color: #D1D5DB !important; }
+
+/* ── Texto colorido: tons escuros viram tons claros no dark ── */
+.dark .text-emerald-800, .dark .text-emerald-700 { color: #6EE7B7 !important; }
+.dark .text-emerald-600 { color: #34D399 !important; }
+.dark .text-emerald-500 { color: #A7F3D0 !important; }
+.dark .text-green-600 { color: #4ADE80 !important; }
+.dark .text-amber-800 { color: #FDE68A !important; }
+.dark .text-amber-700 { color: #FCD34D !important; }
+.dark .text-amber-600 { color: #FBBF24 !important; }
+.dark .text-amber-500 { color: #FDE68A !important; }
+.dark .text-orange-700 { color: #FB923C !important; }
+.dark .text-orange-600 { color: #FDBA74 !important; }
+.dark .text-red-600 { color: #FCA5A5 !important; }
+.dark .text-red-500 { color: #FCA5A5 !important; }
+.dark .text-red-400 { color: #FCA5A5 !important; }
+.dark .text-rose-700, .dark .text-rose-600 { color: #FDA4AF !important; }
+.dark .text-rose-500, .dark .text-rose-400 { color: #FDA4AF !important; }
+.dark .text-violet-700 { color: #C4B5FD !important; }
+.dark .text-violet-600 { color: #A78BFA !important; }
+.dark .text-blue-700 { color: #93C5FD !important; }
+.dark .text-blue-600 { color: #60A5FA !important; }
+.dark .text-teal-700 { color: #5EEAD4 !important; }
+.dark .text-teal-600 { color: #2DD4BF !important; }
+.dark .text-purple-700 { color: #D8B4FE !important; }
+.dark .text-purple-600, .dark .text-purple-500 { color: #C084FC !important; }
+.dark .text-yellow-700 { color: #FDE047 !important; }
+
+/* ── Fundos claros coloridos → transparências sutis ── */
+.dark .bg-white { background-color: #111111 !important; }
+.dark .bg-divine-50, .dark .bg-amber-50\/30 { background-color: rgba(212,175,55,0.08) !important; }
+.dark .bg-divine-100 { background-color: rgba(212,175,55,0.14) !important; }
+.dark .bg-amber-50  { background-color: rgba(217,119,6,0.12) !important; }
+.dark .bg-amber-100 { background-color: rgba(217,119,6,0.18) !important; }
+.dark .bg-red-50    { background-color: rgba(239,68,68,0.12) !important; }
+.dark .bg-red-100   { background-color: rgba(239,68,68,0.18) !important; }
+.dark .bg-emerald-50  { background-color: rgba(52,211,153,0.10) !important; }
+.dark .bg-emerald-100 { background-color: rgba(52,211,153,0.15) !important; }
+.dark .bg-green-50  { background-color: rgba(74,222,128,0.10) !important; }
+.dark .bg-green-100 { background-color: rgba(74,222,128,0.15) !important; }
+.dark .bg-violet-50 { background-color: rgba(167,139,250,0.10) !important; }
+.dark .bg-blue-50   { background-color: rgba(96,165,250,0.10) !important; }
+.dark .bg-teal-50   { background-color: rgba(45,212,191,0.10) !important; }
+.dark .bg-orange-50 { background-color: rgba(251,146,60,0.10) !important; }
+.dark .bg-rose-50   { background-color: rgba(251,113,133,0.10) !important; }
+.dark .bg-rose-100  { background-color: rgba(251,113,133,0.15) !important; }
+.dark .bg-purple-50 { background-color: rgba(192,132,252,0.10) !important; }
+.dark .bg-yellow-50 { background-color: rgba(253,224,71,0.10) !important; }
+.dark .bg-gray-50   { background-color: #000000 !important; }
+.dark .bg-gray-100  { background-color: #0a0a0a !important; }
+.dark .bg-white\/90 { background-color: rgba(17,17,17,0.90) !important; }
+.dark .bg-white\/60 { background-color: rgba(17,17,17,0.60) !important; }
+.dark .bg-amber-50\/60 { background-color: rgba(217,119,6,0.10) !important; }
+.dark .bg-amber-50\/70 { background-color: rgba(217,119,6,0.12) !important; }
+
+/* ── Bordas coloridas ── */
+.dark .border-divine-100 { border-color: rgba(212,175,55,0.15) !important; }
+.dark .border-divine-200 { border-color: rgba(212,175,55,0.20) !important; }
+.dark .border-amber-100  { border-color: rgba(212,175,55,0.18) !important; }
+.dark .border-amber-200  { border-color: rgba(217,119,6,0.25) !important; }
+.dark .border-red-200    { border-color: rgba(239,68,68,0.25) !important; }
+.dark .border-emerald-200, .dark .border-emerald-300 { border-color: rgba(52,211,153,0.25) !important; }
+.dark .border-violet-200 { border-color: rgba(167,139,250,0.25) !important; }
+.dark .border-rose-100, .dark .border-rose-200 { border-color: rgba(251,113,133,0.22) !important; }
+.dark .border-purple-300 { border-color: rgba(192,132,252,0.30) !important; }
+.dark .border-yellow-400 { border-color: rgba(253,224,71,0.35) !important; }
+
+/* ── Inputs ── */
 .dark input, .dark textarea {
-  background-color: #2a2218 !important;
-  border-color: rgba(212,175,55,0.2) !important;
-  color: #e8dcc8 !important;
+  background-color: #1a1a1a !important;
+  border-color: rgba(212,175,55,0.25) !important;
+  color: #F3F4F6 !important;
 }
-.dark input::placeholder, .dark textarea::placeholder { color: #5c5040 !important; }
+.dark input::placeholder, .dark textarea::placeholder { color: #6B7280 !important; }
+
+.dark .min-h-screen,
+.dark .min-h-full {
+  background-color: #000000;
+}
+
+/* ── Fundos cinza/slate claros ── */
+.dark .bg-slate-50  { background-color: #0a0a0a !important; }
+.dark .bg-slate-100 { background-color: #0f0f0f !important; }
+.dark .bg-slate-200 { background-color: #1a1a1a !important; }
+.dark .border-slate-100 { border-color: rgba(100,116,139,0.20) !important; }
+.dark .border-slate-200 { border-color: rgba(100,116,139,0.28) !important; }
+
+/* ── Opacity modifiers de classes claras não cobertos ── */
+.dark .bg-amber-50\/50 { background-color: rgba(217,119,6,0.09) !important; }
+.dark .bg-amber-50\/40 { background-color: rgba(217,119,6,0.08) !important; }
+.dark .bg-amber-50\/20 { background-color: rgba(217,119,6,0.06) !important; }
+.dark .bg-divine-50\/40 { background-color: rgba(212,175,55,0.08) !important; }
+.dark .bg-divine-50\/60 { background-color: rgba(212,175,55,0.10) !important; }
+.dark .bg-white\/80 { background-color: rgba(17,17,17,0.80) !important; }
+.dark .bg-white\/50 { background-color: rgba(17,17,17,0.50) !important; }
+.dark .bg-white\/40 { background-color: rgba(17,17,17,0.40) !important; }
+.dark .bg-white\/30 { background-color: rgba(17,17,17,0.30) !important; }
+.dark .bg-\[\#FFFEF9\] { background-color: #000000 !important; }
+.dark .bg-purple-100 { background-color: rgba(192,132,252,0.15) !important; }
+.dark .bg-purple-200 { background-color: rgba(192,132,252,0.22) !important; }
+
+/* ── Gradientes Tailwind (from-* via-* to-*) em dark mode ── */
+/* bg-* overrides não afetam variáveis de gradiente — precisam ser sobrescritas separadamente */
+.dark .from-amber-50 {
+  --tw-gradient-from: #1a1208 !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(26,18,8,0)) !important;
+}
+.dark .from-amber-100 {
+  --tw-gradient-from: rgba(217,119,6,0.20) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(217,119,6,0)) !important;
+}
+.dark .to-amber-50  { --tw-gradient-to: rgba(217,119,6,0.10) !important; }
+.dark .to-amber-100 { --tw-gradient-to: rgba(217,119,6,0.18) !important; }
+.dark .to-amber-300\/40 { --tw-gradient-to: rgba(217,119,6,0.30) !important; }
+.dark .from-purple-50 {
+  --tw-gradient-from: #1a0a2e !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(26,10,46,0)) !important;
+}
+.dark .via-white {
+  --tw-gradient-via: #111111 !important;
+  --tw-gradient-stops: var(--tw-gradient-from), #111111, var(--tw-gradient-to, rgba(17,17,17,0)) !important;
+}
+.dark .to-white   { --tw-gradient-to: #111111 !important; }
+.dark .to-gold\/5 { --tw-gradient-to: rgba(212,175,55,0.04) !important; }
+.dark .to-purple-50\/30 { --tw-gradient-to: rgba(26,10,46,0.3) !important; }
+
+/* ── Gradientes gold com opacity ── */
+.dark .from-gold\/10 { --tw-gradient-from: rgba(212,175,55,0.18) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(212,175,55,0)) !important; }
+.dark .from-gold\/15 { --tw-gradient-from: rgba(212,175,55,0.22) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(212,175,55,0)) !important; }
+.dark .from-gold\/20 { --tw-gradient-from: rgba(212,175,55,0.28) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(212,175,55,0)) !important; }
+.dark .from-gold\/30 { --tw-gradient-from: rgba(212,175,55,0.35) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(212,175,55,0)) !important; }
+.dark .from-gold\/40 { --tw-gradient-from: rgba(212,175,55,0.50) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(212,175,55,0)) !important; }
+.dark .to-gold\/10  { --tw-gradient-to: rgba(212,175,55,0.15) !important; }
+.dark .to-gold\/20  { --tw-gradient-to: rgba(212,175,55,0.25) !important; }
+.dark .via-gold\/20 { --tw-gradient-via: rgba(212,175,55,0.25) !important; --tw-gradient-stops: var(--tw-gradient-from), rgba(212,175,55,0.25), var(--tw-gradient-to, rgba(212,175,55,0)) !important; }
+
+/* ── Botões ghost mais visíveis em dark mode ── */
+.dark .btn-ghost-divine {
+  border-width: 2px !important;
+  border-color: rgba(212,175,55,0.55) !important;
+  background-color: rgba(212,175,55,0.10) !important;
+  color: #FCD34D !important;
+}
+.dark .btn-ghost-divine:hover {
+  border-color: rgba(212,175,55,0.85) !important;
+  background-color: rgba(212,175,55,0.18) !important;
+}
 
 /* ── Animações de entrada sequencial ───────────────────────── */
 .animate-delay-100 { animation-delay: 100ms; }
@@ -259,6 +431,23 @@ html.font-large { font-size: 115%; }
 .animate-delay-300 { animation-delay: 300ms; }
 .animate-delay-400 { animation-delay: 400ms; }
 .animate-delay-500 { animation-delay: 500ms; }
+
+/* ── Emoji com glow dourado no dark mode ── */
+.dark .emoji-glow {
+  filter: drop-shadow(0 0 10px rgba(212,175,55,0.85)) brightness(1.5);
+}
+/* PageSymbolCard emoji (🪶 🔥 🕊️ etc.) — glow suave no dark mode */
+.dark .page-card-emoji {
+  filter: drop-shadow(0 0 8px rgba(212,175,55,0.7)) brightness(1.4);
+}
+
+/* ── Paywall soft-block fade — adapta ao tema ── */
+.paywall-fade {
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.97) 55%);
+}
+.dark .paywall-fade {
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.97) 55%);
+}
 
 /* Partícula de luz no botão "Orei por isso" */
 @keyframes light-particle {

@@ -1,25 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Home, Users, BookOpen, Heart, Bell, Menu, X, LogOut, UserCircle, Moon, Sun, BookMarked } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { Home, Users, BookOpen, Heart, Bell, Menu, X, LogOut, UserCircle, Moon, Sun, BookMarked, Sparkles, Lock } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { useFontSize } from "@/components/providers/FontSizeProvider";
+import { usePlan } from "@/hooks/usePlan";
 import { NotificationPrompt } from "@/components/ui/NotificationPrompt";
 import { NotificationDropdown } from "@/components/ui/NotificationDropdown";
-import { OnboardingModal } from "@/components/ui/OnboardingModal";
+import dynamic from "next/dynamic";
+const OnboardingModal = dynamic(() => import("@/components/ui/OnboardingModal").then(m => ({ default: m.OnboardingModal })), { ssr: false });
+const PaywallModal = dynamic(() => import("@/components/ui/PaywallModal").then(m => ({ default: m.PaywallModal })), { ssr: false });
 
-const NAV_ITEMS = [
+type NavItem = { href: string; icon: React.ElementType; label: string; premium?: boolean };
+
+const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard",      icon: Home,        label: "Início" },
   { href: "/fraternidade",   icon: Users,       label: "Fraternidade" },
   { href: "/oracao",         icon: Heart,       label: "Oração" },
   { href: "/diario",         icon: BookMarked,  label: "Diário" },
   { href: "/plano-leitura",  icon: BookOpen,    label: "Plano de Leitura" },
   { href: "/perfil",         icon: UserCircle,  label: "Perfil" },
+  { href: "/assinar",        icon: Sparkles,    label: "Assinar" },
 ];
 
 export function Navbar() {
@@ -34,6 +40,9 @@ export function Navbar() {
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifEnabled, setNotifEnabled] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [paywallFeature, setPaywallFeature] = useState("");
+  const { isPremium } = usePlan();
 
   useEffect(() => {
     setNotifEnabled(localStorage.getItem("notif") === "on");
@@ -65,9 +74,16 @@ export function Navbar() {
   };
 
   useEffect(() => {
+    const cached = sessionStorage.getItem("navbar_avatarUrl");
+    if (cached) { setAvatarUrl(cached); return; }
     fetch("/api/user/profile")
       .then((r) => r.json())
-      .then((d) => { if (d.avatarUrl) setAvatarUrl(d.avatarUrl); })
+      .then((d) => {
+        if (d.avatarUrl) {
+          setAvatarUrl(d.avatarUrl);
+          sessionStorage.setItem("navbar_avatarUrl", d.avatarUrl);
+        }
+      })
       .catch(() => {});
   }, []);
 
@@ -76,58 +92,63 @@ export function Navbar() {
       <OnboardingModal />
 
       {/* ── Desktop sidebar (md+) ───────────────────────── */}
-      <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 border-r border-amber-100/60 p-6 gap-6" style={{ backgroundColor: "#FFFEF9" }}>
+      <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 border-r border-amber-100/60 dark:border-gold/10 p-6 gap-6 bg-[#FFFEF9] dark:bg-black">
         {/* Logo */}
         <div className="flex items-center gap-3.5 pb-5 border-b border-divine-100">
           <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-divine flex-shrink-0">
             <span className="text-white text-2xl">✝</span>
           </div>
           <div className="flex flex-col justify-center">
-            <p className="font-serif text-[17px] font-bold text-slate-900 tracking-tight leading-none">Luz Divina</p>
+            <p className="font-serif text-[17px] font-bold text-slate-900 tracking-tight leading-none">Vida com Jesus</p>
             <p className="mt-1.5 text-[9.5px] font-semibold tracking-[0.22em] text-gold-dark/70 leading-none uppercase">Sua jornada de fé</p>
           </div>
         </div>
 
         {/* Nav links */}
         <nav className="flex flex-col gap-1 flex-1">
-          {NAV_ITEMS.map(({ href, icon: Icon, label }) => {
+          {NAV_ITEMS.map(({ href, icon: Icon, label, premium }) => {
             const active = pathname.startsWith(href);
-            return (
-              <Link key={href} href={href}>
-                <div className={`flex items-center gap-3 px-3 py-3 rounded-2xl transition-all duration-200 ${
-                  active
-                    ? "bg-amber-50/80 text-gold-dark font-semibold border-l-2 border-l-gold pl-4 ml-[-2px]"
+            const isLocked = !!premium && !isPremium;
+            const itemContent = (
+              <div className={`flex items-center gap-3 px-3 py-3 rounded-2xl transition-all duration-200 ${
+                active
+                  ? "bg-amber-50/80 text-gold-dark font-semibold border-l-2 border-l-gold pl-4 ml-[-2px]"
+                  : isLocked
+                    ? "text-slate-400 hover:bg-divine-50 hover:text-slate-600 cursor-pointer"
                     : "text-slate-600 hover:bg-divine-50 hover:text-slate-800"
-                }`}>
-                  <Icon className={`w-5 h-5 flex-shrink-0 ${active ? "text-gold" : ""}`} />
-                  <span className="text-base">{label}</span>
-                  {active && (
-                    <motion.div layoutId="nav-indicator" className="ml-auto w-1.5 h-1.5 rounded-full bg-gold" />
-                  )}
-                </div>
-              </Link>
+              }`}>
+                <Icon className={`${fontSize === "xlarge" ? "w-6 h-6" : "w-5 h-5"} flex-shrink-0 ${active ? "text-gold" : ""}`} />
+                <span className="text-base">{label}</span>
+                {isLocked && <Lock className="w-3 h-3 opacity-40 ml-auto flex-shrink-0" />}
+                {active && !isLocked && (
+                  <motion.div layoutId="nav-indicator" className="ml-auto w-1.5 h-1.5 rounded-full bg-gold" />
+                )}
+              </div>
             );
+            if (isLocked) {
+              return (
+                <button key={href} className="w-full text-left" onClick={() => { setPaywallFeature(label); setPaywallOpen(true); }}>
+                  {itemContent}
+                </button>
+              );
+            }
+            return <Link key={href} href={href}>{itemContent}</Link>;
           })}
         </nav>
 
         {/* Controles de acessibilidade */}
         <div className="flex items-center gap-1.5 pt-3 border-t border-divine-100">
-          <button
-            onClick={() => setFontSize("large")}
-            aria-label="Aumentar fonte"
-            title="Aumentar fonte"
-            className={`px-2 py-1 rounded-lg text-xs border transition-all ${fontSize === "large" ? "border-gold text-gold-dark bg-amber-50" : "border-divine-200 text-slate-500 hover:border-gold hover:text-gold-dark"}`}
-          >
-            A+
-          </button>
-          <button
-            onClick={() => setFontSize("normal")}
-            aria-label="Fonte normal"
-            title="Fonte normal"
-            className={`px-2 py-1 rounded-lg text-xs border transition-all ${fontSize === "normal" ? "border-gold text-gold-dark bg-amber-50" : "border-divine-200 text-slate-500 hover:border-gold hover:text-gold-dark"}`}
-          >
-            A-
-          </button>
+          {([["A", "normal"], ["A+", "large"], ["A++", "xlarge"]] as const).map(([label, size]) => (
+            <button
+              key={size}
+              onClick={() => setFontSize(size)}
+              aria-label={`Fonte ${label}`}
+              title={`Fonte ${label}`}
+              className={`px-2.5 py-1.5 rounded-lg text-sm font-semibold border transition-all ${fontSize === size ? "border-gold text-gold-dark bg-amber-50" : "border-divine-200 text-slate-500 hover:border-gold hover:text-gold-dark"}`}
+            >
+              {label}
+            </button>
+          ))}
           <button
             onClick={toggleTheme}
             aria-label={theme === "dark" ? "Modo claro" : "Modo escuro"}
@@ -163,12 +184,12 @@ export function Navbar() {
       </aside>
 
       {/* ── Mobile top bar ──────────────────────────────── */}
-      <header className="md:hidden fixed top-0 inset-x-0 z-30 backdrop-blur-md border-b border-amber-100/60 px-4 h-14 flex items-center justify-between" style={{ backgroundColor: "#FFFEF9F0", paddingTop: "env(safe-area-inset-top, 0px)" }}>
+      <header className="md:hidden fixed top-0 inset-x-0 z-30 backdrop-blur-md border-b border-amber-100/60 dark:border-gold/10 px-4 h-14 flex items-center justify-between bg-[#FFFEF9F0] dark:bg-black/90" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-sm">
             <span className="text-white text-sm">✝</span>
           </div>
-          <p className="font-serif text-sm font-bold text-slate-800">Luz Divina</p>
+          <p className="font-serif text-sm font-bold text-slate-800">Vida com Jesus</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="relative">
@@ -227,27 +248,39 @@ export function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "tween", duration: 0.22 }}
-            className="md:hidden fixed top-14 right-0 bottom-0 w-3/4 max-w-xs border-l border-amber-100/60 z-20 p-5 flex flex-col gap-2"
-            style={{ backgroundColor: "#FFFEF9" }}
+            className="md:hidden fixed top-14 right-0 bottom-0 w-3/4 max-w-xs border-l border-amber-100/60 dark:border-gold/10 z-20 p-5 flex flex-col gap-2 bg-[#FFFEF9] dark:bg-black"
           >
-            {NAV_ITEMS.map(({ href, icon: Icon, label }) => {
+            {NAV_ITEMS.map(({ href, icon: Icon, label, premium }) => {
               const active = pathname.startsWith(href);
+              const isLocked = !!premium && !isPremium;
+              const itemContent = (
+                <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all ${
+                  active ? "bg-divine-100 text-gold-dark font-semibold" : isLocked ? "text-slate-400 hover:bg-divine-50" : "text-slate-500 hover:bg-divine-50"
+                }`}>
+                  <Icon className={`${fontSize === "xlarge" ? "w-5 h-5" : "w-4 h-4"} flex-shrink-0`} />
+                  <span className="text-sm">{label}</span>
+                  {isLocked && <Lock className="w-3 h-3 opacity-40 ml-auto flex-shrink-0" />}
+                </div>
+              );
+              if (isLocked) {
+                return (
+                  <button key={href} className="w-full text-left" onClick={() => { setMobileOpen(false); setPaywallFeature(label); setPaywallOpen(true); }}>
+                    {itemContent}
+                  </button>
+                );
+              }
               return (
                 <Link key={href} href={href} onClick={() => setMobileOpen(false)}>
-                  <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all ${
-                    active ? "bg-divine-100 text-gold-dark font-semibold" : "text-slate-500 hover:bg-divine-50"
-                  }`}>
-                    <Icon className="w-4 h-4 flex-shrink-0" />
-                    <span className="text-sm">{label}</span>
-                  </div>
+                  {itemContent}
                 </Link>
               );
             })}
             <div className="mt-auto pt-4 border-t border-divine-100 flex flex-col gap-2">
               {/* Acessibilidade mobile */}
               <div className="flex items-center gap-1.5">
-                <button onClick={() => setFontSize("large")} className={`px-2 py-1 rounded-lg text-xs border transition-all ${fontSize === "large" ? "border-gold text-gold-dark bg-amber-50" : "border-divine-200 text-slate-500"}`}>A+</button>
-                <button onClick={() => setFontSize("normal")} className={`px-2 py-1 rounded-lg text-xs border transition-all ${fontSize === "normal" ? "border-gold text-gold-dark bg-amber-50" : "border-divine-200 text-slate-500"}`}>A-</button>
+                {([["A", "normal"], ["A+", "large"], ["A++", "xlarge"]] as const).map(([label, size]) => (
+                  <button key={size} onClick={() => setFontSize(size)} className={`px-2.5 py-1.5 rounded-lg text-sm font-semibold border transition-all ${fontSize === size ? "border-gold text-gold-dark bg-amber-50" : "border-divine-200 text-slate-500"}`}>{label}</button>
+                ))}
                 <button onClick={toggleTheme} className="ml-auto p-1.5 rounded-lg border border-divine-200 text-slate-500 transition-all">
                   {theme === "dark" ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
                 </button>
@@ -264,38 +297,87 @@ export function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* ── Mobile bottom nav (sem Perfil — fica no drawer) ── */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-30 backdrop-blur-md border-t border-amber-100/60 flex" style={{ backgroundColor: "#FFFEF9F0", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
-        {NAV_ITEMS.slice(0, 4).map(({ href, icon: Icon, label }) => {
+      {/* ── Mobile bottom nav — 5 items: Início, Oração, Plano, Fraternidade, Perfil ── */}
+      {/* layoutId="bottom-indicator" is shared across all items; only the active item renders
+          the indicator element, so there is never more than one in the DOM at a time. */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-30 backdrop-blur-md border-t border-amber-100/60 dark:border-gold/10 flex bg-[#FFFEF9F0] dark:bg-black/90" style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
+        <LayoutGroup>
+        {[
+          { href: "/dashboard",     icon: Home,     label: "Início",  premium: false },
+          { href: "/fraternidade",  icon: Users,    label: "Irmãos",  premium: false },
+          { href: "/oracao",        icon: Heart,    label: "Oração",  premium: false },
+          { href: "/plano-leitura", icon: BookOpen, label: "Plano",   premium: true },
+        ].map(({ href, icon: Icon, label, premium }) => {
           const active = pathname.startsWith(href);
+          const isLocked = premium && !isPremium;
+          const content = (
+            <div className={`relative flex flex-col items-center gap-1 py-2.5 transition-all ${active ? "text-gold" : "text-slate-500"}`}>
+              {active && (
+                <motion.div layoutId="bottom-indicator" className="absolute -top-0.5 w-8 h-0.5 rounded-full bg-gold" />
+              )}
+              <div className="relative">
+                <Icon className={`${fontSize === "xlarge" ? "w-7 h-7" : "w-6 h-6"} ${active ? "text-gold" : ""}`} />
+                {isLocked && <Lock className="absolute -top-1 -right-1 w-3 h-3 text-slate-400 opacity-60" />}
+              </div>
+              <span className="text-xs font-medium">{label}</span>
+            </div>
+          );
+          if (isLocked) {
+            return (
+              <button key={href} className="flex-1" aria-label={label} onClick={() => { setPaywallFeature("Plano de Leitura"); setPaywallOpen(true); }}>
+                {content}
+              </button>
+            );
+          }
           return (
             <Link key={href} href={href} className="flex-1" aria-label={label}>
-              <div className={`relative flex flex-col items-center gap-1 py-2.5 transition-all ${active ? "text-gold" : "text-slate-500"}`}>
-                {active && (
-                  <motion.div layoutId="bottom-indicator" className="absolute -top-0.5 w-8 h-0.5 rounded-full bg-gold" />
-                )}
-                <Icon className={`w-6 h-6 ${active ? "text-gold" : ""}`} />
-                <span className="text-xs font-medium">{label}</span>
-              </div>
+              {content}
             </Link>
           );
         })}
-        {/* Avatar no lugar do 5º item no mobile */}
-        <Link href="/perfil" className="flex-1" aria-label="Perfil">
-          <div className={`relative flex flex-col items-center gap-0.5 py-2 transition-all ${pathname.startsWith("/perfil") ? "text-gold" : "text-slate-400"}`}>
-            {pathname.startsWith("/perfil") && (
-              <motion.div layoutId="bottom-indicator" className="absolute -top-0.5 w-8 h-0.5 rounded-full bg-gold" />
-            )}
-            <div className="w-5 h-5 rounded-full overflow-hidden bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center">
-              {avatarUrl
-                ? <Image src={avatarUrl} alt="Perfil" width={20} height={20} className="w-full h-full object-cover" />
-                : <span className="text-white text-[8px] font-bold">{userInitial}</span>
-              }
-            </div>
-            <span className="text-[10px] font-medium">Perfil</span>
-          </div>
-        </Link>
+        {/* Avatar — Perfil (uses same layoutId so indicator animates smoothly from other tabs) */}
+        {(() => {
+          const active = pathname.startsWith("/perfil");
+          return (
+            <Link href="/perfil" className="flex-1" aria-label="Perfil">
+              <div className={`relative flex flex-col items-center gap-0.5 py-2 transition-all ${active ? "text-gold" : "text-slate-400"}`}>
+                {active && (
+                  <motion.div layoutId="bottom-indicator" className="absolute -top-0.5 w-8 h-0.5 rounded-full bg-gold" />
+                )}
+                <div className="w-6 h-6 rounded-full overflow-hidden bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center">
+                  {avatarUrl
+                    ? <Image src={avatarUrl} alt="Perfil" width={24} height={24} className="w-full h-full object-cover" />
+                    : <span className="text-white text-[9px] font-bold">{userInitial}</span>
+                  }
+                </div>
+                <span className="text-[10px] font-medium">Perfil</span>
+              </div>
+            </Link>
+          );
+        })()}
+        {/* Assinar — última aba, destaque premium */}
+        {(() => {
+          const active = pathname.startsWith("/assinar");
+          return (
+            <Link href="/assinar" className="flex-1" aria-label="Assinar">
+              <div className={`relative flex flex-col items-center gap-1 py-2.5 transition-all ${active ? "text-gold" : "text-gold-dark/60"}`}>
+                {active && (
+                  <motion.div layoutId="bottom-indicator" className="absolute -top-0.5 w-8 h-0.5 rounded-full bg-gold" />
+                )}
+                <Sparkles className={`${fontSize === "xlarge" ? "w-7 h-7" : "w-6 h-6"}`} />
+                <span className="text-xs font-bold">Premium</span>
+              </div>
+            </Link>
+          );
+        })()}
+        </LayoutGroup>
       </nav>
+
+      <PaywallModal
+        open={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        feature={paywallFeature}
+      />
     </>
   );
 }
