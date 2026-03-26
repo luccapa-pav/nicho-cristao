@@ -314,36 +314,36 @@ export default function CelulaPage() {
     const memberCount = group.members?.length ?? 0;
 
     return (
-      <div className="flex flex-col lg:flex-row overflow-hidden bg-gray-50 h-[calc(100dvh-3.5rem-5rem)] md:h-[100dvh]">
+      <div className="flex flex-col lg:flex-row overflow-hidden bg-gray-50 dark:bg-zinc-950 h-[calc(100dvh-3.5rem-5rem)] md:h-[100dvh]">
         {ToastElement}
 
         {/* ══ Sidebar esquerda (30%) — desktop only ══ */}
         <aside
-          className="hidden lg:flex flex-col w-72 xl:w-80 shrink-0 h-full bg-gradient-to-b from-amber-50/60 via-white to-white"
+          className="hidden lg:flex flex-col w-72 xl:w-80 shrink-0 h-full bg-gradient-to-b from-amber-50/60 via-white to-white dark:from-zinc-900 dark:via-zinc-900 dark:to-zinc-900 dark:border-r dark:border-zinc-800"
           style={{ boxShadow: "2px 0 16px rgba(0,0,0,0.05)" }}
         >
 
           {/* Fraternity header */}
-          <div className="p-5 border-b border-slate-100">
-            <p className="text-xs font-semibold text-slate-400 mb-1">Minha Fraternidade</p>
-            <h2 className="font-serif text-lg font-bold text-slate-900 leading-tight truncate">{group.name}</h2>
+          <div className="p-5 border-b border-slate-100 dark:border-zinc-800">
+            <p className="text-xs font-semibold text-slate-400 dark:text-zinc-500 mb-1">Minha Fraternidade</p>
+            <h2 className="font-serif text-lg font-bold text-slate-900 dark:text-zinc-100 leading-tight truncate">{group.name}</h2>
             <div className="flex items-center gap-1.5 mt-1">
               {group.isPrivate
-                ? <><Lock className="w-3 h-3 text-slate-400" /><span className="text-xs text-slate-400">Privada</span></>
-                : <><Globe className="w-3 h-3 text-slate-400" /><span className="text-xs text-slate-400">Pública</span></>}
-              <span className="text-slate-300 mx-1">·</span>
-              <Users className="w-3 h-3 text-slate-400" />
-              <span className="text-xs text-slate-400">{memberCount} membros</span>
+                ? <><Lock className="w-3 h-3 text-slate-400 dark:text-zinc-500" /><span className="text-xs text-slate-400 dark:text-zinc-500">Privada</span></>
+                : <><Globe className="w-3 h-3 text-slate-400 dark:text-zinc-500" /><span className="text-xs text-slate-400 dark:text-zinc-500">Pública</span></>}
+              <span className="text-slate-300 dark:text-zinc-700 mx-1">·</span>
+              <Users className="w-3 h-3 text-slate-400 dark:text-zinc-500" />
+              <span className="text-xs text-slate-400 dark:text-zinc-500">{memberCount} membros</span>
             </div>
           </div>
 
           {/* Progress + Members */}
-          <div className="p-5 border-b border-slate-100">
+          <div className="p-5 border-b border-slate-100 dark:border-zinc-800">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-semibold text-slate-600">Progresso do grupo</p>
+              <p className="text-xs font-semibold text-slate-600 dark:text-zinc-400">Progresso do grupo</p>
               <p className="text-xs font-bold text-gold-dark">{group.progress}%</p>
             </div>
-            <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+            <div className="h-1.5 rounded-full bg-slate-100 dark:bg-zinc-700 overflow-hidden">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-gold to-gold-dark transition-all"
                 style={{ width: `${group.progress}%` }}
@@ -355,7 +355,7 @@ export default function CelulaPage() {
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-gold-dark shadow-sm ${
                     m.role === "LEADER"
                       ? "bg-gradient-to-br from-gold/30 to-gold/10 border-2 border-gold/50"
-                      : "bg-gradient-to-br from-amber-100 to-amber-50 border-2 border-white"
+                      : "bg-gradient-to-br from-amber-100 to-amber-50 dark:from-zinc-700 dark:to-zinc-800 border-2 border-white dark:border-zinc-900"
                   }`}>
                     {m.name[0]}
                   </div>
@@ -368,7 +368,7 @@ export default function CelulaPage() {
                 </div>
               ))}
               {memberCount > 8 && (
-                <div className="w-8 h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-xs font-bold text-slate-500">
+                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-zinc-700 border-2 border-white dark:border-zinc-900 flex items-center justify-center text-xs font-bold text-slate-500 dark:text-zinc-400">
                   +{memberCount - 8}
                 </div>
               )}
@@ -377,18 +377,18 @@ export default function CelulaPage() {
 
           {/* Muro de Oração */}
           {groupPrayers.length > 0 && (
-            <div className="p-5 border-b border-slate-100 flex flex-col gap-3">
-              <p className="text-sm font-semibold text-slate-600">🙏 Muro de Oração</p>
+            <div className="p-5 border-b border-slate-100 dark:border-zinc-800 flex flex-col gap-3">
+              <p className="text-sm font-semibold text-slate-600 dark:text-zinc-300">🙏 Muro de Oração</p>
               {groupPrayers.slice(0, 4).map((gp) => (
-                <div key={gp.id} className="flex items-start gap-2.5 p-2.5 rounded-xl bg-amber-50/50">
+                <div key={gp.id} className="flex items-start gap-2.5 p-2.5 rounded-xl bg-amber-50/50 dark:bg-zinc-800/80">
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-slate-700 truncate">{gp.title}</p>
-                    <p className="text-xs text-slate-400">por {gp.author}</p>
+                    <p className="text-xs font-semibold text-slate-700 dark:text-zinc-200 truncate">{gp.title}</p>
+                    <p className="text-xs text-slate-400 dark:text-zinc-500">por {gp.author}</p>
                   </div>
                   <button
                     onClick={() => handlePrayFor(gp.id)}
                     disabled={prayingId === gp.id}
-                    className="flex items-center gap-1 px-2 py-1 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-gold-dark hover:bg-gray-50 transition-colors shrink-0 disabled:opacity-60"
+                    className="flex items-center gap-1 px-2 py-1 rounded-lg bg-white dark:bg-zinc-700 border border-slate-200 dark:border-zinc-600 text-xs font-semibold text-gold-dark hover:bg-gray-50 dark:hover:bg-zinc-600 transition-colors shrink-0 disabled:opacity-60"
                   >
                     🙏 {gp.prayedCount > 0 ? gp.prayedCount : "Orei"}
                   </button>
@@ -398,10 +398,10 @@ export default function CelulaPage() {
           )}
 
           {/* Convidar — desktop sidebar */}
-          <div className="px-4 py-3 border-t border-slate-100 shrink-0">
+          <div className="px-4 py-3 border-t border-slate-100 dark:border-zinc-800 shrink-0">
             <button
               onClick={handleOpenInvite}
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-semibold text-slate-600 hover:border-gold/40 hover:text-gold-dark transition-all"
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-sm font-semibold text-slate-600 dark:text-zinc-300 hover:border-gold/40 hover:text-gold-dark transition-all"
             >
               <Link2 className="w-4 h-4" />
               Convidar ({memberCount}/{group.maxMembers ?? 12})
@@ -409,27 +409,27 @@ export default function CelulaPage() {
           </div>
 
           {/* Feed da Comunidade */}
-          <div className="flex flex-col flex-1 min-h-0 border-t border-slate-100">
+          <div className="flex flex-col flex-1 min-h-0 border-t border-slate-100 dark:border-zinc-800">
             <div className="flex items-center justify-between px-5 pt-4 pb-2 shrink-0">
-              <p className="text-sm font-semibold text-slate-500">Feed da Comunidade</p>
+              <p className="text-sm font-semibold text-slate-500 dark:text-zinc-400">Feed da Comunidade</p>
               {posts.length > 0 && (
-                <span className="text-xs text-slate-400">{posts.length} posts</span>
+                <span className="text-xs text-slate-400 dark:text-zinc-500">{posts.length} posts</span>
               )}
             </div>
             <div className="flex-1 overflow-y-auto px-4 pb-4 flex flex-col gap-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {posts.length === 0 ? (
-                <p className="text-xs text-slate-400 italic px-1">Nenhuma mensagem ainda.</p>
+                <p className="text-xs text-slate-400 dark:text-zinc-600 italic px-1">Nenhuma mensagem ainda.</p>
               ) : (
                 posts.map((post) => (
-                  <div key={post.id} className="bg-gray-50 rounded-xl p-3 flex flex-col gap-1.5">
+                  <div key={post.id} className="bg-gray-50 dark:bg-zinc-800 rounded-xl p-3 flex flex-col gap-1.5">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-100 to-amber-50 flex items-center justify-center text-xs font-bold text-gold-dark shrink-0">
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-100 to-amber-50 dark:from-zinc-600 dark:to-zinc-700 flex items-center justify-center text-xs font-bold text-gold-dark shrink-0">
                         {post.author[0]}
                       </div>
-                      <p className="text-xs font-semibold text-slate-700 truncate">{post.author}</p>
-                      <p className="text-xs text-slate-400 ml-auto shrink-0">{post.createdAt}</p>
+                      <p className="text-xs font-semibold text-slate-700 dark:text-zinc-200 truncate">{post.author}</p>
+                      <p className="text-xs text-slate-400 dark:text-zinc-500 ml-auto shrink-0">{post.createdAt}</p>
                     </div>
-                    <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">{post.content}</p>
+                    <p className="text-xs text-slate-600 dark:text-zinc-300 leading-relaxed line-clamp-3">{post.content}</p>
                     {(post.reactions.AMEN > 0 || post.reactions.GLORY > 0) && (
                       <div className="flex gap-2 mt-0.5">
                         {post.reactions.AMEN > 0 && (
@@ -447,7 +447,7 @@ export default function CelulaPage() {
           </div>
 
           {/* Sair */}
-          <div className="mt-auto p-4 border-t border-slate-100 flex justify-center shrink-0">
+          <div className="mt-auto p-4 border-t border-slate-100 dark:border-zinc-800 flex justify-center shrink-0">
             <LeaveGroupButton />
           </div>
         </aside>
@@ -458,35 +458,35 @@ export default function CelulaPage() {
           {/* ── Chat ── */}
           <>
             {/* Mobile compact header */}
-            <div className="flex lg:hidden items-center justify-between px-4 py-3 bg-white border-b border-slate-100 shrink-0"
+            <div className="flex lg:hidden items-center justify-between px-4 py-3 bg-white dark:bg-zinc-900 border-b border-slate-100 dark:border-zinc-800 shrink-0"
               style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
               <div>
-                <p className="text-sm font-bold text-slate-800">{group.name}</p>
-                <p className="text-xs text-slate-400">{memberCount} membros</p>
+                <p className="text-sm font-bold text-slate-800 dark:text-zinc-100">{group.name}</p>
+                <p className="text-xs text-slate-400 dark:text-zinc-500">{memberCount} membros</p>
               </div>
               <button
                 onClick={handleOpenInvite}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-600 hover:border-gold/40 hover:text-gold-dark transition-all"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs font-semibold text-slate-600 dark:text-zinc-300 hover:border-gold/40 hover:text-gold-dark transition-all"
               >
                 <Link2 className="w-3.5 h-3.5" />
                 Convidar ({memberCount}/{group.maxMembers ?? 12})
               </button>
             </div>
             {/* Desktop chat header */}
-            <div className="hidden lg:flex items-center px-4 py-3 bg-white border-b border-slate-100 shrink-0"
+            <div className="hidden lg:flex items-center px-4 py-3 bg-white dark:bg-zinc-900 border-b border-slate-100 dark:border-zinc-800 shrink-0"
               style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
               <MessageCircle className="w-4 h-4 text-gold-dark mr-2" />
-              <p className="text-sm font-semibold text-slate-700">Chat da Fraternidade</p>
+              <p className="text-sm font-semibold text-slate-700 dark:text-zinc-300">Chat da Fraternidade</p>
             </div>
               {/* Messages area */}
               <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-3 min-h-0">
                 {posts.length === 0 ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center py-16">
-                    <div className="w-14 h-14 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center">
-                      <MessageCircle className="w-7 h-7 text-gray-300" />
+                    <div className="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 flex items-center justify-center">
+                      <MessageCircle className="w-7 h-7 text-gray-300 dark:text-zinc-600" />
                     </div>
-                    <p className="text-sm font-semibold text-slate-600">Seja o primeiro a compartilhar!</p>
-                    <p className="text-xs text-slate-400 max-w-[220px] leading-relaxed">
+                    <p className="text-sm font-semibold text-slate-600 dark:text-zinc-300">Seja o primeiro a compartilhar!</p>
+                    <p className="text-xs text-slate-400 dark:text-zinc-500 max-w-[220px] leading-relaxed">
                       Este é o espaço da sua fraternidade. Compartilhe gratidão, pedidos e vitórias.
                     </p>
                   </div>
@@ -509,17 +509,17 @@ export default function CelulaPage() {
                             className={`px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
                               isOwn
                                 ? "bg-gradient-to-br from-gold to-gold-dark text-white rounded-tr-sm"
-                                : "bg-white text-slate-800 rounded-tl-sm"
+                                : "bg-white dark:bg-zinc-800 text-slate-800 dark:text-zinc-100 rounded-tl-sm"
                             }`}
                             style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}
                           >
                             {msg.content}
                           </div>
                           <div className="flex items-center gap-2 px-1">
-                            <p className="text-xs text-slate-400">{msg.createdAt}</p>
+                            <p className="text-xs text-slate-400 dark:text-zinc-600">{msg.createdAt}</p>
                             <button
                               onClick={() => handleReact(msg.id, "AMEN")}
-                              className="text-xs text-slate-400 hover:text-gold-dark transition-colors"
+                              className="text-xs text-slate-400 dark:text-zinc-500 hover:text-gold-dark transition-colors"
                             >
                               🙏 {msg.reactions.AMEN > 0 ? msg.reactions.AMEN : ""}
                             </button>
@@ -534,7 +534,7 @@ export default function CelulaPage() {
 
               {/* Input bar — fixa no rodapé do chat */}
               <div
-                className="bg-white/90 backdrop-blur-sm px-4 py-3 flex items-center gap-2 shrink-0"
+                className="bg-white/90 dark:bg-zinc-900/95 backdrop-blur-sm px-4 py-3 flex items-center gap-2 shrink-0 border-t border-transparent dark:border-zinc-800"
                 style={{ boxShadow: "0 -2px 16px rgba(0,0,0,0.07)" }}
               >
                 {/* Text input — pill shape */}
@@ -545,7 +545,7 @@ export default function CelulaPage() {
                     onChange={(e) => setChatInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSendChat()}
                     placeholder="Compartilhe com sua fraternidade…"
-                    className="w-full bg-white border border-slate-200 rounded-full px-5 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold/40 transition-all"
+                    className="w-full bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-full px-5 py-2.5 text-sm text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold/40 transition-all"
                     style={{ boxShadow: "0 1px 6px rgba(0,0,0,0.06)" }}
                   />
                 </div>
@@ -566,22 +566,22 @@ export default function CelulaPage() {
 
           {/* ── Muro de Oração colapsável (mobile only) ── */}
           {groupPrayers.length > 0 && (
-            <details className="lg:hidden shrink-0 border-t border-slate-100 bg-white">
-              <summary className="flex items-center gap-2 px-4 py-3 cursor-pointer text-sm font-semibold text-slate-600 list-none select-none">
+            <details className="lg:hidden shrink-0 border-t border-slate-100 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+              <summary className="flex items-center gap-2 px-4 py-3 cursor-pointer text-sm font-semibold text-slate-600 dark:text-zinc-300 list-none select-none">
                 <span>🙏</span> Muro de Oração ({groupPrayers.length})
-                <ChevronRight className="w-4 h-4 text-slate-400 ml-auto" />
+                <ChevronRight className="w-4 h-4 text-slate-400 dark:text-zinc-500 ml-auto" />
               </summary>
               <div className="px-4 pb-4 flex flex-col gap-3">
                 {groupPrayers.slice(0, 4).map((gp) => (
-                  <div key={gp.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
+                  <div key={gp.id} className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-zinc-800 rounded-xl">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-slate-700">{gp.title}</p>
-                      <p className="text-xs text-slate-400 mt-0.5">por {gp.author}</p>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-zinc-100">{gp.title}</p>
+                      <p className="text-xs text-slate-400 dark:text-zinc-500 mt-0.5">por {gp.author}</p>
                     </div>
                     <button
                       onClick={() => handlePrayFor(gp.id)}
                       disabled={prayingId === gp.id}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-gold-dark hover:bg-gray-50 transition-colors shrink-0 disabled:opacity-60"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white dark:bg-zinc-700 border border-slate-200 dark:border-zinc-600 text-xs font-semibold text-gold-dark hover:bg-gray-50 dark:hover:bg-zinc-600 transition-colors shrink-0 disabled:opacity-60"
                     >
                       🙏 {gp.prayedCount > 0 ? gp.prayedCount : ""} Orei
                     </button>
@@ -603,21 +603,21 @@ export default function CelulaPage() {
                 exit={{ opacity: 0, scale: 0.95, y: 8 }}
                 transition={{ duration: 0.25 }}
                 onClick={(e) => e.stopPropagation()}
-                className="w-full max-w-sm bg-white rounded-2xl shadow-2xl p-7 flex flex-col items-center gap-5 text-center"
+                className="w-full max-w-sm bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl p-7 flex flex-col items-center gap-5 text-center"
               >
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-divine">
                   <Lock className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="font-serif text-xl font-bold text-slate-900">Recurso Premium</h2>
-                  <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-                    <strong className="text-slate-700">{chatPaywallFeature}</strong> é exclusivo do plano Premium. Eleve sua experiência espiritual e lidere sua comunidade com mais poder.
+                  <h2 className="font-serif text-xl font-bold text-slate-900 dark:text-zinc-100">Recurso Premium</h2>
+                  <p className="text-sm text-slate-500 dark:text-zinc-400 mt-2 leading-relaxed">
+                    <strong className="text-slate-700 dark:text-zinc-200">{chatPaywallFeature}</strong> é exclusivo do plano Premium. Eleve sua experiência espiritual e lidere sua comunidade com mais poder.
                   </p>
                 </div>
                 <a href="/assinar" className="btn-divine w-full py-3.5 text-sm font-bold">
                   Desbloquear Premium
                 </a>
-                <button onClick={() => setShowChatPaywall(false)} className="text-xs text-slate-400 hover:text-slate-600">
+                <button onClick={() => setShowChatPaywall(false)} className="text-xs text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300">
                   Agora não
                 </button>
               </motion.div>
