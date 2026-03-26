@@ -23,12 +23,17 @@ model User {
   passwordHash  String?
   avatarUrl     String?
   bio           String?
+  phone         String?
   church        String?
   city          String?
   verse         String?
   ministry      String?
-  plan          Plan     @default(FREE)
-  createdAt     DateTime @default(now())
+  plan                  Plan     @default(FREE)
+  trialEndsAt           DateTime?
+  stripeCustomerId      String?
+  stripeSubscriptionId  String?
+  planExpiresAt         DateTime?
+  createdAt             DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   // Relações
