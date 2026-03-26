@@ -591,7 +591,7 @@ export default function DashboardPage() {
                   onPray={() => {}}
                 />
               ) : (
-                <div className="relative overflow-hidden rounded-2xl border border-gold/25 p-8 flex flex-col items-center gap-5 text-center justify-center min-h-[220px] fraternity-empty-card"
+                <div className="relative overflow-hidden rounded-2xl border border-gold/25 dark:border-gold/35 p-8 flex flex-col items-center gap-5 text-center justify-center min-h-[220px] fraternity-empty-card"
                   style={{
                     boxShadow: "0 4px 32px rgba(212,175,55,0.13), 0 1px 6px rgba(212,175,55,0.07)",
                   }}
@@ -605,8 +605,8 @@ export default function DashboardPage() {
                     <Users className="w-8 h-8 text-white" />
                   </div>
                   <div className="relative">
-                    <p className="font-serif text-xl font-bold text-slate-800">Descubra sua Fraternidade</p>
-                    <p className="text-sm text-slate-500 mt-1 max-w-xs mx-auto">
+                    <p className="font-serif text-xl font-bold text-slate-800 dark:text-zinc-100">Descubra sua Fraternidade</p>
+                    <p className="text-sm text-slate-500 dark:text-zinc-400 mt-1 max-w-xs mx-auto">
                       Entre em uma fraternidade e participe da comunidade de gratidão e oração.
                     </p>
                   </div>
