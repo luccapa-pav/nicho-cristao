@@ -447,11 +447,16 @@ export default function DashboardPage() {
 
           {/* ── Devocional do Dia ──────────────────────────────── */}
           <div>
-            <div className="flex flex-col items-center text-center mb-4 gap-0.5">
-              <h2 className="font-serif text-2xl md:text-3xl font-semibold text-slate-800 tracking-tight">
+            <div className="flex flex-col items-center text-center mb-6 gap-2">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-gold-dark/70">Sua jornada espiritual</p>
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-slate-800 tracking-tight">
                 Devocional do Dia
               </h2>
-              <div className="w-8 h-px bg-gold/40 mt-1" />
+              <div className="flex items-center gap-3 mt-1">
+                <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold/50" />
+                <span className="text-gold text-base select-none">✦</span>
+                <div className="h-px w-12 bg-gradient-to-l from-transparent to-gold/50" />
+              </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
               <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={3} className="md:col-span-1 lg:col-span-1 h-full">

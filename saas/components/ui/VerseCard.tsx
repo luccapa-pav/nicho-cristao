@@ -160,14 +160,9 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
         />
 
         {/* ── HEADER ── */}
-        <div className="flex items-center justify-between mb-3 relative z-10">
-          {/* espaçador espelha os botões à direita */}
-          <div className="flex items-center gap-1 opacity-0 pointer-events-none" aria-hidden="true">
-            <div className="min-h-[32px] min-w-[32px]" />
-            <div className="min-h-[32px] min-w-[32px]" />
-          </div>
-
-          <div className="flex flex-col items-center gap-0.5">
+        <div className="relative mb-3 z-10">
+          {/* Título centralizado */}
+          <div className="flex flex-col items-center gap-1 text-center">
             <div className="flex items-center gap-2">
               <BookOpen className="w-3.5 h-3.5 text-gold-dark" />
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-gold-dark leading-none">
@@ -175,13 +170,14 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
               </p>
             </div>
             {theme && (
-              <span className="text-[0.7rem] font-semibold text-slate-500 leading-none mt-0.5">
+              <span className="px-2.5 py-0.5 rounded-full bg-gold/10 border border-gold/25 text-[0.7rem] font-semibold text-gold-dark leading-none">
                 {theme}
               </span>
             )}
           </div>
 
-          <div className="flex items-center gap-1 shrink-0">
+          {/* Botões no canto direito absoluto */}
+          <div className="absolute top-0 right-0 flex items-center gap-1 shrink-0">
             {getFavs().length > 0 && (
               <button
                 onClick={() => setShowFavs(true)}
