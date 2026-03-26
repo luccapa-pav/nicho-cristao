@@ -18,7 +18,8 @@ function formatTime(s: number) {
 }
 
 export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProps) {
-  const hasAudio = Boolean(audioUrl);
+  const [audioError, setAudioError] = useState(false);
+  const hasAudio = Boolean(audioUrl) && !audioError;
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState(0.8);
@@ -232,7 +233,7 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
         </div>
       </div>
 
-      {audioUrl ? (
+      {audioUrl && !audioError ? (
         <audio
           ref={audioRef}
           src={audioUrl}
@@ -240,6 +241,7 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
           onPause={() => setPlaying(false)}
           onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
           onEnded={() => setPlaying(false)}
+          onError={() => { setAudioError(true); setPlaying(false); }}
           preload="metadata"
         />
       ) : (

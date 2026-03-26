@@ -164,7 +164,7 @@ export function ShareStreakModal({ open, onClose, days, verse, verseRef }: Share
     // URL
     ctx.font = "24px Georgia, serif";
     ctx.fillStyle = "rgba(212,175,55,0.35)";
-    ctx.fillText("luz-divina.vercel.app", W / 2, H - 28);
+    ctx.fillText("viver-com-jesus.vercel.app", W / 2, H - 28);
 
     setImageUrl(canvas.toDataURL("image/jpeg", 0.92));
   }, [open, days, v, vRef, userName]);

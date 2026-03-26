@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Brain, CheckCircle, XCircle, RotateCcw } from "lucide-react";
 import { PremiumGate } from "@/components/ui/PremiumGate";
+import { PageSymbolCard } from "@/components/ui/PageBackground";
 
 function blankWords(verse: string, phase: 2 | 3 | 4): string {
   const words = verse.split(" ");
@@ -134,8 +135,11 @@ function VersiculoContent() {
 
 export default function VersiculoPage() {
   return (
-    <Suspense fallback={<div className="flex justify-center py-20"><div className="w-6 h-6 rounded-full border-2 border-gold border-t-transparent animate-spin" /></div>}>
-      <VersiculoContent />
-    </Suspense>
+    <>
+      <PageSymbolCard symbol="scroll" />
+      <Suspense fallback={<div className="flex justify-center py-20"><div className="w-6 h-6 rounded-full border-2 border-gold border-t-transparent animate-spin" /></div>}>
+        <VersiculoContent />
+      </Suspense>
+    </>
   );
 }

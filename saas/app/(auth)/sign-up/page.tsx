@@ -35,8 +35,12 @@ export default function SignUpPage() {
     }
 
     // Auto login após cadastro
-    await signIn("credentials", { email, password, redirect: false });
-    router.push("/dashboard");
+    const loginRes = await signIn("credentials", { email, password, redirect: false });
+    if (loginRes?.error) {
+      router.push("/sign-in");
+    } else {
+      router.push("/dashboard");
+    }
   }
 
   return (

@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Política de Privacidade — Luz Divina",
-  description: "Saiba como o Luz Divina coleta, usa e protege seus dados pessoais.",
+  title: "Política de Privacidade — Vida com Jesus",
+  description: "Saiba como o Vida com Jesus coleta, usa e protege seus dados pessoais.",
 };
 
 export default function PrivacidadePage() {
@@ -23,7 +23,7 @@ export default function PrivacidadePage() {
           <section>
             <h2 className="text-lg font-semibold text-slate-800 mb-3">1. Quem somos</h2>
             <p>
-              O <strong>Luz Divina</strong> é um aplicativo cristão de crescimento espiritual. O responsável pelo tratamento dos seus dados pessoais é o operador do serviço Luz Divina, com sede no Brasil.
+              O <strong>Vida com Jesus</strong> é um aplicativo cristão de crescimento espiritual. O responsável pelo tratamento dos seus dados pessoais é o operador do serviço Vida com Jesus, com sede no Brasil.
             </p>
           </section>
 

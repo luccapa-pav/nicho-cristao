@@ -8,8 +8,8 @@ export async function POST() {
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const userId = session.user.id;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const todayStr = new Date().toISOString().split("T")[0];
+  const today = new Date(`${todayStr}T00:00:00.000Z`);
 
   const devotional = await prisma.devotional.findFirst({
     where: { date: { gte: today, lt: new Date(today.getTime() + 86400000) } },

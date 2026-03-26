@@ -2,10 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 export async function POST(_req: NextRequest, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { limited } = await checkRateLimit(`prayed:${session.user.id}:${params.id}`, 1, 1440);
+  if (limited) return NextResponse.json({ error: "Você já orou por este pedido hoje" }, { status: 429 });
 
   const prayer = await prisma.prayer.findUnique({ where: { id: params.id } });
   if (!prayer) return NextResponse.json({ error: "Not found" }, { status: 404 });

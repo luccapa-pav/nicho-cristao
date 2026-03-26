@@ -10,7 +10,7 @@ export async function GET() {
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
     select: {
-      id: true, name: true, email: true, bio: true,
+      id: true, name: true, email: true, emailVerified: true, bio: true,
       church: true, city: true, verse: true, ministry: true, avatarUrl: true, plan: true, createdAt: true,
       streak: { select: { currentStreak: true, longestStreak: true, totalDays: true } },
       _count: {
@@ -22,7 +22,10 @@ export async function GET() {
     },
   });
 
-  return NextResponse.json(user);
+  if (!user) return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
+
+  const isAdmin = !!process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL;
+  return NextResponse.json({ ...user, isAdmin });
 }
 
 export async function PUT(req: NextRequest) {

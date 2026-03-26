@@ -4,7 +4,8 @@ import { createNotification } from "@/lib/notifications";
 
 export async function GET(req: NextRequest) {
   const auth = req.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  const isVercel = req.headers.get("x-vercel-cron") === "1";
+  if (!isVercel && auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

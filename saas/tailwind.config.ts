@@ -72,8 +72,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans:  ["var(--font-inter)", "system-ui", "sans-serif"],
-        serif: ["var(--font-playfair)", "Georgia", "serif"],
+        sans:  ["var(--font-lora)", "Georgia", "serif"],
+        serif: ["var(--font-cormorant)", "Georgia", "serif"],
       },
       borderRadius: {
         lg:   "var(--radius)",

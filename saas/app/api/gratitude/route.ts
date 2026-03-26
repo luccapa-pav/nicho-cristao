@@ -42,17 +42,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Conteúdo inválido (máx. 600 caracteres)" }, { status: 400 });
   }
 
-  const post = await prisma.gratitudePost.create({
-    data: { userId: session.user.id, content: content.trim() },
-    include: { user: { select: { name: true } } },
-  });
-
-  return NextResponse.json({
-    id: post.id,
-    author: post.user.name,
-    content: post.content,
-    createdAt: post.createdAt.toISOString(),
-    reactions: { AMEN: 0, GLORY: 0 },
-    userReacted: null,
-  }, { status: 201 });
+  try {
+    const post = await prisma.gratitudePost.create({
+      data: { userId: session.user.id, content: content.trim() },
+      include: { user: { select: { name: true } } },
+    });
+    return NextResponse.json({
+      id: post.id,
+      author: post.user.name,
+      content: post.content,
+      createdAt: post.createdAt.toISOString(),
+      reactions: { AMEN: 0, GLORY: 0 },
+      userReacted: null,
+    }, { status: 201 });
+  } catch {
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
+  }
 }

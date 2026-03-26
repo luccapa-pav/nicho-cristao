@@ -32,7 +32,11 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  await sendVerificationEmail(user.email, user.name, token.token);
+  try {
+    await sendVerificationEmail(user.email, user.name, token.token);
+  } catch {
+    return NextResponse.json({ error: "Falha ao enviar email. Tente novamente." }, { status: 500 });
+  }
 
   return NextResponse.json({ ok: true });
 }

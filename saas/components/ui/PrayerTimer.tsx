@@ -2,22 +2,23 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Play, Pause, RotateCcw, Music, Moon, Minimize2, Volume2, VolumeX } from "lucide-react";
+import { X, Play, Pause, RotateCcw, Music, Moon, Minimize2, Volume2, VolumeX, Lock } from "lucide-react";
 import Link from "next/link";
 import confetti from "canvas-confetti";
 import { usePlan } from "@/hooks/usePlan";
-import { PremiumGate } from "@/components/ui/PremiumGate";
 import { PRAYER_VERSES, PrayerMode } from "@/lib/prayerVerses";
 
 interface PrayerTimerProps {
   open: boolean;
   onClose: () => void;
+  initialDuration?: number;
+  autoStartMusic?: boolean;
 }
 
 const AMBIENT_MUSIC_URL = "https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73467.mp3";
 
 const MODES: PrayerMode[] = ["Livre", "Adoração", "Intercessão", "Lectio Divina"];
-const FREE_DURATION = 300; // 5 min
+const FREE_DURATION = 600; // 10 min
 
 function formatTime(seconds: number) {
   const m = Math.floor(seconds / 60).toString().padStart(2, "0");
@@ -43,10 +44,11 @@ function playBell(audioCtxRef: React.MutableRefObject<AudioContext | null>) {
   } catch { /* AudioContext may not be available */ }
 }
 
-export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
+export function PrayerTimer({ open, onClose, initialDuration = FREE_DURATION, autoStartMusic = false }: PrayerTimerProps) {
   const { isPremium } = usePlan();
   const [mode, setMode] = useState<PrayerMode>("Livre");
-  const [duration, setDuration] = useState(FREE_DURATION);
+  const effectiveDuration = !isPremium ? Math.min(initialDuration, FREE_DURATION) : initialDuration;
+  const [duration, setDuration] = useState(effectiveDuration);
   const [elapsed, setElapsed] = useState(0);
   const [running, setRunning] = useState(false);
   const [finished, setFinished] = useState(false);
@@ -67,6 +69,15 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
       ambientAudioRef.current = null;
     };
   }, []);
+
+  // Sync duration + auto-start music when modal opens
+  useEffect(() => {
+    if (open) {
+      const eff = !isPremium ? Math.min(initialDuration, FREE_DURATION) : initialDuration;
+      setDuration(eff);
+      if (autoStartMusic && isPremium) setMusicPlaying(true);
+    }
+  }, [open, initialDuration, isPremium, autoStartMusic]);
 
   // Reset when closed
   useEffect(() => {
@@ -126,7 +137,7 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
 
   const verseList = PRAYER_VERSES[mode];
   const [manualVerseOffset, setManualVerseOffset] = useState(0);
-  const verseIndex = (Math.floor(elapsed / 45) + manualVerseOffset) % verseList.length;
+  const verseIndex = verseList.length > 0 ? (Math.floor(elapsed / 45) + manualVerseOffset) % verseList.length : 0;
   const currentVerse = verseList[verseIndex];
 
   // TTS — lê o versículo quando troca (a cada 45s)
@@ -236,10 +247,11 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
               </div>
             )}
 
-            {/* Duration selector — PREMIUM only */}
-            {isPremium && !meditacao && (
+            {/* Duration selector */}
+            {!meditacao && (
               <div className="flex gap-2 flex-wrap">
-                {durationMinutes.map((min) => (
+                {/* 5 e 10min — sempre disponíveis */}
+                {[5, 10].map((min) => (
                   <button
                     key={min}
                     onClick={() => { setDuration(min * 60); handleReset(); }}
@@ -252,13 +264,42 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
                     {min}min
                   </button>
                 ))}
+
+                {/* Premium: durações longas */}
+                {isPremium ? (
+                  [15, 30, 60].map((min) => (
+                    <button
+                      key={min}
+                      onClick={() => { setDuration(min * 60); handleReset(); }}
+                      disabled={running}
+                      aria-label={`${min} minutos`}
+                      className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all ${
+                        duration === min * 60 ? "bg-gold text-white shadow-sm" : "bg-divine-50 text-slate-500 hover:bg-divine-100"
+                      }`}
+                    >
+                      {min}min
+                    </button>
+                  ))
+                ) : (
+                  /* Vitrine desfocada para free — 15/30/60 bloqueados */
+                  [15, 30, 60].map((min) => (
+                    <span
+                      key={min}
+                      style={{ filter: "grayscale(80%) blur(3px)", userSelect: "none" }}
+                      className="px-3.5 py-2 rounded-full text-sm font-medium bg-divine-50 text-slate-500 pointer-events-none"
+                      aria-hidden="true"
+                    >
+                      {min}min
+                    </span>
+                  ))
+                )}
               </div>
             )}
 
-            {/* Ambient music toggle */}
+            {/* Música ambiente + TTS — vitrine desfocada para free, funcional para premium */}
             {!meditacao && (
-              <div className="flex justify-center gap-2 flex-wrap">
-                <PremiumGate feature="Música ambiente de oração">
+              isPremium ? (
+                <div className="flex justify-center gap-2 flex-wrap">
                   <button
                     onClick={() => setMusicPlaying((v) => !v)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
@@ -270,8 +311,6 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
                     {musicPlaying ? <Pause className="w-4 h-4" /> : <Music className="w-4 h-4" />}
                     {musicPlaying ? "Pausar música" : "Música ambiente"}
                   </button>
-                </PremiumGate>
-                <PremiumGate feature="Versículos em voz alta">
                   <button
                     onClick={() => setTtsEnabled((v) => !v)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
@@ -283,8 +322,47 @@ export function PrayerTimer({ open, onClose }: PrayerTimerProps) {
                     {ttsEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
                     {ttsEnabled ? "Voz ativa" : "Ouvir versículos"}
                   </button>
-                </PremiumGate>
-              </div>
+                </div>
+              ) : (
+                /* Soft Lock — Vitrine para free */
+                <div className="relative rounded-2xl overflow-hidden">
+                  {/* Conteúdo borrado */}
+                  <div
+                    className="flex justify-center gap-2 flex-wrap p-3 bg-divine-50/40 rounded-2xl"
+                    style={{ filter: "grayscale(80%) blur(4px)", pointerEvents: "none", userSelect: "none" }}
+                    aria-hidden="true"
+                  >
+                    <span className="flex items-center gap-2 px-4 py-2 rounded-full border border-gold/30 bg-white text-gold-dark text-sm font-medium">
+                      <Music className="w-4 h-4" /> Música ambiente
+                    </span>
+                    <span className="flex items-center gap-2 px-4 py-2 rounded-full border border-gold/30 bg-white text-gold-dark text-sm font-medium">
+                      <VolumeX className="w-4 h-4" /> Ouvir versículos
+                    </span>
+                    <span className="flex items-center gap-2 px-4 py-2 rounded-full border border-gold/30 bg-white text-gold-dark text-sm font-medium">
+                      <Music className="w-4 h-4" /> Sons da natureza
+                    </span>
+                  </div>
+                  {/* Overlay com cadeado */}
+                  <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <div
+                      className="bg-white/96 border border-gold/25 rounded-2xl px-4 py-4 text-center shadow-xl flex flex-col items-center gap-2"
+                      style={{ boxShadow: "0 0 30px rgba(212,175,55,0.18), 0 4px 20px rgba(0,0,0,0.08)" }}
+                    >
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold/20 to-gold-dark/10 border border-gold/30 flex items-center justify-center">
+                        <Lock className="w-4 h-4 text-gold-dark" />
+                      </div>
+                      <p className="font-semibold text-slate-800 text-xs leading-tight max-w-[180px]">
+                        Música Ilimitada e Timers Longos
+                      </p>
+                      <Link href="/assinar" onClick={onClose}>
+                        <button className="btn-divine py-2 px-4 text-xs">
+                          Desbloquear Experiência Premium
+                        </button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              )
             )}
 
             {/* Timer circle */}

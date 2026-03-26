@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { BookOpen, Lock, ChevronRight } from "lucide-react";
 import { usePlan } from "@/hooks/usePlan";
+import { PageSymbolCard } from "@/components/ui/PageBackground";
 
 interface Plan {
   id: string;
@@ -22,18 +23,21 @@ export default function PlanoLeituraPage() {
 
   useEffect(() => {
     fetch("/api/reading/plans")
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then((d) => setPlans(d.plans ?? []))
-      .catch(() => {})
+      .catch(() => setPlans([]))
       .finally(() => setLoading(false));
   }, []);
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
+    <>
+      <div className="p-6 max-w-2xl mx-auto">
       <div className="mb-6">
         <h1 className="font-serif text-2xl font-bold text-slate-800">Planos de Leitura</h1>
         <p className="text-sm text-slate-400 mt-1">Leia a Bíblia com estrutura e consistência</p>
       </div>
+
+      <PageSymbolCard symbol="crown-thorns" />
 
       {loading && (
         <div className="flex flex-col gap-3 animate-pulse">
@@ -46,14 +50,14 @@ export default function PlanoLeituraPage() {
       {!loading && plans.length === 0 && (
         <div className="divine-card p-10 flex flex-col items-center gap-3 text-center">
           <BookOpen className="w-10 h-10 text-divine-200" />
-          <h2 className="font-semibold text-slate-600">Nenhum plano disponível ainda</h2>
+          <h2 className="font-semibold text-slate-600">Comece um plano de leitura hoje 📖</h2>
           <p className="text-sm text-slate-400">Novos planos serão adicionados em breve. Fique atento!</p>
         </div>
       )}
 
       <div className="flex flex-col gap-3">
         {plans.map((plan, i) => {
-          const locked = plan.isPremium && !isPremium;
+          const locked = false;
           const progress = plan.progress;
           const pct = progress ? Math.round((progress.currentDay / plan.daysTotal) * 100) : 0;
 
@@ -110,5 +114,6 @@ export default function PlanoLeituraPage() {
         })}
       </div>
     </div>
+    </>
   );
 }

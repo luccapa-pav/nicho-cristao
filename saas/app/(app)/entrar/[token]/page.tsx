@@ -65,7 +65,7 @@ export default function EntrarPage() {
           <div className="w-14 h-14 rounded-3xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-divine mb-3">
             <span className="text-white text-2xl">✝</span>
           </div>
-          <h1 className="font-serif text-2xl font-bold text-slate-800">Luz Divina</h1>
+          <h1 className="font-serif text-2xl font-bold text-slate-800">Vida com Jesus</h1>
           <p className="text-sm text-slate-400 mt-1">Convite para fraternidade</p>
         </div>
 

@@ -9,20 +9,24 @@ export async function POST(req: NextRequest, { params }: { params: { slug: strin
 
   const userId = session.user.id;
 
-  // Verify premium from DB (not JWT — plan may have changed)
-  const user = await prisma.user.findUnique({ where: { id: userId }, select: { plan: true } });
-  if (user?.plan === "FREE") {
-    return NextResponse.json({ error: "Premium required" }, { status: 403 });
-  }
-
   const plan = await prisma.readingPlan.findUnique({ where: { slug: params.slug } });
   if (!plan) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const { day } = await req.json();
+  let day: number;
+  try {
+    const body = await req.json();
+    day = Number(body.day);
+  } catch {
+    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+  }
+  if (!Number.isFinite(day) || day < 0) {
+    return NextResponse.json({ error: "Invalid day" }, { status: 400 });
+  }
+  day = Math.min(day, plan.daysTotal);
 
   const progress = await prisma.readingProgress.upsert({
     where: { userId_planId: { userId, planId: plan.id } },
-    update: { currentDay: Math.max(day, 0) },
+    update: { currentDay: day },
     create: { userId, planId: plan.id, currentDay: day },
   });
 

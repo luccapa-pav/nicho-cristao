@@ -4,7 +4,8 @@ import { createNotification } from "@/lib/notifications";
 
 export async function GET(req: NextRequest) {
   const auth = req.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  const isVercel = req.headers.get("x-vercel-cron") === "1";
+  if (!isVercel && auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -12,6 +13,7 @@ export async function GET(req: NextRequest) {
   today.setHours(0, 0, 0, 0);
 
   // Usuários com streak >= 3 que NÃO fizeram check-in hoje
+  // TODO: implement cursor-based pagination for large user bases
   const atRisk = await prisma.streak.findMany({
     where: {
       currentStreak: { gte: 3 },
@@ -21,6 +23,7 @@ export async function GET(req: NextRequest) {
       userId: true,
       currentStreak: true,
     },
+    take: 500,
   });
 
   if (atRisk.length === 0) {

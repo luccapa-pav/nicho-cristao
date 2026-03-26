@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     const messages = tokens.map((t) => ({
       token: t.token,
-      notification: { title: title ?? "Luz Divina", body: body ?? "Não esqueça seu devocional hoje! 🙏" },
+      notification: { title: title ?? "Vida com Jesus", body: body ?? "Não esqueça seu devocional hoje! 🙏" },
       webpush: { fcmOptions: { link: "/dashboard" } },
     }));
 

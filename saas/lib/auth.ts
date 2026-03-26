@@ -22,7 +22,7 @@ const providers: NextAuthOptions["providers"] = [
       const valid = await compare(credentials.password, user.passwordHash);
       if (!valid) return null;
 
-      return { id: user.id, name: user.name, email: user.email, image: user.avatarUrl ?? null, plan: user.plan };
+      return { id: user.id, name: user.name, email: user.email, image: user.avatarUrl ?? null, plan: user.plan, trialEndsAt: user.trialEndsAt?.toISOString() ?? null };
     },
   }),
 ];
@@ -63,29 +63,35 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === "google") {
         const dbUser = await prisma.user.findUnique({
           where: { email: token.email! },
-          select: { id: true, plan: true },
+          select: { id: true, plan: true, trialEndsAt: true },
         });
         if (dbUser) {
           token.id = dbUser.id;
           token.plan = dbUser.plan;
+          token.trialEndsAt = dbUser.trialEndsAt?.toISOString() ?? null;
         }
       } else if (user) {
         token.id = user.id;
         token.plan = (user as { plan?: string | null }).plan ?? "FREE";
+        token.trialEndsAt = (user as { trialEndsAt?: string | null }).trialEndsAt ?? null;
       }
       if (trigger === "update") {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
-          select: { plan: true },
+          select: { plan: true, trialEndsAt: true },
         });
-        if (dbUser) token.plan = dbUser.plan;
+        if (dbUser) {
+          token.plan = dbUser.plan;
+          token.trialEndsAt = dbUser.trialEndsAt?.toISOString() ?? null;
+        }
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as { id?: string; plan?: string | null }).id = token.id as string;
-        (session.user as { id?: string; plan?: string | null }).plan = token.plan ?? "FREE";
+        (session.user as { id?: string; plan?: string | null; trialEndsAt?: string | null }).id = token.id as string;
+        (session.user as { id?: string; plan?: string | null; trialEndsAt?: string | null }).plan = token.plan ?? "FREE";
+        (session.user as { id?: string; plan?: string | null; trialEndsAt?: string | null }).trialEndsAt = (token.trialEndsAt as string | null) ?? null;
       }
       return session;
     },

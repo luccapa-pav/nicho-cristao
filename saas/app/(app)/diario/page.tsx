@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PlusCircle, Trash2, BookMarked, Loader2, X, Search, Download, BarChart2, Lock, ChevronDown } from "lucide-react";
 import { usePlan } from "@/hooks/usePlan";
+import { PageSymbolCard } from "@/components/ui/PageBackground";
 
 type JournalMood = "GRATIDAO" | "APRENDIZADO" | "DESAFIO" | "LOUVOR" | "PAZ" | "ADORACAO" | "ARREPENDIMENTO" | "RENOVACAO";
 
@@ -35,6 +36,7 @@ export default function DiarioPage() {
   const [content, setContent] = useState("");
   const [mood, setMood] = useState<JournalMood>("GRATIDAO");
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [moodOpen, setMoodOpen] = useState(false);
   const moodRef = useRef<HTMLDivElement>(null);
@@ -42,6 +44,7 @@ export default function DiarioPage() {
   const [showAnalytics, setShowAnalytics] = useState(false);
 
   useEffect(() => {
+    if (!formOpen) return;
     const handleClick = (e: MouseEvent) => {
       if (moodRef.current && !moodRef.current.contains(e.target as Node)) {
         setMoodOpen(false);
@@ -49,7 +52,7 @@ export default function DiarioPage() {
     };
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
+  }, [formOpen]);
 
   useEffect(() => {
     fetch("/api/journal")
@@ -59,26 +62,38 @@ export default function DiarioPage() {
   }, []);
 
   const handleCreate = useCallback(async () => {
-    if (!content.trim()) return;
+    if (!content.trim() || saving) return;
     setSaving(true);
-    const res = await fetch("/api/journal", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content, mood }),
-    });
-    if (res.ok) {
-      const entry = await res.json();
-      setEntries((prev) => [entry, ...prev]);
-      setContent("");
-      setMood("GRATIDAO");
-      setFormOpen(false);
+    setSaveError(false);
+    try {
+      const res = await fetch("/api/journal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content, mood }),
+      });
+      if (res.ok) {
+        const entry = await res.json();
+        setEntries((prev) => [entry, ...prev]);
+        setContent("");
+        setMood("GRATIDAO");
+        setFormOpen(false);
+      } else {
+        setSaveError(true);
+      }
+    } catch {
+      setSaveError(true);
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
-  }, [content, mood]);
+  }, [content, mood, saving]);
 
   const handleDelete = useCallback(async (id: string) => {
-    await fetch(`/api/journal/${id}`, { method: "DELETE" });
-    setEntries((prev) => prev.filter((e) => e.id !== id));
+    const res = await fetch(`/api/journal/${id}`, { method: "DELETE" }).catch(() => null);
+    if (res && (res.ok || res.status === 204)) {
+      setEntries((prev) => prev.filter((e) => e.id !== id));
+    } else {
+      alert("Erro ao excluir. Tente novamente.");
+    }
     setConfirmDelete(null);
   }, []);
 
@@ -115,15 +130,19 @@ export default function DiarioPage() {
       return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
     });
     const total = thisMonth.length || 1;
-    return MOOD_ORDER.map((m) => ({
-      mood: m,
-      count: thisMonth.filter((e) => e.mood === m).length,
-      pct: Math.round((thisMonth.filter((e) => e.mood === m).length / total) * 100),
-    }));
+    return {
+      items: MOOD_ORDER.map((m) => ({
+        mood: m,
+        count: thisMonth.filter((e) => e.mood === m).length,
+        pct: Math.round((thisMonth.filter((e) => e.mood === m).length / total) * 100),
+      })),
+      hasThisMonth: thisMonth.length > 0,
+    };
   }, [entries]);
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-6 min-h-full relative z-10">
+    <>
+      <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-6 min-h-full relative z-10">
 
       {/* ── Hero ── */}
       <motion.div
@@ -139,7 +158,7 @@ export default function DiarioPage() {
           <div className="absolute w-20 h-20 rounded-full border border-gold/15 animate-ping" style={{ animationDuration: "3s" }} />
           <div className="absolute w-14 h-14 rounded-full border border-gold/20" />
           <motion.span
-            className="text-4xl relative z-10"
+            className="text-4xl relative z-10 emoji-glow"
             animate={{ rotate: [-3, 3, -3], scale: [1, 1.04, 1] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
@@ -166,6 +185,8 @@ export default function DiarioPage() {
           {entries.length === 0 ? "Escrever minha primeira reflexão" : "Nova reflexão"}
         </motion.button>
       </motion.div>
+
+      <PageSymbolCard symbol="quill" />
 
       {/* ── Ferramentas Premium ── */}
       {entries.length > 0 && (
@@ -238,7 +259,7 @@ export default function DiarioPage() {
               </button>
             </div>
             <div className="space-y-2.5">
-              {moodStats.map(({ mood: m, count, pct }) => {
+              {moodStats.items.map(({ mood: m, count, pct }) => {
                 const def = MOODS[m];
                 return (
                   <div key={m} className="flex items-center gap-3">
@@ -257,7 +278,7 @@ export default function DiarioPage() {
                 );
               })}
             </div>
-            {entries.length === 0 && (
+            {!moodStats.hasThisMonth && (
               <p className="text-xs text-slate-400 text-center mt-2">Nenhuma entrada este mês ainda.</p>
             )}
           </motion.div>
@@ -382,6 +403,11 @@ export default function DiarioPage() {
 
               {/* Ações */}
               <div className="space-y-2 pt-1">
+                {saveError && (
+                  <p className="text-xs text-red-500 text-center bg-red-50 rounded-lg px-3 py-2">
+                    ❌ Erro ao guardar. Tente novamente.
+                  </p>
+                )}
                 <button
                   onClick={handleCreate}
                   disabled={saving || !content.trim()}
@@ -500,5 +526,6 @@ export default function DiarioPage() {
         </div>
       )}
     </div>
+    </>
   );
 }

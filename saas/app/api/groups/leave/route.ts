@@ -18,6 +18,15 @@ export async function POST() {
   const remaining = await prisma.groupMember.count({ where: { groupId: membership.groupId } });
   if (remaining === 0) {
     await prisma.group.delete({ where: { id: membership.groupId } });
+  } else if (membership.role === "LEADER") {
+    // Transferir liderança para o membro mais antigo
+    const next = await prisma.groupMember.findFirst({
+      where: { groupId: membership.groupId },
+      orderBy: { joinedAt: "asc" },
+    });
+    if (next) {
+      await prisma.groupMember.update({ where: { id: next.id }, data: { role: "LEADER" } });
+    }
   }
 
   return new NextResponse(null, { status: 204 });

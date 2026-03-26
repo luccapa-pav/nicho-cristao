@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Termos de Uso — Luz Divina",
-  description: "Leia os Termos de Uso do aplicativo Luz Divina.",
+  title: "Termos de Uso — Vida com Jesus",
+  description: "Leia os Termos de Uso do aplicativo Vida com Jesus.",
 };
 
 export default function TermosPage() {
@@ -23,14 +23,14 @@ export default function TermosPage() {
           <section>
             <h2 className="text-lg font-semibold text-slate-800 mb-3">1. Aceitação dos Termos</h2>
             <p>
-              Ao criar uma conta ou usar o <strong>Luz Divina</strong>, você concorda com estes Termos de Uso. Se não concordar com algum ponto, não utilize o serviço.
+              Ao criar uma conta ou usar o <strong>Vida com Jesus</strong>, você concorda com estes Termos de Uso. Se não concordar com algum ponto, não utilize o serviço.
             </p>
           </section>
 
           <section>
             <h2 className="text-lg font-semibold text-slate-800 mb-3">2. Descrição do serviço</h2>
             <p>
-              O Luz Divina é um aplicativo de crescimento espiritual cristão que oferece devocionais diários, controle de streak de oração, diário espiritual, fraternidades virtuais, pedidos de oração e feed de gratidão. Parte dos recursos está disponível no plano gratuito; outros são exclusivos do plano Premium.
+              O Vida com Jesus é um aplicativo de crescimento espiritual cristão que oferece devocionais diários, controle de streak de oração, diário espiritual, fraternidades virtuais, pedidos de oração e feed de gratidão. Parte dos recursos está disponível no plano gratuito; outros são exclusivos do plano Premium.
             </p>
           </section>
 
@@ -46,7 +46,7 @@ export default function TermosPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-slate-800 mb-3">4. Conduta do usuário</h2>
-            <p>Ao usar o Luz Divina, você se compromete a:</p>
+            <p>Ao usar o Vida com Jesus, você se compromete a:</p>
             <ul className="list-disc pl-5 space-y-1 mt-2">
               <li>Não publicar conteúdo ofensivo, discriminatório, falso ou que viole direitos de terceiros.</li>
               <li>Não utilizar o app para fins comerciais sem autorização.</li>
@@ -69,7 +69,7 @@ export default function TermosPage() {
           <section>
             <h2 className="text-lg font-semibold text-slate-800 mb-3">6. Propriedade intelectual</h2>
             <p>
-              Todo o conteúdo do Luz Divina (textos, devocionais, design, código) é de propriedade do serviço ou licenciado por terceiros. Você não pode reproduzir, distribuir ou criar obras derivadas sem autorização expressa.
+              Todo o conteúdo do Vida com Jesus (textos, devocionais, design, código) é de propriedade do serviço ou licenciado por terceiros. Você não pode reproduzir, distribuir ou criar obras derivadas sem autorização expressa.
             </p>
             <p className="mt-2">
               Ao publicar conteúdo no app (gratidões, pedidos de oração), você nos concede uma licença não exclusiva para exibi-lo dentro da plataforma.
@@ -86,7 +86,7 @@ export default function TermosPage() {
           <section>
             <h2 className="text-lg font-semibold text-slate-800 mb-3">8. Limitação de responsabilidade</h2>
             <p>
-              O Luz Divina é fornecido "como está". Não nos responsabilizamos por danos indiretos, perda de dados ou interrupção do serviço. Nossa responsabilidade total está limitada ao valor pago pelo usuário nos últimos 3 meses.
+              O Vida com Jesus é fornecido "como está". Não nos responsabilizamos por danos indiretos, perda de dados ou interrupção do serviço. Nossa responsabilidade total está limitada ao valor pago pelo usuário nos últimos 3 meses.
             </p>
           </section>
 

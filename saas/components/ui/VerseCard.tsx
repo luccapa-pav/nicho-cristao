@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -24,11 +24,30 @@ function getFavs(): FavVerse[] {
   try { return JSON.parse(localStorage.getItem("fav-verses") ?? "[]"); } catch { return []; }
 }
 
+function wrapText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
+  const words = text.split(" ");
+  let line = "";
+  let currentY = y;
+  for (const word of words) {
+    const testLine = line ? `${line} ${word}` : word;
+    if (ctx.measureText(testLine).width > maxWidth && line) {
+      ctx.fillText(line, x, currentY);
+      line = word;
+      currentY += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  if (line) ctx.fillText(line, x, currentY);
+  return currentY + lineHeight;
+}
+
 export function VerseCard({ verse, reference, theme }: VerseCardProps) {
   const [favorited, setFavorited] = useState(() =>
     getFavs().some((f) => f.reference === reference && f.verse === verse)
   );
   const [showFavs, setShowFavs] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const toggleFav = useCallback(() => {
     const favs = getFavs();
@@ -43,8 +62,91 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
     }
   }, [favorited, verse, reference]);
 
+  const generateImage = useCallback(async () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const SIZE = 1080;
+    canvas.width = SIZE;
+    canvas.height = SIZE;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Background
+    const bg = ctx.createLinearGradient(0, 0, SIZE, SIZE);
+    bg.addColorStop(0, "#FFF9EE");
+    bg.addColorStop(1, "#FEF3C7");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, SIZE, SIZE);
+
+    // Gold border
+    ctx.strokeStyle = "#D4AF37";
+    ctx.lineWidth = 12;
+    ctx.strokeRect(36, 36, SIZE - 72, SIZE - 72);
+
+    // Inner border
+    ctx.strokeStyle = "rgba(212,175,55,0.3)";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(56, 56, SIZE - 112, SIZE - 112);
+
+    // App name
+    ctx.fillStyle = "#B8860B";
+    ctx.font = "bold 36px Georgia, serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Vida com Jesus", SIZE / 2, 120);
+
+    // Decorative line
+    ctx.strokeStyle = "rgba(212,175,55,0.5)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(SIZE / 2 - 120, 140);
+    ctx.lineTo(SIZE / 2 + 120, 140);
+    ctx.stroke();
+
+    // Quote mark
+    ctx.fillStyle = "rgba(212,175,55,0.25)";
+    ctx.font = "bold 200px Georgia, serif";
+    ctx.textAlign = "left";
+    ctx.fillText("\u201C", 80, 360);
+
+    // Verse text
+    ctx.fillStyle = "#1E293B";
+    ctx.font = "italic 52px Georgia, serif";
+    ctx.textAlign = "center";
+    const finalY = wrapText(ctx, verse, SIZE / 2, 380, SIZE - 200, 76);
+
+    // Reference
+    ctx.fillStyle = "#B8860B";
+    ctx.font = "bold 44px Georgia, serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`\u2014 ${reference}`, SIZE / 2, Math.max(finalY + 40, 800));
+
+    // Footer
+    ctx.fillStyle = "rgba(184,134,11,0.5)";
+    ctx.font = "28px Georgia, serif";
+    ctx.textAlign = "center";
+    ctx.fillText("\u2720 Compartilhado com amor pelo Vida com Jesus", SIZE / 2, SIZE - 80);
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+      const file = new File([blob], "versiculo.png", { type: "image/png" });
+      try {
+        if (navigator.canShare?.({ files: [file] })) {
+          await navigator.share({ files: [file], title: reference });
+        } else {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "versiculo-viver-com-jesus.png";
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+      } catch { /* cancelled */ }
+    }, "image/png");
+  }, [verse, reference]);
+
   return (
     <>
+      <canvas ref={canvasRef} style={{ display: "none" }} aria-hidden="true" />
       <motion.div
         className="divine-card p-4 relative overflow-hidden h-full flex flex-col"
         initial={{ opacity: 0, y: 16 }}
@@ -150,6 +252,7 @@ export function VerseCard({ verse, reference, theme }: VerseCardProps) {
               <Share2 className="w-3 h-3" />
               Compartilhar
             </button>
+
             <Link href={`/versiculo?verse=${encodeURIComponent(verse)}&ref=${encodeURIComponent(reference)}`}>
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-gold-dark transition-colors py-1 px-2 rounded-lg hover:bg-divine-50 cursor-pointer">
                 <Brain className="w-3 h-3" />

@@ -6,6 +6,7 @@ import { BookOpen, ChevronDown, Lock, CheckCircle2, Sparkles, Star } from "lucid
 import Link from "next/link";
 import { PremiumGate } from "@/components/ui/PremiumGate";
 import { usePlan } from "@/hooks/usePlan";
+import { PageSymbolCard } from "@/components/ui/PageBackground";
 
 interface ReadingEntry {
   id: string;
@@ -57,7 +58,13 @@ export default function DevocionalPage() {
 
   const handleMarkDay = async (slug: string) => {
     setMarking(slug);
-    const res = await fetch(`/api/reading/plans/${slug}/progress`, { method: "POST" });
+    const plan = plans.find((p) => p.slug === slug);
+    const nextDay = (plan?.currentDay ?? 0) + 1;
+    const res = await fetch(`/api/reading/plans/${slug}/progress`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ day: nextDay }),
+    });
     if (res.ok) {
       setPlans((prev) => prev.map((p) => p.slug === slug ? { ...p, currentDay: p.currentDay + 1 } : p));
     }
@@ -75,7 +82,8 @@ export default function DevocionalPage() {
   const lockedPlans = plans.filter((p) => !isPremium && p.isPremium);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-divine-50 via-amber-50/30 to-white">
+    <>
+      <div className="min-h-screen bg-gradient-to-b from-divine-50 via-amber-50/30 to-white">
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 pb-32 md:pb-14 flex flex-col gap-7">
 
       {/* Hero */}
@@ -113,6 +121,8 @@ export default function DevocionalPage() {
       </motion.div>
 
       <div className="divine-divider -my-1" />
+
+      <PageSymbolCard symbol="dove" />
 
       {/* Plans grid */}
       <div className="flex flex-col gap-5">
@@ -445,5 +455,6 @@ export default function DevocionalPage() {
 
     </div>
     </div>
+    </>
   );
 }

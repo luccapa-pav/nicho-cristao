@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { ChevronDown, ChevronUp, Search, Play, Pause } from "lucide-react";
 import { PremiumGate } from "@/components/ui/PremiumGate";
 import { usePlan } from "@/hooks/usePlan";
 
@@ -13,6 +13,7 @@ interface HistoryEntry {
   theme: string | null;
   date: string;
   completedAt: string;
+  audioUrl: string | null;
 }
 
 export function DevotionalHistory() {
@@ -22,6 +23,7 @@ export function DevotionalHistory() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [playingId, setPlayingId] = useState<string | null>(null);
 
   // Debounce search
   useEffect(() => {
@@ -45,7 +47,8 @@ export function DevotionalHistory() {
   }, [open, debouncedSearch, fetchHistory]);
 
   const FREE_LIMIT = 3;
-  const visibleHistory = isPremium ? history : history.slice(0, FREE_LIMIT);
+  const DOM_LIMIT = 50;
+  const visibleHistory = (isPremium ? history : history.slice(0, FREE_LIMIT)).slice(0, DOM_LIMIT);
   const hasMore = !isPremium && history.length >= FREE_LIMIT;
 
   return (
@@ -103,23 +106,45 @@ export function DevotionalHistory() {
                 <>
                   <div className="flex flex-col gap-1.5 max-h-52 overflow-y-auto custom-scroll pr-0.5">
                     {visibleHistory.map((entry) => (
-                      <div key={entry.id} className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg border border-divine-100 bg-amber-50/20 hover:bg-amber-50/40 transition-colors">
-                        <div className="flex-shrink-0 w-8 text-center">
-                          <p className="text-[8px] font-bold uppercase tracking-wide text-gold-dark/60 leading-none">
-                            {new Date(entry.date).toLocaleDateString("pt-BR", { month: "short" })}
-                          </p>
-                          <p className="text-sm font-bold text-gold leading-none tabular-nums">
-                            {new Date(entry.date).getDate()}
-                          </p>
+                      <div key={entry.id} className="flex flex-col rounded-lg border border-divine-100 bg-amber-50/20 hover:bg-amber-50/40 transition-colors overflow-hidden">
+                        <div className="flex items-center gap-2.5 px-2.5 py-2">
+                          <div className="flex-shrink-0 w-8 text-center">
+                            <p className="text-[8px] font-bold uppercase tracking-wide text-gold-dark/60 leading-none">
+                              {new Date(entry.date).toLocaleDateString("pt-BR", { month: "short" })}
+                            </p>
+                            <p className="text-sm font-bold text-gold leading-none tabular-nums">
+                              {new Date(entry.date).getDate()}
+                            </p>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-semibold text-slate-700 leading-tight line-clamp-1">{entry.title}</p>
+                            <p className="text-[10px] text-slate-400 mt-0.5">{entry.verseRef}</p>
+                          </div>
+                          {entry.theme && (
+                            <span className="flex-shrink-0 text-[9px] font-bold uppercase tracking-widest bg-divine-100 text-gold-dark px-1.5 py-0.5 rounded-full hidden sm:inline">
+                              {entry.theme}
+                            </span>
+                          )}
+                          {entry.audioUrl && (
+                            <button
+                              onClick={() => setPlayingId(playingId === entry.id ? null : entry.id)}
+                              className="flex-shrink-0 p-1.5 rounded-full bg-divine-50 border border-divine-200 text-gold-dark hover:bg-divine-100 transition-colors"
+                              aria-label={playingId === entry.id ? "Pausar" : "Ouvir devocional"}
+                            >
+                              {playingId === entry.id
+                                ? <Pause className="w-3 h-3" />
+                                : <Play className="w-3 h-3" />}
+                            </button>
+                          )}
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-xs font-semibold text-slate-700 leading-tight line-clamp-1">{entry.title}</p>
-                          <p className="text-[10px] text-slate-400 mt-0.5">{entry.verseRef}</p>
-                        </div>
-                        {entry.theme && (
-                          <span className="flex-shrink-0 text-[9px] font-bold uppercase tracking-widest bg-divine-100 text-gold-dark px-1.5 py-0.5 rounded-full hidden sm:inline">
-                            {entry.theme}
-                          </span>
+                        {playingId === entry.id && entry.audioUrl && (
+                          <audio
+                            src={entry.audioUrl}
+                            autoPlay
+                            controls
+                            className="w-full h-8 px-2 pb-1.5"
+                            onEnded={() => setPlayingId(null)}
+                          />
                         )}
                       </div>
                     ))}

@@ -1,7 +1,26 @@
+"use client";
+
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
+  const { status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "unauthenticated") { router.replace("/login"); return; }
+    if (status === "authenticated") {
+      fetch("/api/admin/stats")
+        .then((r) => { if (r.status === 401) router.replace("/dashboard"); })
+        .catch(() => router.replace("/dashboard"));
+    }
+  }, [status, router]);
+
+  if (status === "loading" || status === "unauthenticated") return null;
+
   return (
     <div className="min-h-screen bg-[#FFFEF9]">
       <header className="border-b border-amber-100 px-6 py-3 flex items-center gap-4">

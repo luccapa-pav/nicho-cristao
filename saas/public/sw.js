@@ -1,4 +1,4 @@
-const CACHE = "luz-divina-v1";
+const CACHE = "luz-divina-v2";
 const STATIC = ["/", "/dashboard", "/manifest.json"];
 
 self.addEventListener("install", (e) =>

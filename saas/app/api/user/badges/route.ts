@@ -10,7 +10,7 @@ export async function GET() {
 
   const userId = session.user.id;
 
-  const [user, streak, prayerCount, answeredCount, memberCount, postWithReactions] = await Promise.all([
+  const [user, streak, prayerCount, answeredCount, memberCount, postWithReactions, acceptedInvites] = await Promise.all([
     prisma.user.findUnique({ where: { id: userId }, select: { plan: true } }),
     prisma.streak.findUnique({ where: { userId } }),
     prisma.prayer.count({ where: { userId } }),
@@ -19,6 +19,7 @@ export async function GET() {
     prisma.gratitudePost.count({
       where: { userId, reactions: { some: {} } },
     }),
+    prisma.groupInvite.count({ where: { senderId: userId, status: "ACCEPTED" } }),
   ]);
 
   const currentStreak = streak?.currentStreak ?? 0;
@@ -41,6 +42,7 @@ export async function GET() {
       case "orador":         earned = prayerCount >= 50; progress = Math.min(100, (prayerCount / 50) * 100); break;
       case "evangelista":    earned = postWithReactions >= 10; progress = Math.min(100, (postWithReactions / 10) * 100); break;
       case "familia":        earned = user?.plan === "FAMILY"; break;
+      case "missionario_digital": earned = acceptedInvites >= 1; break;
     }
 
     return { badgeId: def.id, earned, progress };

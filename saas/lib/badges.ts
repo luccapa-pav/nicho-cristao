@@ -1,7 +1,8 @@
 export type BadgeId =
   | "streak_7" | "streak_30" | "streak_90" | "streak_180" | "streak_365"
   | "first_prayer" | "first_answered" | "cell_member"
-  | "discipulo_fiel" | "orador" | "evangelista" | "familia";
+  | "discipulo_fiel" | "orador" | "evangelista" | "familia"
+  | "missionario_digital";
 
 export interface BadgeDef {
   id: BadgeId;
@@ -24,4 +25,5 @@ export const BADGE_DEFS: BadgeDef[] = [
   { id: "orador",         label: "Orador",           description: "50 orações registradas",              icon: "📿", isPremium: true },
   { id: "evangelista",    label: "Evangelista",      description: "10 posts com reações no feed",        icon: "📣", isPremium: true },
   { id: "familia",        label: "Família",          description: "Plano Família ativo",                 icon: "❤️", isPremium: true },
+  { id: "missionario_digital", label: "Missionário Digital", description: "Convidou um irmão para a fraternidade", icon: "📣", isPremium: false },
 ];

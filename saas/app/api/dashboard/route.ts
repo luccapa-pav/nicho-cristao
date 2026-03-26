@@ -19,28 +19,33 @@ export async function GET(request: Request) {
   const todayUTC = new Date(today.toISOString().split("T")[0] + "T00:00:00.000Z");
 
   if (quick) {
-    const [streak, devotional] = await Promise.all([
-      prisma.streak.findUnique({ where: { userId } }),
-      prisma.devotional.findFirst({
-        where: { date: { gte: todayUTC, lt: new Date(todayUTC.getTime() + 86400000) } },
-        include: { logs: { where: { userId } } },
-      }),
-    ]);
-    return NextResponse.json({
-      streak: streak ?? { currentStreak: 0, longestStreak: 0 },
-      devotional: devotional ? {
-        id: devotional.id,
-        title: devotional.title,
-        verse: devotional.verse,
-        verseRef: devotional.verseRef,
-        audioUrl: devotional.audioUrl ?? "",
-        duration: devotional.audioDuration ?? 0,
-        theme: devotional.theme ?? "",
-        completedToday: devotional.logs.length > 0,
-      } : null,
-    }, { headers: { "Cache-Control": "private, max-age=15" } });
+    try {
+      const [streak, devotional] = await Promise.all([
+        prisma.streak.findUnique({ where: { userId } }),
+        prisma.devotional.findFirst({
+          where: { date: { gte: todayUTC, lt: new Date(todayUTC.getTime() + 86400000) } },
+          include: { logs: { where: { userId } } },
+        }),
+      ]);
+      return NextResponse.json({
+        streak: streak ?? { currentStreak: 0, longestStreak: 0 },
+        devotional: devotional ? {
+          id: devotional.id,
+          title: devotional.title,
+          verse: devotional.verse,
+          verseRef: devotional.verseRef,
+          audioUrl: devotional.audioUrl ?? "",
+          duration: devotional.audioDuration ?? 0,
+          theme: devotional.theme ?? "",
+          completedToday: devotional.logs.length > 0,
+        } : null,
+      }, { headers: { "Cache-Control": "private, max-age=15" } });
+    } catch {
+      return NextResponse.json({ error: "Erro interno" }, { status: 500 });
+    }
   }
 
+  try {
   const [user, streak, devotional, prayers, posts, membership] = await Promise.all([
     prisma.user.findUnique({ where: { id: userId }, select: { name: true, plan: true, emailVerified: true } }),
 
@@ -73,6 +78,8 @@ export async function GET(request: Request) {
           include: {
             members: {
               select: {
+                role: true,
+                joinedAt: true,
                 user: {
                   select: {
                     id: true,
@@ -112,7 +119,8 @@ export async function GET(request: Request) {
     isOnline: m.user.streak?.lastCheckIn
       ? new Date(m.user.streak.lastCheckIn) > onlineThreshold
       : false,
-  })) ?? [];
+    role: m.role as "LEADER" | "MEMBER",
+  })).sort((a, b) => (a.role === "LEADER" ? -1 : b.role === "LEADER" ? 1 : 0)) ?? [];
   const maxMembers = group
     ? computeEffectiveMax(group.members.map((m) => m.user.plan ?? "FREE"))
     : 12;
@@ -145,4 +153,7 @@ export async function GET(request: Request) {
   }, {
     headers: { "Cache-Control": "private, max-age=30, stale-while-revalidate=60" },
   });
+  } catch {
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
+  }
 }

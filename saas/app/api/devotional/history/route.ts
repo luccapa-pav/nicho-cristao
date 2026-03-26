@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     },
     include: {
       devotional: {
-        select: { id: true, title: true, verseRef: true, theme: true, date: true },
+        select: { id: true, title: true, verseRef: true, theme: true, date: true, audioUrl: true },
       },
     },
     orderBy: { listenedAt: "desc" },
@@ -40,6 +40,7 @@ export async function GET(req: NextRequest) {
       theme: l.devotional.theme,
       date: l.devotional.date.toISOString(),
       completedAt: l.listenedAt.toISOString(),
+      audioUrl: l.devotional.audioUrl ?? null,
     })),
     isPremium: premium,
   });

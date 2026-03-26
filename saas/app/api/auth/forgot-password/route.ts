@@ -4,8 +4,14 @@ import { sendPasswordResetEmail } from "@/lib/email";
 import { checkRateLimit } from "@/lib/rateLimit";
 
 export async function POST(req: NextRequest) {
-  const { email } = await req.json();
+  let email: string;
+  try {
+    ({ email } = await req.json());
+  } catch {
+    return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+  }
   if (!email) return NextResponse.json({ error: "Email obrigatório" }, { status: 400 });
+  if (typeof email !== "string" || !email.includes("@")) return NextResponse.json({ ok: true });
 
   const { limited } = await checkRateLimit(`forgot:${email.toLowerCase().trim()}`, 3, 15);
   if (limited) {

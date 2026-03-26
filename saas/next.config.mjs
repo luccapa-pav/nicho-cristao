@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  compress: true,
+  poweredByHeader: false,
   async redirects() {
     return [
       { source: "/celula", destination: "/fraternidade", permanent: true },
@@ -7,7 +9,7 @@ const nextConfig = {
     ];
   },
   experimental: {
-    typedRoutes: false,
+    optimizePackageImports: ["lucide-react", "framer-motion"],
   },
   images: {
     remotePatterns: [
@@ -15,6 +17,7 @@ const nextConfig = {
       { protocol: "https", hostname: "**.googleusercontent.com" },
       { protocol: "https", hostname: "**.cloudinary.com" },
     ],
+    formats: ["image/avif", "image/webp"],
   },
 };
 

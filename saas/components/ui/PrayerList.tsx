@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Clock, Plus, X, Heart, Users, Share2, Trash2 } from "lucide-react";
 import Link from "next/link";
 import confetti from "canvas-confetti";
+import { useToast } from "@/components/ui/Toast";
 
 interface Prayer {
   id: string;
@@ -52,6 +53,7 @@ export function PrayerList({
   groupPrayers = [], isLoading, isPremium,
 }: PrayerListProps) {
   const [showForm, setShowForm] = useState(false);
+  const { showToast, ToastElement } = useToast();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState(false);
@@ -61,6 +63,7 @@ export function PrayerList({
   const [awaitingTestimony, setAwaitingTestimony] = useState<string | null>(null);
   const [testimonyText, setTestimonyText] = useState("");
   const [copied, setCopied] = useState(false);
+  const [shareTestimony, setShareTestimony] = useState<{ title: string; text: string } | null>(null);
 
   useEffect(() => {
     if (autoOpenForm) { setShowForm(true); onFormOpened?.(); }
@@ -92,19 +95,38 @@ export function PrayerList({
   };
 
   const confirmAnswer = async (id: string) => {
-    const ok = await onMarkAnswered(id, testimonyText.trim() || undefined);
+    const capturedTestimony = testimonyText.trim();
+    const capturedTitle = prayers.find((p) => p.id === id)?.title ?? "";
+    const ok = await onMarkAnswered(id, capturedTestimony || undefined);
     setAwaitingTestimony(null);
     setTestimonyText("");
     if (ok) {
       navigator.vibrate?.([30, 30, 60, 30, 120]);
       confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors: ["#D4AF37", "#F5E27A", "#FFFFFF", "#FFA500"] });
+      if (capturedTestimony) {
+        setShareTestimony({ title: capturedTitle, text: capturedTestimony });
+      }
     }
+  };
+
+  const handleShareTestimony = async () => {
+    if (!shareTestimony) return;
+    const content = `🙏 Oração respondida!\n\n"${shareTestimony.title}"\n\n✦ Testemunho: ${shareTestimony.text}`;
+    const res = await fetch("/api/gratitude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content }),
+    }).catch(() => null);
+    setShareTestimony(null);
+    if (res?.ok) showToast("✦ Testemunho partilhado na gratidão!");
+    else showToast("❌ Não foi possível partilhar agora.");
   };
 
   const handlePrayed = async (id: string) => {
     navigator.vibrate?.([20]);
     onPrayedFor?.(id);
     await fetch(`/api/prayers/${id}/prayed`, { method: "POST" }).catch(() => {});
+    showToast("🙏 Orei por isso!");
   };
 
   const handleExport = async () => {
@@ -112,7 +134,7 @@ export function PrayerList({
     const total = prayers.length;
     const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
     const text =
-      `📖 Meu Diário de Oração — Luz Divina\n\n` +
+      `📖 Meu Diário de Oração — Vida com Jesus\n\n` +
       `✦ ${total} pedidos no total\n✓ ${answered} respondidos por Deus (${pct}%)\n` +
       `🙏 ${total - answered} aguardando\n\n"Apresentai os vossos pedidos a Deus" — Fp 4:6`;
     try {
@@ -126,6 +148,7 @@ export function PrayerList({
 
   return (
     <div className="divine-card p-5 flex flex-col gap-4 h-full">
+      {ToastElement}
 
       {/* ── Header ── */}
       <div className="flex items-center justify-between">
@@ -226,7 +249,7 @@ export function PrayerList({
       </AnimatePresence>
 
       {/* ── Tabs ── */}
-      <div className="flex gap-1.5 flex-wrap">
+      <div className="flex gap-1.5 flex-wrap justify-center">
         {(["ALL", "PENDING", "ANSWERED"] as const).map((f) => (
           <button
             key={f}
@@ -269,6 +292,28 @@ export function PrayerList({
           )}
         </button>
       </div>
+
+      {/* ── Testemunho compartilhar ── */}
+      <AnimatePresence>
+        {shareTestimony && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex flex-col gap-2"
+          >
+            <p className="text-sm font-semibold text-emerald-700">🎉 Glória a Deus! Compartilhar com a fraternidade?</p>
+            <div className="flex gap-2">
+              <button onClick={handleShareTestimony} className="btn-divine py-2 text-sm flex-1">
+                Compartilhar testemunho
+              </button>
+              <button onClick={() => setShareTestimony(null)} className="text-sm text-slate-400 px-3">
+                Não
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Lista ── */}
       <div className="flex flex-col gap-2 flex-1 overflow-y-auto custom-scroll pr-0.5 max-h-[55vh] md:max-h-[32rem]">
@@ -363,7 +408,20 @@ export function PrayerList({
               </div>
             )
           ) : isPremium ? (
-            grouped.map(({ month, items }) => (
+            grouped.length === 0 ? (
+              <div className="text-center py-10 flex flex-col items-center gap-3">
+                <div className="w-16 h-16 rounded-full bg-divine-50 border border-divine-200 flex items-center justify-center shadow-[0_0_18px_rgba(212,175,55,0.12)]">
+                  <Heart className="w-7 h-7 text-gold/60" />
+                </div>
+                <p className="text-base font-semibold text-slate-700">Nenhum pedido aqui ainda</p>
+                <p className="text-sm text-slate-500 max-w-[220px] leading-relaxed text-center italic">
+                  &ldquo;Apresentai os vossos pedidos a Deus em toda oração&rdquo; — Fp 4:6
+                </p>
+                <button onClick={() => setShowForm(true)} className="btn-divine py-2.5 px-6 text-sm mt-1">
+                  + Adicionar primeiro pedido
+                </button>
+              </div>
+            ) : grouped.map(({ month, items }) => (
               <div key={month}>
                 <p className="text-[10px] text-gold-dark font-bold uppercase tracking-widest py-1.5 px-1 capitalize">
                   {month}
@@ -381,6 +439,7 @@ export function PrayerList({
                     onCancelTestimony={() => setAwaitingTestimony(null)}
                     onPrayed={handlePrayed}
                     onDelete={onDeletePrayer}
+                    onDeleteError={() => showToast("❌ Erro ao excluir pedido.")}
                   />
                 ))}
               </div>
@@ -410,7 +469,7 @@ export function PrayerList({
 
 function PrayerItem({
   prayer, index, awaitingTestimony, testimonyText,
-  onSetAwaiting, onTestimonyChange, onConfirmAnswer, onCancelTestimony, onPrayed, onDelete,
+  onSetAwaiting, onTestimonyChange, onConfirmAnswer, onCancelTestimony, onPrayed, onDelete, onDeleteError,
 }: {
   prayer: Prayer;
   index: number;
@@ -422,9 +481,20 @@ function PrayerItem({
   onCancelTestimony: () => void;
   onPrayed: (id: string) => void;
   onDelete?: (id: string) => void;
+  onDeleteError?: () => void;
 }) {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [shimmer, setShimmer] = useState(false);
+
+  // Trigger shimmer when prayer transitions to answered
+  useEffect(() => {
+    if (prayer.status === "ANSWERED") {
+      setShimmer(true);
+      const t = setTimeout(() => setShimmer(false), 1200);
+      return () => clearTimeout(t);
+    }
+  }, [prayer.status]);
 
   const handleDelete = async () => {
     setConfirmingDelete(false);
@@ -432,17 +502,19 @@ function PrayerItem({
     if (res && (res.ok || res.status === 204)) {
       onDelete?.(prayer.id);
     } else {
-      // Revert — re-show the item (parent keeps it in state, just reset local confirm)
-      setConfirmingDelete(false);
+      onDeleteError?.();
     }
   };
 
   return (
     <motion.div
       initial={{ opacity: 0, x: -8 }}
-      animate={{ opacity: 1, x: 0 }}
+      animate={shimmer
+        ? { opacity: 1, x: 0, boxShadow: ["0 0 0px rgba(212,175,55,0)", "0 0 24px rgba(212,175,55,0.7)", "0 0 8px rgba(212,175,55,0.3)"] }
+        : { opacity: 1, x: 0 }
+      }
       exit={{ opacity: 0, x: 8 }}
-      transition={{ delay: index * 0.04 }}
+      transition={{ delay: index * 0.04, ...(shimmer ? { duration: 1, times: [0, 0.4, 1] } : {}) }}
       className={`flex flex-col p-3 rounded-xl border transition-all ${
         prayer.status === "ANSWERED"
           ? "border-gold/40 bg-gradient-to-r from-divine-50 to-divine-100/60 shadow-[0_2px_12px_rgba(212,175,55,0.18)]"
