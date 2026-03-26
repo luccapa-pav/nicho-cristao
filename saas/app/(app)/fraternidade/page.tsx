@@ -731,21 +731,20 @@ export default function CelulaPage() {
         </div>
       </div>
 
-      {/* ── Overlay: Caixa "Descubra sua Fraternidade" ── */}
-      <div className="absolute inset-0 z-30 flex items-center justify-center px-4">
+      {/* ── Overlay: Caixa "Descubra sua Fraternidade" — fixo na tela ── */}
+      <div className="fixed inset-0 z-30 flex items-center justify-center px-4 bg-black/30 dark:bg-black/60 backdrop-blur-[2px]">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="w-full max-w-sm backdrop-blur-md rounded-2xl shadow-2xl border border-divine-200/80 p-7 flex flex-col items-center gap-6 relative overflow-hidden"
+          className="w-full max-w-sm rounded-2xl shadow-2xl border border-gold/30 dark:border-gold/20 p-7 flex flex-col items-center gap-5 relative overflow-hidden"
           style={{ background: "linear-gradient(160deg, #FEFDF8 0%, #FBF8F0 60%, #F9F5E8 100%)" }}
         >
-          {/* Textura de fundo sutil — padrão de conexão */}
-          <svg
-            className="absolute inset-0 w-full h-full pointer-events-none"
-            aria-hidden="true"
-            style={{ opacity: 0.045 }}
-          >
+          {/* Dark mode overlay */}
+          <div className="absolute inset-0 hidden dark:block rounded-2xl" style={{ background: "linear-gradient(160deg, #1a1810 0%, #1e1c12 60%, #201e14 100%)" }} />
+
+          {/* Textura de fundo sutil */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true" style={{ opacity: 0.05 }}>
             <defs>
               <pattern id="conn-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
                 <circle cx="20" cy="20" r="1.5" fill="#B8960C" />
@@ -759,47 +758,45 @@ export default function CelulaPage() {
 
           {/* Icon + Title */}
           <div className="text-center relative z-10">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-divine-100 to-divine-50 border border-divine-200 flex items-center justify-center mx-auto mb-4 shadow-sm">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gold/20 to-gold/10 border border-gold/30 flex items-center justify-center mx-auto mb-4 shadow-sm">
               <Users className="w-8 h-8 text-gold-dark" />
             </div>
-            <h2 className="font-serif text-2xl font-bold text-slate-900">Descubra sua Fraternidade</h2>
-            <p className="text-sm text-slate-500 mt-2 leading-relaxed max-w-[260px] mx-auto">
+            <h2 className="font-serif text-2xl font-bold text-slate-900 dark:text-zinc-100">Descubra sua Fraternidade</h2>
+            <p className="text-sm text-slate-500 dark:text-zinc-400 mt-2 leading-relaxed max-w-[260px] mx-auto">
               Encontre o seu lugar único numa comunidade de irmãos que caminham na fé, onde cada conexão é pensada para se encaixar na sua jornada pessoal.
             </p>
-            <p className="text-xs italic text-slate-400 mt-2.5">
+            <p className="text-xs italic text-slate-400 dark:text-zinc-500 mt-2.5">
               &ldquo;O ferro aguça o ferro, e um homem aguça o rosto do outro.&rdquo; — Pv 27:17
             </p>
           </div>
 
-          {/* CTAs — todos outlined com fundo creme pálido */}
+          {/* CTAs */}
           <div className="w-full flex flex-col gap-3 relative z-10">
 
-            {/* CTA 1: Escolher uma Fraternidade */}
+            {/* CTA 1: Escolher uma Fraternidade — destaque primário */}
             <button
               onClick={() => { setShowSearchModal(true); setShowLinkPanel(false); }}
-              className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-xl border-2 border-gold/35 text-sm font-semibold text-slate-700 hover:border-gold/60 hover:brightness-[0.97] transition-all"
-              style={{ background: "#FDFDFA" }}
+              className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-xl text-sm font-bold text-white transition-all active:scale-95"
+              style={{ background: "linear-gradient(135deg, #D4AF37 0%, #9A7A1E 100%)", boxShadow: "0 4px 14px rgba(212,175,55,0.4)" }}
             >
-              <Search className="w-4 h-4 text-gold-dark" />
+              <Search className="w-4 h-4" />
               Escolher uma Fraternidade
             </button>
 
             {/* CTA 2: Entrar por Link */}
             <button
               onClick={() => { setShowLinkPanel(true); setShowSearchModal(false); }}
-              className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-xl border-2 border-gold/35 text-sm font-semibold text-slate-700 hover:border-gold/60 hover:brightness-[0.97] transition-all"
-              style={{ background: "#FDFDFA" }}
+              className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-xl border-2 border-gold/40 dark:border-gold/30 text-sm font-semibold text-slate-700 dark:text-zinc-200 hover:border-gold/70 hover:bg-gold/5 transition-all active:scale-95"
             >
               <Link2 className="w-4 h-4 text-gold-dark" />
               Entrar por Link
             </button>
 
-            {/* CTA 3: Entrar Aleatório — outlined, mesmo peso visual, subtexto espiritual */}
+            {/* CTA 3: Entrar Aleatório */}
             <button
               onClick={handleJoinRandom}
               disabled={joiningRandom}
-              className="w-full flex flex-col items-center justify-center gap-0.5 py-4 px-4 rounded-xl border-2 border-gold/35 text-sm font-semibold text-slate-700 hover:border-gold/60 hover:brightness-[0.97] transition-all disabled:opacity-60"
-              style={{ background: "#FDFDFA" }}
+              className="w-full flex flex-col items-center justify-center gap-0.5 py-3.5 px-4 rounded-xl border-2 border-gold/40 dark:border-gold/30 text-sm font-semibold text-slate-700 dark:text-zinc-200 hover:border-gold/70 hover:bg-gold/5 transition-all disabled:opacity-60 active:scale-95"
             >
               {joiningRandom ? (
                 <span className="flex items-center gap-2 text-gold-dark">
@@ -807,8 +804,8 @@ export default function CelulaPage() {
                 </span>
               ) : (
                 <>
-                  <span className="text-slate-800">Entrar Aleatório <span className="text-gold-dark">✦</span></span>
-                  <span className="text-xs font-normal text-slate-400">Deixe Deus escolher sua Fraternidade</span>
+                  <span>Entrar Aleatório <span className="text-gold-dark">✦</span></span>
+                  <span className="text-xs font-normal text-slate-400 dark:text-zinc-500">Deixe Deus escolher sua Fraternidade</span>
                 </>
               )}
             </button>
@@ -816,7 +813,7 @@ export default function CelulaPage() {
           </div>
 
           {joinError && (
-            <p className="text-xs text-red-500 text-center -mt-2 relative z-10">{joinError}</p>
+            <p className="text-xs text-red-500 text-center -mt-1 relative z-10">{joinError}</p>
           )}
         </motion.div>
       </div>
