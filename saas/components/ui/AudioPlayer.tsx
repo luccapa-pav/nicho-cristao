@@ -2,14 +2,14 @@
 
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Lock } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Headphones } from "lucide-react";
 import Link from "next/link";
 
 interface AudioPlayerProps {
   title: string;
-  duration: number;       // duração do áudio completo (premium)
-  audioUrl: string;       // url do áudio completo (premium)
-  audioPreviewUrl?: string; // url do preview ~15s (free)
+  duration: number;
+  audioUrl: string;
+  audioPreviewUrl?: string;
   date: string;
   isPremium?: boolean;
   onUnlock?: () => void;
@@ -31,28 +31,25 @@ export function AudioPlayer({
   onUnlock,
 }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [playing, setPlaying]           = useState(false);
-  const [currentTime, setCurrentTime]   = useState(0);
+  const [playing, setPlaying]             = useState(false);
+  const [currentTime, setCurrentTime]     = useState(0);
   const [audioDuration, setAudioDuration] = useState(duration);
-  const [volume, setVolume]             = useState(0.8);
-  const [muted, setMuted]               = useState(false);
-  const [playbackRate, setPlaybackRate] = useState(1);
-  const [audioError, setAudioError]     = useState(false);
-  const [previewEnded, setPreviewEnded] = useState(false);
+  const [volume, setVolume]               = useState(0.8);
+  const [muted, setMuted]                 = useState(false);
+  const [playbackRate, setPlaybackRate]   = useState(1);
+  const [audioError, setAudioError]       = useState(false);
+  const [previewEnded, setPreviewEnded]   = useState(false);
 
-  // Qual src usar?
-  const activeSrc = isPremium ? audioUrl : (audioPreviewUrl ?? "");
-  const hasAudio  = Boolean(activeSrc) && !audioError;
-  const isPreview = !isPremium && Boolean(audioPreviewUrl);
-  const progress  = audioDuration > 0 ? (currentTime / audioDuration) * 100 : 0;
+  const activeSrc  = isPremium ? audioUrl : (audioPreviewUrl ?? "");
+  const hasAudio   = Boolean(activeSrc) && !audioError;
+  const isPreview  = !isPremium && Boolean(audioPreviewUrl);
+  const progress   = audioDuration > 0 ? (currentTime / audioDuration) * 100 : 0;
+  const showPaywall = !isPremium && (!isPreview || previewEnded);
 
   const togglePlay = useCallback(() => {
     if (!audioRef.current) return;
-    if (audioRef.current.paused) {
-      audioRef.current.play().catch(() => {});
-    } else {
-      audioRef.current.pause();
-    }
+    if (audioRef.current.paused) audioRef.current.play().catch(() => {});
+    else audioRef.current.pause();
   }, []);
 
   const seek = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -78,9 +75,6 @@ export function AudioPlayer({
   }, [muted]);
 
   const handleUnlock = onUnlock ?? (() => {});
-
-  // Paywall overlay: imediato (sem preview) ou após preview terminar
-  const showPaywall = !isPremium && (!isPreview || previewEnded);
 
   return (
     <div className="divine-card p-4 h-full flex flex-col gap-0 relative overflow-hidden">
@@ -288,55 +282,101 @@ export function AudioPlayer({
             className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col items-center justify-center z-10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.35 }}
           >
-            <div className="absolute inset-0 backdrop-blur-[6px] bg-white/40 dark:bg-black/50" />
+            {/* Blur + gradient background */}
+            <div className="absolute inset-0 backdrop-blur-[8px]" style={{ background: "linear-gradient(160deg, rgba(255,249,230,0.88) 0%, rgba(254,243,199,0.92) 100%)" }} />
+
+            {/* Animated sound bars behind */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10">
+              {Array.from({ length: 18 }).map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="w-1 mx-0.5 rounded-full bg-gold-dark"
+                  animate={{ height: [`${8 + Math.random() * 20}px`, `${24 + Math.random() * 40}px`, `${8 + Math.random() * 20}px`] }}
+                  transition={{ duration: 0.8 + Math.random() * 0.6, repeat: Infinity, ease: "easeInOut", delay: i * 0.06 }}
+                />
+              ))}
+            </div>
+
+            {/* Card */}
             <motion.div
-              className="relative z-10 flex flex-col items-center gap-3 px-6 py-5 mx-4 rounded-2xl text-center"
+              className="relative z-10 flex flex-col items-center gap-3 px-5 py-5 mx-5 rounded-2xl text-center w-full max-w-xs"
               style={{
-                background: "linear-gradient(145deg, rgba(255,249,230,0.97) 0%, rgba(255,252,240,0.97) 100%)",
-                boxShadow: "0 4px 24px rgba(212,175,55,0.25), 0 1px 6px rgba(212,175,55,0.12)",
-                border: "1px solid rgba(212,175,55,0.35)",
+                background: "linear-gradient(145deg, rgba(255,252,242,0.98) 0%, rgba(255,248,220,0.98) 100%)",
+                boxShadow: "0 8px 32px rgba(212,175,55,0.22), 0 2px 8px rgba(212,175,55,0.1)",
+                border: "1px solid rgba(212,175,55,0.4)",
               }}
-              initial={{ scale: 0.92, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.25, delay: 0.15 }}
+              initial={{ scale: 0.9, opacity: 0, y: 8 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
             >
+              {/* Icon */}
               <div
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{ background: "linear-gradient(135deg, #D4AF37 0%, #B8962E 100%)" }}
+                className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg, #D4AF37 0%, #9A7A1E 100%)", boxShadow: "0 4px 16px rgba(212,175,55,0.45)" }}
               >
-                <Lock className="w-5 h-5 text-white" />
+                <Headphones className="w-7 h-7 text-white" />
               </div>
-              <div>
-                <p className="font-serif text-base font-bold text-slate-800">
-                  {previewEnded ? "Gostou da prévia?" : "Devocional Narrado"}
-                </p>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed max-w-[200px]">
+
+              {/* Copy */}
+              <div className="flex flex-col gap-1">
+                <p className="font-serif text-[1.05rem] font-bold text-slate-800 leading-tight">
                   {previewEnded
-                    ? "Continue a meditação guiada completa com o Premium"
-                    : "Ouça o devocional do dia com narração exclusiva para membros Premium"}
+                    ? "Você ouviu só o início…"
+                    : "Meditação guiada completa"}
+                </p>
+                <p className="text-[0.72rem] text-slate-500 leading-relaxed">
+                  {previewEnded
+                    ? `A reflexão completa tem ${duration > 0 ? formatTime(duration) : "vários minutos"} de narração, música e Palavra. Continue sua caminhada.`
+                    : "Cada devocional é narrado com música ambiente e reflexão bíblica guiada — exclusivo para membros Premium."}
                 </p>
               </div>
+
+              {/* Features row */}
+              <div className="flex items-center justify-center gap-3 w-full">
+                {["🎙 Narração", "🎵 Música", "📖 Reflexão"].map((f) => (
+                  <span key={f} className="text-[0.62rem] font-semibold text-gold-dark/80 bg-gold/10 px-2 py-1 rounded-full border border-gold/20">
+                    {f}
+                  </span>
+                ))}
+              </div>
+
+              {/* CTA */}
               {onUnlock ? (
                 <button
                   onClick={handleUnlock}
-                  className="w-full py-2.5 px-5 rounded-xl text-sm font-bold text-white"
-                  style={{ background: "linear-gradient(135deg, #D4AF37 0%, #B8962E 100%)", boxShadow: "0 2px 10px rgba(212,175,55,0.4)" }}
+                  className="w-full py-3 px-5 rounded-xl text-sm font-bold text-white relative overflow-hidden group"
+                  style={{ background: "linear-gradient(135deg, #D4AF37 0%, #9A7A1E 100%)", boxShadow: "0 4px 14px rgba(212,175,55,0.5)" }}
                 >
-                  ✦ Seja Premium
+                  <span className="relative z-10">✦ {previewEnded ? "Ouvir completo — 7 dias grátis" : "Começar 7 dias grátis"}</span>
+                  <motion.div
+                    className="absolute inset-0 bg-white/20"
+                    initial={{ x: "-100%" }}
+                    animate={{ x: "100%" }}
+                    transition={{ duration: 1.8, repeat: Infinity, repeatDelay: 2 }}
+                  />
                 </button>
               ) : (
                 <Link href="/assinar" className="w-full">
                   <button
-                    className="w-full py-2.5 px-5 rounded-xl text-sm font-bold text-white"
-                    style={{ background: "linear-gradient(135deg, #D4AF37 0%, #B8962E 100%)", boxShadow: "0 2px 10px rgba(212,175,55,0.4)" }}
+                    className="w-full py-3 px-5 rounded-xl text-sm font-bold text-white relative overflow-hidden"
+                    style={{ background: "linear-gradient(135deg, #D4AF37 0%, #9A7A1E 100%)", boxShadow: "0 4px 14px rgba(212,175,55,0.5)" }}
                   >
-                    ✦ Seja Premium
+                    <span className="relative z-10">✦ {previewEnded ? "Ouvir completo — 7 dias grátis" : "Começar 7 dias grátis"}</span>
+                    <motion.div
+                      className="absolute inset-0 bg-white/20"
+                      initial={{ x: "-100%" }}
+                      animate={{ x: "100%" }}
+                      transition={{ duration: 1.8, repeat: Infinity, repeatDelay: 2 }}
+                    />
                   </button>
                 </Link>
               )}
-              <p className="text-[10px] text-slate-400">7 dias grátis · Cancele quando quiser</p>
+
+              <p className="text-[0.62rem] text-slate-400">
+                R$ 14,99/mês · Cancele quando quiser
+              </p>
             </motion.div>
           </motion.div>
         )}
