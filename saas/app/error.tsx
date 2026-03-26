@@ -25,7 +25,7 @@ export default function GlobalError({ error, reset }: { error: Error; reset: () 
           <button onClick={reset} className="btn-divine py-3 px-8 flex items-center gap-2">
             <RefreshCw className="w-4 h-4" /> Tentar novamente
           </button>
-          <Link href="/dashboard" className="text-sm text-gold-dark hover:underline">
+          <Link href="/inicio" className="text-sm text-gold-dark hover:underline">
             Voltar ao início
           </Link>
         </div>

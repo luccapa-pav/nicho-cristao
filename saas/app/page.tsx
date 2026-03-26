@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default async function RootPage() {
   const session = await getServerSession(authOptions);
-  if (session) redirect("/dashboard");
+  if (session) redirect("/inicio");
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FFFEF9]">

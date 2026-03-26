@@ -23,7 +23,7 @@ const FEATURES = [
     icon: "🔥",
     title: "Ofensiva Diária",
     desc: "Mantenha sua sequência de dias fiéis. Cada check-in conta!",
-    href: "/dashboard",
+    href: "/inicio",
   },
   {
     icon: "👥",
@@ -111,7 +111,7 @@ export function OnboardingModal() {
 
               {/* CTA */}
               <div className="px-5 pt-3 pb-6 flex flex-col gap-2" style={{ paddingBottom: "calc(1.5rem + env(safe-area-inset-bottom, 0px))" }}>
-                <Link href="/dashboard" onClick={dismiss} className="w-full">
+                <Link href="/inicio" onClick={dismiss} className="w-full">
                   <button className="btn-divine py-4 text-base w-full flex items-center justify-center gap-2 font-bold">
                     ✦ Começar minha jornada
                   </button>

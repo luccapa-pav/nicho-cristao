@@ -380,7 +380,7 @@ export default function AssinarPage() {
               {/* CTA — fixo no rodapé */}
               <div className="mt-auto pt-4">
                 {p.id === "free" ? (
-                  <Link href="/dashboard">
+                  <Link href="/inicio">
                     <button className={p.ctaStyle}>{p.ctaText}</button>
                   </Link>
                 ) : (

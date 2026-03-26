@@ -17,7 +17,7 @@ export default function VerificacaoSucessoPage() {
           <p className="text-sm text-slate-500 leading-relaxed">
             Sua conta foi verificada com sucesso. Que sua jornada de fé seja abençoada! 🙏
           </p>
-          <Link href="/dashboard" className="btn-divine py-3 px-8 mt-2">
+          <Link href="/inicio" className="btn-divine py-3 px-8 mt-2">
             Ir para o app
           </Link>
         </div>

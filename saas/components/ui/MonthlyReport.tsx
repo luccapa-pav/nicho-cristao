@@ -42,7 +42,7 @@ export function MonthlyReport({ open, onClose }: MonthlyReportProps) {
     if (!open || data) return;
     setLoading(true);
     const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-    fetch("/api/dashboard")
+    fetch("/api/inicio")
       .then((r) => r.ok ? r.json() : null)
       .then((d) => {
         if (!d) return;

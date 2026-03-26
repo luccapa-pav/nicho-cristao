@@ -14,7 +14,7 @@ export default function NotFound() {
         <p className="text-sm text-slate-400 mb-8 leading-relaxed">
           &ldquo;Porque eu sei os planos que tenho para você&rdquo; — mas esta página não é um deles. 😊
         </p>
-        <Link href="/dashboard" className="btn-divine py-3 px-8">
+        <Link href="/inicio" className="btn-divine py-3 px-8">
           Voltar ao início
         </Link>
       </div>

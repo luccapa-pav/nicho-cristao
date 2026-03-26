@@ -85,7 +85,7 @@ export default function EntrarPage() {
               <XCircle className="w-10 h-10 text-red-400" />
               <p className="text-base font-semibold text-slate-700">{fetchError}</p>
               <p className="text-sm text-slate-400">O link pode ter expirado ou já ter sido usado.</p>
-              <Link href="/dashboard" className="btn-divine py-2.5 text-sm w-full text-center mt-2">
+              <Link href="/inicio" className="btn-divine py-2.5 text-sm w-full text-center mt-2">
                 Ir para o início
               </Link>
             </div>

@@ -185,8 +185,8 @@ export default function DashboardPage() {
   const fetchAll = useCallback(async () => {
     try {
       // Inicia todas as requisições em paralelo imediatamente
-      const quickPromise = fetch("/api/dashboard?quick=1").then((r) => { if (!r.ok) throw new Error(); return r.json(); });
-      const fullPromise = fetch("/api/dashboard").then((r) => { if (!r.ok) throw new Error(); return r.json(); });
+      const quickPromise = fetch("/api/inicio?quick=1").then((r) => { if (!r.ok) throw new Error(); return r.json(); });
+      const fullPromise = fetch("/api/inicio").then((r) => { if (!r.ok) throw new Error(); return r.json(); });
       const gpPromise = fetch("/api/prayers/group").then((r) => r.ok ? r.json() : []);
       const versesPromise = fetch("/api/verses/memorized").then((r) => r.ok ? r.json() : []);
       const plansPromise = fetch("/api/reading/plans").then((r) => r.ok ? r.json() : []);

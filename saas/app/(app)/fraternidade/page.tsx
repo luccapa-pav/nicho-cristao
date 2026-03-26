@@ -130,7 +130,7 @@ export default function CelulaPage() {
   const { showToast, ToastElement } = useToast();
 
   useEffect(() => {
-    fetch("/api/dashboard")
+    fetch("/api/inicio")
       .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then((d) => {
         setGroup(d.group ?? null);

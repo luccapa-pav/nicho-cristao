@@ -19,7 +19,7 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/admin")) {
     const adminEmail = process.env.ADMIN_EMAIL;
     if (!adminEmail || token.email !== adminEmail) {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
+      return NextResponse.redirect(new URL("/inicio", req.url));
     }
   }
 
@@ -28,7 +28,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
+    "/inicio/:path*",
     "/fraternidade/:path*",
     "/oracao/:path*",
     "/devocional/:path*",

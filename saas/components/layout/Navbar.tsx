@@ -19,7 +19,7 @@ const PaywallModal = dynamic(() => import("@/components/ui/PaywallModal").then(m
 type NavItem = { href: string; icon: React.ElementType; label: string; premium?: boolean };
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/dashboard",      icon: Home,        label: "Início" },
+  { href: "/inicio",      icon: Home,        label: "Início" },
   { href: "/fraternidade",   icon: Users,       label: "Fraternidade" },
   { href: "/oracao",         icon: Heart,       label: "Oração" },
   { href: "/diario",         icon: BookMarked,  label: "Diário" },
@@ -303,7 +303,7 @@ export function Navbar() {
       <nav className="md:hidden fixed bottom-0 inset-x-0 z-30 backdrop-blur-md border-t border-amber-100/60 dark:border-gold/10 flex bg-[#FFFEF9F0] dark:bg-black/90" style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
         <LayoutGroup>
         {[
-          { href: "/dashboard",     icon: Home,     label: "Início",  premium: false },
+          { href: "/inicio",     icon: Home,     label: "Início",  premium: false },
           { href: "/fraternidade",  icon: Users,    label: "Irmãos",  premium: false },
           { href: "/oracao",        icon: Heart,    label: "Oração",  premium: false },
           { href: "/plano-leitura", icon: BookOpen, label: "Plano",   premium: true },

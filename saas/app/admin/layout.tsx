@@ -14,8 +14,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     if (status === "unauthenticated") { router.replace("/login"); return; }
     if (status === "authenticated") {
       fetch("/api/admin/stats")
-        .then((r) => { if (r.status === 401) router.replace("/dashboard"); })
-        .catch(() => router.replace("/dashboard"));
+        .then((r) => { if (r.status === 401) router.replace("/inicio"); })
+        .catch(() => router.replace("/inicio"));
     }
   }, [status, router]);
 
@@ -36,7 +36,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <Link href="/admin/usuarios" className="text-slate-500 hover:text-gold-dark transition-colors">Usuários</Link>
         </nav>
         <div className="ml-auto">
-          <Link href="/dashboard" className="text-xs text-slate-400 hover:text-gold-dark transition-colors">← App</Link>
+          <Link href="/inicio" className="text-xs text-slate-400 hover:text-gold-dark transition-colors">← App</Link>
         </div>
       </header>
       <main className="p-6 max-w-5xl mx-auto">{children}</main>

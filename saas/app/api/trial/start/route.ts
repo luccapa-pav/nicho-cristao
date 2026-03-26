@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     mode: "subscription",
     line_items: [{ price: STRIPE_PRICES.premium, quantity: 1 }],
     payment_method_collection: "always",
-    success_url: `${origin}/dashboard?trial=started`,
+    success_url: `${origin}/inicio?trial=started`,
     cancel_url: `${origin}/assinar`,
     metadata: { userId: session.user.id, planId: "premium" },
     subscription_data: {

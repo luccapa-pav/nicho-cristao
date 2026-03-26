@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 export function PrayerFAB() {
   const pathname = usePathname();
   // Não mostrar na oração (destino) nem no dashboard (já tem ações de oração)
-  if (pathname === "/oracao" || pathname === "/dashboard") return null;
+  if (pathname === "/oracao" || pathname === "/inicio") return null;
 
   return (
     <Link href="/oracao" aria-label="Orar agora">

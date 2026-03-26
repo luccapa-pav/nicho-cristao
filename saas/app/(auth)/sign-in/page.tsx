@@ -24,7 +24,7 @@ export default function SignInPage() {
     if (res?.error) {
       setError("Email ou senha incorretos.");
     } else {
-      router.push("/dashboard");
+      router.push("/inicio");
     }
   }
 
@@ -48,7 +48,7 @@ export default function SignInPage() {
         {/* Google */}
         <button
           type="button"
-          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          onClick={() => signIn("google", { callbackUrl: "/inicio" })}
           className="w-full py-3 rounded-2xl border-2 border-slate-200 bg-white text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-colors flex items-center justify-center gap-3 mb-4"
         >
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">

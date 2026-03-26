@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
         type: "STREAK_RISK",
         title: "Sua ofensiva está em risco! 🔥",
         body: `${s.currentStreak} dias seguidos — não deixe sua chama apagar. Abra o app antes de meia-noite!`,
-        link: "/dashboard",
+        link: "/inicio",
       })
     )
   );

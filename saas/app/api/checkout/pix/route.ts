@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       price: planInfo.amount,
     }],
     returnUrl: `${origin}/assinar`,
-    completionUrl: `${origin}/dashboard?payment=success&method=pix`,
+    completionUrl: `${origin}/inicio?payment=success&method=pix`,
     customer: {
       name: user?.name ?? (session.user as { name?: string }).name ?? "Cliente",
       email: user?.email ?? (session.user as { email?: string }).email ?? "",
