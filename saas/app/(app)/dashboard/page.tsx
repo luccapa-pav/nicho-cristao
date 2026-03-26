@@ -64,6 +64,7 @@ interface DashboardData {
     verse: string;
     verseRef: string;
     audioUrl: string;
+    audioPreviewUrl: string;
     duration: number;
     theme: string;
     completedToday: boolean;
@@ -79,6 +80,7 @@ const FALLBACK_DEVOTIONAL = {
   verse: "Porque andamos por fé e não por vista.",
   verseRef: "2 Coríntios 5:7",
   audioUrl: "",
+  audioPreviewUrl: "",
   duration: 0,
   theme: "Confiança",
   completedToday: false,
@@ -456,20 +458,14 @@ export default function DashboardPage() {
                 <VerseCard verse={devotional.verse} reference={devotional.verseRef} theme={devotional.theme} />
               </motion.div>
               <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} custom={4} className="md:col-span-1 lg:col-span-2 h-full relative">
-                {!isPremium && devotional.audioUrl && (
-                  <button
-                    onClick={() => { setPaywallFeature("Devocional Narrado"); setPaywallOpen(true); }}
-                    className="absolute top-3 right-3 z-10 flex items-center gap-1 bg-white/90 border border-gold/30 rounded-full px-2 py-1 text-xs font-semibold text-gold-dark shadow-sm hover:bg-amber-50 transition-colors"
-                    title="Recurso Premium"
-                  >
-                    <Lock className="w-3 h-3" /> Premium
-                  </button>
-                )}
                 <AudioPlayer
                   title={devotional.title}
                   duration={devotional.duration}
-                  audioUrl={isPremium ? devotional.audioUrl : ""}
+                  audioUrl={devotional.audioUrl}
+                  audioPreviewUrl={devotional.audioPreviewUrl}
                   date={new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+                  isPremium={isPremium || isOnTrial}
+                  onUnlock={() => { setPaywallFeature("Devocional Narrado"); setPaywallOpen(true); }}
                 />
               </motion.div>
             </div>

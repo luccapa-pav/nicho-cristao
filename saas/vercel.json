@@ -6,6 +6,10 @@
   "outputDirectory": ".next",
   "crons": [
     {
+      "path": "/api/cron/audio",
+      "schedule": "0 3 * * *"
+    },
+    {
       "path": "/api/cron/devotional",
       "schedule": "0 9 * * *"
     },

@@ -2,13 +2,17 @@
 
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Lock } from "lucide-react";
+import Link from "next/link";
 
 interface AudioPlayerProps {
   title: string;
-  duration: number;
-  audioUrl: string;
+  duration: number;       // duração do áudio completo (premium)
+  audioUrl: string;       // url do áudio completo (premium)
+  audioPreviewUrl?: string; // url do preview ~15s (free)
   date: string;
+  isPremium?: boolean;
+  onUnlock?: () => void;
 }
 
 function formatTime(s: number) {
@@ -17,17 +21,30 @@ function formatTime(s: number) {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 }
 
-export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProps) {
-  const [audioError, setAudioError] = useState(false);
-  const hasAudio = Boolean(audioUrl) && !audioError;
-  const [playing, setPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [volume, setVolume] = useState(0.8);
-  const [muted, setMuted] = useState(false);
-  const [playbackRate, setPlaybackRate] = useState(1);
+export function AudioPlayer({
+  title,
+  duration,
+  audioUrl,
+  audioPreviewUrl,
+  date,
+  isPremium = true,
+  onUnlock,
+}: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [playing, setPlaying]           = useState(false);
+  const [currentTime, setCurrentTime]   = useState(0);
+  const [audioDuration, setAudioDuration] = useState(duration);
+  const [volume, setVolume]             = useState(0.8);
+  const [muted, setMuted]               = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const [audioError, setAudioError]     = useState(false);
+  const [previewEnded, setPreviewEnded] = useState(false);
 
-  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+  // Qual src usar?
+  const activeSrc = isPremium ? audioUrl : (audioPreviewUrl ?? "");
+  const hasAudio  = Boolean(activeSrc) && !audioError;
+  const isPreview = !isPremium && Boolean(audioPreviewUrl);
+  const progress  = audioDuration > 0 ? (currentTime / audioDuration) * 100 : 0;
 
   const togglePlay = useCallback(() => {
     if (!audioRef.current) return;
@@ -39,25 +56,31 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
   }, []);
 
   const seek = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!hasAudio) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const ratio = (e.clientX - rect.left) / rect.width;
-    const newTime = ratio * duration;
+    const newTime = ratio * audioDuration;
     if (audioRef.current) audioRef.current.currentTime = newTime;
     setCurrentTime(newTime);
-  }, [duration]);
+  }, [audioDuration, hasAudio]);
 
   const skip = useCallback((secs: number) => {
     if (!audioRef.current) return;
-    const newTime = Math.max(0, Math.min(duration, audioRef.current.currentTime + secs));
+    const newTime = Math.max(0, Math.min(audioDuration, audioRef.current.currentTime + secs));
     audioRef.current.currentTime = newTime;
     setCurrentTime(newTime);
-  }, [duration]);
+  }, [audioDuration]);
 
   const toggleMute = useCallback(() => {
     if (!audioRef.current) return;
     audioRef.current.muted = !muted;
     setMuted((m) => !m);
   }, [muted]);
+
+  const handleUnlock = onUnlock ?? (() => {});
+
+  // Paywall overlay: imediato (sem preview) ou após preview terminar
+  const showPaywall = !isPremium && (!isPreview || previewEnded);
 
   return (
     <div className="divine-card p-4 h-full flex flex-col gap-0 relative overflow-hidden">
@@ -66,7 +89,7 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
         style={{ background: "radial-gradient(ellipse at 90% 10%, rgba(212,175,55,0.07) 0%, transparent 55%)" }}
       />
 
-      {/* Zona 1 — Identidade */}
+      {/* ── Zona 1 — Identidade ── */}
       <div className="flex flex-col items-center text-center mb-3 relative gap-0.5">
         <div className="flex items-center gap-1.5">
           <div className="relative w-5 h-5 rounded-md bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-divine flex-shrink-0">
@@ -83,7 +106,7 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
             <span className="font-serif text-xs text-white select-none">✝</span>
           </div>
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-gold-dark/70 leading-none">
-            Cápsula de Áudio
+            {isPreview ? "Prévia · 15s" : "Cápsula de Áudio"}
           </p>
           <AnimatePresence>
             {playing && (
@@ -106,19 +129,15 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
             )}
           </AnimatePresence>
         </div>
-        <p className="text-base font-serif font-semibold text-slate-800 leading-snug">
-          {title}
-        </p>
-        <p className="text-xs text-slate-400 leading-none tracking-wide">
-          {date}
-        </p>
+        <p className="text-base font-serif font-semibold text-slate-800 leading-snug">{title}</p>
+        <p className="text-xs text-slate-400 leading-none tracking-wide">{date}</p>
       </div>
 
-      {/* Zona 2 — Controle Primário */}
+      {/* ── Zona 2 — Controle Primário ── */}
       <div className="flex flex-col gap-3 relative">
         <div className="space-y-1.5">
           <div
-            className="h-1.5 w-full rounded-full bg-divine-100 cursor-pointer overflow-hidden group relative"
+            className={`h-1.5 w-full rounded-full bg-divine-100 overflow-hidden group relative ${hasAudio ? "cursor-pointer" : ""}`}
             onClick={seek}
             role="slider"
             aria-label="Progresso do áudio"
@@ -131,19 +150,22 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
               style={{ width: `${progress}%` }}
               transition={{ duration: 0.1 }}
             >
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-3 h-3 rounded-full bg-white border-2 border-gold shadow-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+              {hasAudio && (
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-3 h-3 rounded-full bg-white border-2 border-gold shadow-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+              )}
             </motion.div>
           </div>
           <div className="flex justify-between text-[0.65rem] leading-none text-slate-400 tabular-nums font-medium tracking-wide">
             <span>{formatTime(currentTime)}</span>
-            <span>{formatTime(duration)}</span>
+            <span>{formatTime(audioDuration)}</span>
           </div>
         </div>
 
         <div className="flex items-center justify-center gap-6">
           <button
             onClick={() => skip(-15)}
-            className="group flex flex-col items-center gap-0.5 text-slate-300 hover:text-gold-dark transition-colors"
+            disabled={!hasAudio || isPreview}
+            className="group flex flex-col items-center gap-0.5 text-slate-300 hover:text-gold-dark transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Voltar 15 segundos"
           >
             <SkipBack className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
@@ -173,7 +195,8 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
 
           <button
             onClick={() => skip(15)}
-            className="group flex flex-col items-center gap-0.5 text-slate-300 hover:text-gold-dark transition-colors"
+            disabled={!hasAudio || isPreview}
+            className="group flex flex-col items-center gap-0.5 text-slate-300 hover:text-gold-dark transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Avançar 15 segundos"
           >
             <SkipForward className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
@@ -184,14 +207,15 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
 
       <div className="divine-divider my-2" />
 
-      {/* Zona 3 — Controles Secundários */}
+      {/* ── Zona 3 — Controles Secundários ── */}
       <div className="flex items-center gap-4 relative">
         <div className="flex items-center gap-0.5">
           {[0.75, 1, 1.25, 1.5].map((rate) => (
             <button
               key={rate}
+              disabled={!isPremium}
               onClick={() => { setPlaybackRate(rate); if (audioRef.current) audioRef.current.playbackRate = rate; }}
-              className={`text-[0.65rem] font-bold px-2 py-1 rounded-md transition-all ${
+              className={`text-[0.65rem] font-bold px-2 py-1 rounded-md transition-all disabled:opacity-40 ${
                 playbackRate === rate
                   ? "bg-gold/15 text-gold-dark border border-gold/30"
                   : "text-slate-400 hover:text-slate-600"
@@ -233,22 +257,90 @@ export function AudioPlayer({ title, duration, audioUrl, date }: AudioPlayerProp
         </div>
       </div>
 
-      {audioUrl && !audioError ? (
+      {/* ── Elemento de áudio ── */}
+      {hasAudio ? (
         <audio
           ref={audioRef}
-          src={audioUrl}
+          src={activeSrc}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
+          onLoadedMetadata={() => {
+            if (audioRef.current) setAudioDuration(audioRef.current.duration);
+          }}
           onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
-          onEnded={() => setPlaying(false)}
+          onEnded={() => {
+            setPlaying(false);
+            if (isPreview) setPreviewEnded(true);
+          }}
           onError={() => { setAudioError(true); setPlaying(false); }}
           preload="metadata"
         />
-      ) : (
+      ) : !isPreview && isPremium ? (
         <p className="text-[0.65rem] text-center text-slate-400 mt-2 tracking-wide">
           Áudio disponível em breve
         </p>
-      )}
+      ) : null}
+
+      {/* ── Paywall overlay ── */}
+      <AnimatePresence>
+        {showPaywall && (
+          <motion.div
+            className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col items-center justify-center z-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="absolute inset-0 backdrop-blur-[6px] bg-white/40 dark:bg-black/50" />
+            <motion.div
+              className="relative z-10 flex flex-col items-center gap-3 px-6 py-5 mx-4 rounded-2xl text-center"
+              style={{
+                background: "linear-gradient(145deg, rgba(255,249,230,0.97) 0%, rgba(255,252,240,0.97) 100%)",
+                boxShadow: "0 4px 24px rgba(212,175,55,0.25), 0 1px 6px rgba(212,175,55,0.12)",
+                border: "1px solid rgba(212,175,55,0.35)",
+              }}
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.25, delay: 0.15 }}
+            >
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg, #D4AF37 0%, #B8962E 100%)" }}
+              >
+                <Lock className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="font-serif text-base font-bold text-slate-800">
+                  {previewEnded ? "Gostou da prévia?" : "Devocional Narrado"}
+                </p>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed max-w-[200px]">
+                  {previewEnded
+                    ? "Continue a meditação guiada completa com o Premium"
+                    : "Ouça o devocional do dia com narração exclusiva para membros Premium"}
+                </p>
+              </div>
+              {onUnlock ? (
+                <button
+                  onClick={handleUnlock}
+                  className="w-full py-2.5 px-5 rounded-xl text-sm font-bold text-white"
+                  style={{ background: "linear-gradient(135deg, #D4AF37 0%, #B8962E 100%)", boxShadow: "0 2px 10px rgba(212,175,55,0.4)" }}
+                >
+                  ✦ Seja Premium
+                </button>
+              ) : (
+                <Link href="/assinar" className="w-full">
+                  <button
+                    className="w-full py-2.5 px-5 rounded-xl text-sm font-bold text-white"
+                    style={{ background: "linear-gradient(135deg, #D4AF37 0%, #B8962E 100%)", boxShadow: "0 2px 10px rgba(212,175,55,0.4)" }}
+                  >
+                    ✦ Seja Premium
+                  </button>
+                </Link>
+              )}
+              <p className="text-[10px] text-slate-400">7 dias grátis · Cancele quando quiser</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

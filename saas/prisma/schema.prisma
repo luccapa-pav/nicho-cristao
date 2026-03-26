@@ -88,9 +88,10 @@ model Devotional {
   title       String
   verse       String
   verseRef    String   // Ex: "João 3:16"
-  audioUrl    String?
-  audioDuration Int?   // segundos
-  theme       String?
+  audioUrl        String?
+  audioDuration   Int?    // segundos — meditação completa (premium)
+  audioPreviewUrl String? // versículo narrado ~15s (free)
+  theme           String?
   publishedAt DateTime @default(now())
 
   logs        DevotionalLog[]
